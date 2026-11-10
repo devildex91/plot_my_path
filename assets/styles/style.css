@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+     themes: fantasy --default, sunset --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "fantasy";
+  --color-primary: #322EB5; 
+}

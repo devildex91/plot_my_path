@@ -1,0 +1,31 @@
+import { defineConfig } from 'vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  base: '/static/', 
+  build: {
+   
+    outDir: path.resolve(__dirname, './static'),
+    // Keep Django-managed static files and MapLibre worker assets during builds.
+    emptyOutDir: false,
+    manifest: "manifest.json",
+    rollupOptions: {
+      input: {
+        'app': path.resolve(__dirname, './assets/js/main.jsx'),
+        'style': path.resolve(__dirname, './assets/styles/style.css'),
+      },
+      output: {
+       
+        entryFileNames: `js/[name]-bundle.js`,
+        assetFileNames: `css/[name].css`,
+      },
+    },
+  },
+});
