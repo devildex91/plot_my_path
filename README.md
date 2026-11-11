@@ -219,6 +219,13 @@ Acceptance criteria are listed beneath each user story.
 #### Design Choices
 ---
 
+Plot My Path is a mobile-first travel planning app. Its interface helps users discover destinations, create trips, organise activities and make decisions while travelling.
+
+The design uses a clean, modern style with rounded cards, generous spacing, clear typography, imagery and a purple and blue colour scheme. These choices make the app feel approachable and easy to navigate, while keeping travel information the main focus.
+
+The layout adapts progressively to larger screens rather than creating separate mobile, tablet and desktop experiences. On small screens, information is prioritised and shown one step at a time. On larger screens, related information can appear side by side, making better use of the space.
+
+This suits a travel app because people use it in different contexts: planning at home on a desktop, researching destinations on a tablet, or checking an itinerary on a phone while travelling.
 
 [back to top](#plot-my-path)
 #### ERD Diagram
@@ -226,16 +233,74 @@ Acceptance criteria are listed beneath each user story.
 
 <details>
 <summary> ERD Data flow  </summary>
+
+
+ | Model       	| Relationship      	| Model               	|
+|-------------	|-------------------	|---------------------	|
+| User        	| has               	| Travel_Preference   	|
+| User        	| Saves             	| Saved_Destination   	|
+| User        	| creates           	| Trip                	|
+| User        	| makes             	| Payment             	|
+| User        	| holds             	| Prermium_Membership 	|
+| User        	| recieves          	| Recommendation      	|
+| Payment     	| activates         	| Premium_Membership  	|
+|             	|                   	|                     	|
+| Country     	| contains          	| Destination         	|
+| Destination 	| has               	| Attraction          	|
+| Destination 	| saved as          	| Saved_Destination   	|
+| Destination 	| is visited in     	| Trip                	|
+|             	|                   	|                     	|
+| Trip        	| is split into     	| Trip_Day            	|
+| Trip        	| generates         	| Recommendation      	|
+| Trip Day    	| schedules         	| Planned_activity    	|
+| Attraction  	| is scheduled as   	| Planned_Activity    	|
+| Attraction  	| is recommended in 	| Recommendation      	|
 </details>
 
+<details>
 <summary> ERD Diagram  </summary>
+
+![ERD diagram](/static/images/readme-img/pmp-erd.png)
 </details>
+
 [back to top](#plot-my-path)
 #### Database Architecture
 ---
 [back to top](#plot-my-path)
 #### Wireframes 
 ---
+Mobile Wireframes 
+---
+- Landing page
+- ![landing page](/static/images/readme-img/mobile-landing-page.png) 
+- Login page
+- ![login page](/static/images/readme-img/mobile-login-page.png)
+- Register page
+- ![register page](/static/images/readme-img/mobile-register-page.png)
+- onboarding pages
+- ![onboarding page](/static/images/readme-img/mobile-onboarding-pages.png)
+- Home page
+- ![home page](/static/images/readme-img/mobile-homepage.png)
+- Explore destination page
+- ![explore destination page](/static/images/readme-img/mobile-explore-destination.png)
+- Destination detail page
+- ![destination detail page](/static/images/readme-img/mobile-destination-detail.png)
+- Create plan page
+- ![create page](/static/images/readme-img/mobile-create-plan.png)
+- Trip summary page
+- ![trip summary page](/static/images/readme-img/mobile-trip-summary.png)
+- Profile page
+- ![profile page](/static/images/readme-img/mobile-profile.png)
+
+Tablet Wireframes
+--- 
+- Note: For landing page, login/register and onboarding pages please see mobile wireframes as the view on tablet will be identical but on a larger scale. 
+- Homepage
+- ![]
+Desktop Wireframes
+--- 
+- Note:For landing page, login/register and onboarding pages please see mobile wireframes as the view on desktop will be identical but on a larger scale.  
+[back to top](#plot-my-path)
  
 [back to top](#plot-my-path)
 ### Features
