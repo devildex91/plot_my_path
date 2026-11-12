@@ -11,32 +11,43 @@ from django.shortcuts import redirect, render
 from .forms import ContactForm
 
 
-
-
 class CustomSignUpView(SignupView):
     def form_valid(self, form):
         """Show the appropriate confirmation after allauth accepts the signup."""
         response = super().form_valid(form)
 
-        if app_settings.EMAIL_VERIFICATION == app_settings.EmailVerificationMethod.MANDATORY:
+        if (
+            app_settings.EMAIL_VERIFICATION
+            == app_settings.EmailVerificationMethod.MANDATORY
+        ):
             messages.info(
-                self.request, 
-                "We've sent you an email to verify your account. Please check your inbox."
+                self.request,
+                "We've sent you an email to verify your account. Please check your inbox.",
             )
         else:
             messages.success(
                 self.request,
-                f"Welcome {form.cleaned_data['first_name']}! Your account has been created."
+                f"Welcome {form.cleaned_data['first_name']}! Your account has been created.",
             )
         return response
+
+
 def landing_page_view(request):
     """Render the public landing page."""
-    return render(request, 'core/landing_page.html',)
+    return render(
+        request,
+        "core/landing_page.html",
+    )
 
 
 def onboarding_page_view(request):
     """Render the introductory onboarding carousel."""
-    return render(request, 'core/onboarding.html',)
+    return render(
+        request,
+        "core/onboarding.html",
+    )
+
+
 @login_required
 def homepage_view(request):
     """Show a time-appropriate greeting and a small set of featured destinations."""
@@ -46,23 +57,18 @@ def homepage_view(request):
         greeting = "Good morning"
         icon = "fa-solid fa-mountain-sun"
     elif hour < 18:
-        greeting ="Good afternoon"
-        icon ="fa-solid fa-sun"
+        greeting = "Good afternoon"
+        icon = "fa-solid fa-sun"
     else:
         greeting = "Good evening"
         icon = "fa-solid fa-moon"
 
-
-
-    
     context = {
-        'greeting': greeting,
-        'icon': icon,
-    
-        
+        "greeting": greeting,
+        "icon": icon,
     }
-    
-    return render(request, 'core/home.html', context)
+
+    return render(request, "core/home.html", context)
 
 
 def contact(request):

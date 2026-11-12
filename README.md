@@ -443,6 +443,8 @@ Plot My Paths features will include:
 [back to top](#plot-my-path)
 #### Python code validation
 ---
+
+
 [back to top](#plot-my-path)
 #### JSX Testing
 ---
@@ -455,6 +457,50 @@ Plot My Paths features will include:
 [back to top](#plot-my-path)
 #### Automated Testing
 ---
+
+##### Django Testing(Using Djangos testing suite)
+---
+###### Core Tests-The Tests
+---
+**core tests ran at commit  **
+ **Pages Tests**
+
+- The landing page and onboarding page load for anyone and use their
+  expected templates.
+- The homepage requires login: a logged-out visitor is redirected.
+- The homepage greeting depends on the time of day: "Good morning" at 9am,
+  "Good afternoon" at 2pm and "Good evening" at 8pm. The clock is mocked, so
+  the tests give the same result whenever they run.
+
+**Contact page**
+
+- The page loads and uses the contact template.
+- For a logged-in user the form is pre-filled with their first name and
+  email address.
+- A valid submission sends one email containing the message and redirects
+  back to the contact page.(Using Django's in-memory test mailbox.)
+- An invalid submission re-renders the form and sends no email.
+
+**Forms**
+
+**Signup form**
+- Valid with a first and last name, and invalid when they are missing.
+- Calling signup saves the first and last name onto the user.
+
+**Contact form**
+- Valid with a name, email, subject and message.
+- Invalid when any field is missing, and invalid for a malformed email
+  address.
+
+**results **
+- ran using python manage.py test core.tests --keepdb and all tests passed 
+----------------------------------------------------------------------
+Ran 16 tests in 17.075s
+
+OK
+Preserving test database for alias 'default'...
+ 
+
 
 [back to top](#plot-my-path)
 #### Contrast tests 
