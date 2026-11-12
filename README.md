@@ -501,8 +501,8 @@ OK
 Preserving test database for alias 'default'...
  
 ###### Accounts model testing- the tests 
-**accounts tests ran at commit **
----
+**accounts tests ran at commit **df124fc**
+
 **Travel Preference**
 - A new preference defaults every interest flag(eg walking,culture) to False, and its string form is "Preferences for <username>
 - A travel style outside the allowed choices is rejected by validation.
@@ -524,6 +524,45 @@ Ran 7 tests in 6.185s
 OK
 Preserving test database for alias 'default'...
 
+###### Destinations model testing- The tests 
+** destinations model tests ran at commit **
+
+**Country**
+- Its string form is the country name.
+- The natural key is the name, and looking a country up by natural key
+  returns the right record or raises `DoesNotExist` for an unknown name.
+
+**Destination**
+- Its string form is the destination name.
+- The natural key is the slug, and lookup by natural key works.
+- Slugs must be unique (database constraint).
+- The image URL is built from the Cloudinary cloud name and the slug. This
+  only builds a string, so no request is made to Cloudinary.
+- Destinations are reachable from their country, and deleting a country
+  deletes its destinations.
+
+**Attraction**
+- Its string form is the attraction name, and the rating is optional.
+- The same slug cannot be used twice within one destination, but can be
+  reused in a different destination.
+- The image URL is built from the cloud name and slug.
+- Attractions are reachable from their destination, and deleting a
+  destination deletes its attractions.
+
+###### Destinations model testing- The results 
+python manage.py test destinations --keepdb
+Found 18 test(s).
+Using existing test database for alias 'default'...
+System check identified some issues:
+
+
+System check identified 1 issue (0 silenced).
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 2.081s
+
+OK
+Preserving test database for alias 'default'...
 [back to top](#plot-my-path)
 #### Contrast tests 
 ---
