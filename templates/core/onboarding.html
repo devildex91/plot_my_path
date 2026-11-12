@@ -9,9 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plot My Path</title>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
+    <style>
+       window.DJANGO_STATIC_URL = "{% static '' %}" 
+    </style>
   </head>
   <body class="min-h-screen bg-base-100">
-    <div id="onboarding"></div>
+    <div id="onboarding" data-home-url="{% url 'home' %}"></div>
 
     {% vite_asset 'assets/js/main.jsx' %}
   </body>
