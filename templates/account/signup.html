@@ -1,0 +1,38 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% load widget_tweaks %}
+
+{% block head_title %}{% trans "Sign Up" %}{% endblock %}
+
+{% block content %}
+  {% trans "Create Account" as heading %}
+
+  <div class="text-center mb-2">
+    <h2 class="text-2xl font-bold text-primary">{{ heading }}</h2>
+    <p class="text-sm opacity-70 mt-1">{% trans "Join us and start planning your next adventure today." %}</p>
+  </div>
+
+  {% if not SOCIALACCOUNT_ONLY %}
+    {% url 'account_signup' as action_url %}
+
+    {% #form form=form url=action_url button_text=heading %}
+      {% csrf_token %}
+      {{ redirect_field }}
+    {% /form %}
+  {% endif %}
+
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
+
+  <div class="text-center text-sm mt-6 space-y-2">
+    <p>
+      {% blocktranslate %}Already have an account?
+      <a class="link link-primary font-semibold" href="{{ login_url }}">Sign in</a>{% endblocktranslate %}
+    </p>
+    <p>
+      <a href="{% url 'contact' %}" class="link link-hover text-xs opacity-70">{% trans "Help and Support" %}</a>
+    </p>
+  </div>
+{% endblock content %}

@@ -1,0 +1,69 @@
+{# djlint:off H006 #}
+{% load i18n %}
+{% load django_vite %}
+{% load static %}
+{% load allauth_ui %}
+<!DOCTYPE html>
+<html lang="en" data-theme="fantasy">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/cbfde23805.js" crossorigin="anonymous"></script>
+    <title>
+      {% block head_title %}
+      {% endblock %}
+    </title>
+
+    {% block extra_head %}
+      <script>
+        ;(function () {
+          const saved = localStorage.getItem('theme')
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'sunset' : 'fantasy'))
+        })()
+      </script>
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
+  </head>
+
+  <body class="min-h-screen bg-base-100 text-primary flex flex-col items-center justify-center px-4 py-12 relative">
+    <a href="javascript:history.back()" class="btn btn-primary btn-sm absolute top-3 left-3"><i class="fa-solid fa-arrow-left"></i> Go Back</a>
+
+    {% block body %}
+      <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="flex flex-col items-center text-center mb-6">
+          <img src="{% static 'images/pmp-logo.png' %}" alt="Plot My Path logo" class="h-20 w-auto mb-2" />
+          <h1 class="text-3xl font-bold text-primary">Plot My Path</h1>
+          <p class="text-xs opacity-70">Plan · Explore · Make it Happen</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+          <div class="mb-4 space-y-2">
+            {% for message in messages %}
+              <div role="alert" class="alert alert-{{ message.tags }} text-sm">
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Card -->
+        <div class="card bg-base-200 shadow-sm border border-primary">
+          <div class="card-body">
+            {% block content %}
+
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block extra_body %}
+
+    {% endblock %}
+  </body>
+</html>

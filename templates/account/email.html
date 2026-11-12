@@ -1,0 +1,81 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+
+{% block head_title %}{% trans "Email Addresses" %}{% endblock %}
+
+{% block content %}
+  {% trans "Email Addresses" as heading %}
+  {% url 'account_email' as action_url %}
+
+  <div class="text-center mb-2">
+    <h2 class="text-2xl font-bold text-primary">{{ heading }}</h2>
+    {% if emailaddresses %}
+      <p class="text-sm opacity-70 mt-1">{% trans "The following email addresses are associated with your account:" %}</p>
+    {% endif %}
+  </div>
+
+  {% if emailaddresses %}
+    {% #form url=action_url use_default_button="false" %}
+      {{ redirect_field }}
+      {% csrf_token %}
+
+      <div class="space-y-2 py-2">
+        {% for radio in emailaddress_radios %}
+          {% with emailaddress=radio.emailaddress %}
+            <label for="{{ radio.id }}"
+                   class="flex items-center gap-3 p-3 border border-primary/30 rounded-xl cursor-pointer bg-base-100 hover:bg-base-300/50 transition has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+              <span class="grow min-w-0">
+                <span class="block text-sm font-medium break-all">{{ emailaddress.email }}</span>
+                <span class="flex flex-wrap gap-1 mt-1">
+                  {% if emailaddress.verified %}
+                    <span class="badge badge-primary badge-outline badge-sm">{% trans "verified" %}</span>
+                  {% endif %}
+                  {% if emailaddress.primary %}
+                    <span class="badge badge-secondary badge-outline badge-sm">{% trans "primary" %}</span>
+                  {% endif %}
+                </span>
+              </span>
+              <input type="radio"
+                     name="email"
+                     value="{{ emailaddress.email }}"
+                     id="{{ radio.id }}"
+                     class="radio radio-primary radio-sm"
+                     {% if radio.checked %}checked{% endif %} />
+            </label>
+          {% endwith %}
+        {% endfor %}
+      </div>
+
+      <div class="flex flex-col gap-2 mt-3">
+        <button name="action_primary" type="submit" class="btn btn-primary w-full">
+          {% trans "Make Primary" %}
+        </button>
+        <button name="action_send" type="submit" class="btn btn-primary btn-outline w-full">
+          {% trans "Re-send verification" %}
+        </button>
+        <button name="action_remove" type="submit" class="btn btn-error btn-outline w-full">
+          {% trans "Remove" %}
+        </button>
+      </div>
+    {% /form %}
+  {% else %}
+    {% include "account/snippets/warn_no_email.html" %}
+  {% endif %}
+
+  {% if can_add_email %}
+    <div class="divider my-4 text-xs opacity-70">{% trans "Add Email Address" %}</div>
+
+    {% trans "Add Email" as button_text %}
+    {% #form form=form url=action_url button_text=button_text use_default_button="false" %}
+      {% csrf_token %}
+      <button type="submit" name="action_add" class="btn btn-primary w-full mt-3">
+        {{ button_text }}
+      </button>
+    {% /form %}
+  {% endif %}
+
+  <div class="text-center text-sm mt-6">
+    <a href="{% url 'profile' %}" class="link link-hover text-xs opacity-70">{% trans "Back to profile" %}</a>
+  </div>
+{% endblock content %}

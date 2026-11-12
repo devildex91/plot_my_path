@@ -1,0 +1,60 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% load widget_tweaks %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+  {% trans "Sign In" as button_label %}
+
+  <div class="text-center mb-2">
+    <h2 class="text-2xl font-bold text-primary">{% trans "Welcome Back" %}</h2>
+    <p class="text-sm opacity-70 mt-1">{% trans "Log in to continue planning your next adventure." %}</p>
+  </div>
+
+  {% if not SOCIALACCOUNT_ONLY %}
+    {% url 'account_login' as action_url %}
+
+    {% #form form=form url=action_url button_text=button_label %}
+      {% csrf_token %}
+
+      {% if form.remember %}
+        <div class="form-control my-2">
+          <label class="label cursor-pointer justify-start gap-2">
+            {% render_field form.remember class="checkbox checkbox-primary checkbox-sm rounded-md" %}
+            <span class="label-text text-xs text-primary">{% trans "Remember me" %}</span>
+          </label>
+        </div>
+      {% endif %}
+
+      {{ redirect_field }}
+
+      <div class="flex justify-end mt-2">
+        <a class="link link-hover text-sm font-semibold text-primary"
+           href="{% url 'account_reset_password' %}">{% trans "Forgot password?" %}</a>
+      </div>
+    {% /form %}
+  {% endif %}
+
+  {% if LOGIN_BY_CODE_ENABLED %}
+    <div class="divider my-4 text-xs opacity-70">{% trans "or" %}</div>
+    <a href="{{ request_login_code_url }}" class="btn btn-outline btn-primary btn-sm w-full rounded-xl">
+      <i class="fa-solid fa-envelope"></i> {% trans "Mail me a sign-in code" %}
+    </a>
+  {% endif %}
+
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
+
+  <div class="text-center text-sm mt-6 space-y-2">
+    <p>
+      {% blocktranslate %}Don't have an account?
+      <a class="link link-primary font-semibold" href="{{ signup_url }}">Sign up</a>{% endblocktranslate %}
+    </p>
+    <p>
+      <a href="{% url 'contact' %}" class="link link-hover text-xs opacity-70">{% trans "Help and Support" %}</a>
+    </p>
+  </div>
+{% endblock content %}
