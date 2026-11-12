@@ -525,7 +525,7 @@ OK
 Preserving test database for alias 'default'...
 
 ###### Destinations model testing- The tests 
-** destinations model tests ran at commit **
+- destinations model tests ran at commit **72fe012**
 
 **Country**
 - Its string form is the country name.
@@ -556,10 +556,70 @@ Using existing test database for alias 'default'...
 System check identified some issues:
 
 
-System check identified 1 issue (0 silenced).
 ..................
 ----------------------------------------------------------------------
 Ran 18 tests in 2.081s
+
+OK
+Preserving test database for alias 'default'...
+
+###### Payments Model Testing-The Tests
+- payments model tests ran at commit **72fe012**
+--- 
+**Payment model**
+- Its string form is the username, amount and currency.
+- A new payment defaults to GBP and a pending status.
+- amount_pounds converts the stored pence amount to pounds (1999 becomes 19.99).
+- The created_at timestamp is set automatically.
+- The Stripe payment ID must be unique (database constraint).
+- A negative amount fails validation.
+- Payments are reachable from their user.
+
+**PremiumMembership model**
+- Its string form is the username and membership status.
+- A new membership defaults to inactive.
+- is_active is true for an active membership and false for an inactive one.
+- The created_at timestamp is set automatically.
+- A membership is reachable from both its user and its payment.
+
+###### Payments model Testing-Results 
+---
+python manage.py test payments --keepdb
+Found 13 test(s).
+Using existing test database for alias 'default'...
+System check identified some issues:
+
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 19.705s
+
+OK
+Preserving test database for alias 'default'...
+
+###### Trips model Testing-The Tests 
+Trips model testing carried out at **commit ** 
+
+External calls are mocked or disabled (the weather API is patched or its key
+is blanked), so no real requests are made during testing.
+
+**Trip, TripDay and PlannedActivity models**
+- The string form of a trip is its name, a day is "Day N - trip name", and an
+  activity is the attraction name followed by its start time.
+- A new activity defaults to a scheduled status.
+
+- A budget that is too large fails validation.
+- Deleting a user deletes their trips.
+- Deleting a trip deletes its days and planned activities.
+
+###### Trips model Testing-Results 
+python manage.py test trips --keepdb
+Found 10 test(s).
+Using existing test database for alias 'default'...
+System check identified some issues:
+
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 4.336s
 
 OK
 Preserving test database for alias 'default'...

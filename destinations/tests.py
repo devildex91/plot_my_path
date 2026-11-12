@@ -13,7 +13,6 @@ from accounts.models import SavedDestination
 
 from .models import Attraction, Country, Destination
 
-
 User = get_user_model()
 
 
