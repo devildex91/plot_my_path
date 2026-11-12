@@ -492,7 +492,7 @@ Plot My Paths features will include:
 - Invalid when any field is missing, and invalid for a malformed email
   address.
 
-**results **
+###### core tests results 
 - ran using python manage.py test core.tests --keepdb and all tests passed 
 ----------------------------------------------------------------------
 Ran 16 tests in 17.075s
@@ -500,7 +500,29 @@ Ran 16 tests in 17.075s
 OK
 Preserving test database for alias 'default'...
  
+###### Accounts model testing- the tests 
+**accounts tests ran at commit **
+---
+**Travel Preference**
+- A new preference defaults every interest flag(eg walking,culture) to False, and its string form is "Preferences for <username>
+- A travel style outside the allowed choices is rejected by validation.
+- Deleting a user deletes their preferences
 
+**Saved Destination**
+- Its string form reads "<username> saved <destination>" and a creation timestamp is set automatically.
+- A user cannot save the same destination twice.
+- Different users can save the same destination.
+- Deleting a destination removes saved records pointing at it and deleting the user removes all the saved records.
+###### Accounts model testing- the results 
+python manage.py test accounts --keepdb
+Found 7 test(s).
+Using existing test database for alias 'default'...
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 6.185s
+
+OK
+Preserving test database for alias 'default'...
 
 [back to top](#plot-my-path)
 #### Contrast tests 
