@@ -1,0 +1,18 @@
+{% load django_vite %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="fantasy">
+  <head>
+    {% vite_react_refresh %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plot My Path</title>
+    <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
+  </head>
+  <body class="min-h-screen bg-base-100">
+    <div id="onboarding"></div>
+
+    {% vite_asset 'assets/js/main.jsx' %}
+  </body>
+</html>
