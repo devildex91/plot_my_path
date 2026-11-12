@@ -462,7 +462,7 @@ Plot My Paths features will include:
 ---
 ###### Core Tests-The Tests
 ---
-**core tests ran at commit  **
+**core tests ran at commit 173448e**
  **Pages Tests**
 
 - The landing page and onboarding page load for anyone and use their
