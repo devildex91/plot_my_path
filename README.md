@@ -266,6 +266,112 @@ This suits a travel app because people use it in different contexts: planning at
 [back to top](#plot-my-path)
 #### Database Architecture
 ---
+
+<details>
+<summary> Database Architecture </summary>
+
+The backend application uses a relational database structure built with Django. Below is a description of the database entities shown in the ERD diagram above. The User model is provided by Django and django-allauth, so it is not described here.
+
+###### TravelPreference Model
+
+- user: A ForeignKey linking the preferences to the user's account, using models.CASCADE so they are removed if the user is deleted.
+- travel_style: A CharField with a 50-character limit, restricted to a set of choices (adventure, relaxation, city break, culture, food & drink and nature).
+- walking_preference, culture, food, nature, history, nightlife, family_friendly, solo_travel: BooleanFields that record the user's interests, each defaulting to False.
+
+###### SavedDestination Model
+
+- user: A ForeignKey linking the saved item to a user, with the related name saved_destinations and cascading deletes.
+- destination: A ForeignKey linking the saved item to a Destination, with the related name saved_by_users and cascading deletes.
+- created_at: A DateTimeField that records when the destination was saved, set automatically.
+- Meta: A unique_together constraint on user and destination to stop the same destination being saved twice.
+
+###### Country Model
+
+- name: A CharField with a 100-character limit that stores the country name and is used as the natural key when loading fixtures.
+- code: A CharField with a 3-character limit that stores the ISO country code.
+- continent: A CharField with a 50-character limit that is used to filter destinations.
+
+###### Destination Model
+
+- country: A ForeignKey to the Country model with the related name destinations and cascading deletes.
+- name: A CharField with a 100-character limit.
+- slug: A unique SlugField used as the natural key for fixtures and to build the Cloudinary image address.
+- description: A TextField holding the destination description.
+- latitude and longitude: DecimalFields (9 digits, 6 decimal places) used for weather lookups.
+- average_cost_per_day: A DecimalField (10 digits, 2 decimal places) storing the estimated daily cost.
+- get_image_url: A property that builds the Cloudinary image address from the slug so images do not need to be stored in the database.
+
+###### Attraction Model
+
+- destination: A ForeignKey to the Destination model with the related name attractions and cascading deletes.
+- name, slug, description: Fields storing the attraction name, its slug and a full description.
+- category: A CharField with a 50-character limit.
+- latitude and longitude: DecimalFields (9 digits, 6 decimal places) storing the attraction's location.
+- average_visit_minutes: An IntegerField storing how long a visit usually takes.
+- entry_cost: A DecimalField (10 digits, 2 decimal places) storing the entry price.
+- rating: An optional DecimalField (3 digits, 2 decimal places) which can be left blank or null.
+- opening_time and closing_time: TimeFields storing when the attraction is open.
+- Meta: A unique_together constraint on destination and slug.
+- get_image_url: A property that builds the Cloudinary image address from the slug.
+
+###### Trip Model
+
+- user: A ForeignKey to the user who owns the trip, with the related name trips and cascading deletes.
+- destination: A ForeignKey to the Destination model with the related name trips and cascading deletes.
+- name: A CharField with a 150-character limit.
+- start_date and end_date: DateFields storing the trip dates.
+- budget: A DecimalField (10 digits, 2 decimal places) storing the user's budget.
+- created_at and updated_at: DateTimeFields set automatically when the trip is created and updated.
+
+###### TripDay Model
+
+- trip: A ForeignKey to the Trip model with the related name trip_days and cascading deletes.
+- date: A DateField storing the calendar date of the day.
+- day_number: An IntegerField storing the day's position within the trip.
+- notes: An optional TextField for the user's notes.
+
+###### PlannedActivity Model
+
+- trip_day: A ForeignKey to the TripDay model with the related name planned_activities and cascading deletes.
+- attraction: A ForeignKey to the Attraction model with the related name planned_activities and cascading deletes.
+- start_time and end_time: TimeFields storing when the activity takes place.
+- order: An IntegerField that sets the position of the activity within the day.
+- notes: An optional TextField for the user's notes.
+- status: A CharField with a 50-character limit, defaulting to "scheduled".
+- Meta: Orders activities by the order field.
+
+###### Recommendation Model
+
+- user: A ForeignKey to the user receiving the recommendation, with the related name recommendations and cascading deletes.
+- trip: A ForeignKey to the Trip model with the related name recommendations and cascading deletes.
+- attraction: A ForeignKey to the Attraction model with the related name recommendations and cascading deletes.
+- score: A DecimalField (5 digits, 2 decimal places) showing how well the attraction matches the user's preferences.
+- reason: A TextField limited to 200 characters explaining why the attraction was recommended.
+- created_at: A DateTimeField set automatically when the recommendation is created.
+- Meta: Orders recommendations from the highest score to the lowest.
+
+###### Payment Model
+
+- user: A ForeignKey to the user who paid, with the related name payments and cascading deletes.
+- stripe_payment_id: An optional, unique CharField (255 characters) storing the Stripe payment ID, which also stops the same payment being recorded twice.
+- amount: A PositiveIntegerField storing the amount in pence.
+- currency: A CharField with a 3-character limit, defaulting to "gbp".
+- status: A CharField restricted to pending, succeeded, failed or refunded, defaulting to pending.
+- created_at: A DateTimeField set automatically when the payment is recorded.
+- amount_pounds: A property that converts the stored pence amount into pounds.
+
+###### PremiumMembership Model
+
+- user: A OneToOneField to the user with the related name membership, so each user can only have one membership.
+- payment: An optional OneToOneField to the Payment model that uses models.SET_NULL so the membership remains if the payment record is removed.
+- status: A CharField restricted to active, inactive, cancelled, expired or past due, defaulting to inactive.
+- stripe_customer_id: An optional, unique CharField (255 characters) storing the Stripe customer ID.
+- started_at: An optional DateTimeField recording when premium access began, which is used to work out refund eligibility.
+- created_at: A DateTimeField set automatically when the membership record is created.
+- is_active: A property that returns True when the status is active.
+
+</details>
+
 [back to top](#plot-my-path)
 #### Wireframes 
 ---
@@ -287,8 +393,6 @@ Mobile Wireframes
 - ![destination detail page](/static/images/readme-img/mobile-destination-detail.png)
 - Create plan page
 - ![create page](/static/images/readme-img/mobile-create-plan.png)
-- Trip summary page
-- ![trip summary page](/static/images/readme-img/mobile-trip-summary.png)
 - Profile page
 - ![profile page](/static/images/readme-img/mobile-profile.png)
 
