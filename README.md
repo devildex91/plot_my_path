@@ -597,7 +597,7 @@ OK
 Preserving test database for alias 'default'...
 
 ###### Trips model Testing-The Tests 
-Trips model testing carried out at **commit ** 
+Trips model testing carried out at **commit 9bc6522** 
 
 External calls are mocked or disabled (the weather API is patched or its key
 is blanked), so no real requests are made during testing.
