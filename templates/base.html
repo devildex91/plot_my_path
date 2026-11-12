@@ -1,13 +1,61 @@
 {% load django_vite %}
+{% load static %}
 
-<html>
-  <head>
-    <title>Getting Started with Django and Vite</title>
-    {% vite_hmr_client %}
-    {% vite_asset 'assets/styles/style.css' %}
-  </head>
-  <body>
-  <div id="root" class = "bg-primary"></div>
-  {% vite_asset 'assets/js/main.jsx' %}
-  </body>
+<!DOCTYPE html>
+<html lang="en" data-theme="fantasy">
+
+<head>
+    {% vite_react_refresh %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/cbfde23805.js" crossorigin="anonymous"></script>
+    
+    <title>
+        {% block title %}Plot My Path{% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
+</head>
+
+
+<body class=" min-h-screen bg-base-100 flex flex-col max-w-full overflow-x-hidden">
+
+    <header>
+       {% block header %}
+       {% endblock %}
+    </header>
+
+    <main class="flex-grow pb-[65px] sm:pb-0 sm:pt-[65px]">
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-info">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    
+<nav class="navbar bg-base-100 shadow-sm mt-auto border-t border-base-200 w-full box-border h-[65px] fixed bottom-0 left-0 sm:top-0 sm:bottom-auto border-t-2 border-primary sm:border-t-0 sm:border-b-2 ">
+    <div class="flex justify-around items-center py-2 w-full min-w-0 gap-1 primary">
+        <a href="/home" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Home">
+            <i class="fa-solid fa-house"></i><p class="text-xs">Home</p>
+        </a>
+        <a href= "" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Trips">
+            <i class="fa-solid fa-briefcase primary"></i><p class="text-xs">Trips</p>
+        </a>
+        <a href="" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Explore">
+            <i class="fa-solid fa-compass"></i><p class="text-xs">Destinations</p>
+        </a>
+        <a href="" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Profile">
+            <i class="fa-solid fa-user"></i><p class="text-xs">Profile</p>
+        </a>
+        
+
+        
+    </div>
+</nav>
+
+<footer class ="hidden sm:flex flex-row justify-center items-center text-primary"><div id = "copyright" class = " hidden sm:flex flex-col justify-center items-center"><img src="{% static 'images/pmp-logo.png' %}" alt="Logo" class="w-15 h-auto"><p class = "text-xs">Plan · Explore · Make it Happen</p><p class = "text-xs">©2026</p></div></footer> 
+{% vite_asset 'assets/main.jsx' %}
+</body>
 </html>

@@ -1,11 +1,15 @@
-
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import TemplateView
+
+from core.views import CustomSignUpView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path('accounts/signup/', CustomSignUpView.as_view(), name='account_signup'),
+    path("accounts/", include("allauth.urls")),
     path("", include("core.urls")),
-    path('hello-vite/', TemplateView.as_view(template_name='base.html'))
+    path("destination/", include("destinations.urls")),
+    path("trips/", include("trips.urls")),
+    path("profile/", include("accounts.urls")),
+  
 ]
-

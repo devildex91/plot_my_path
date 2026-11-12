@@ -9,23 +9,45 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+import cloudinary
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#a_xc&pv*14$u&=hhf)v!zrtj-qwn54exg_&d5o1_mia75yjn='
+SECRET_KEY = env("DJANGO_SECRET_KEY")
+GOOGLE_KEY = env("GOOGLE_KEY")
+CLOUDINARY_URL = env("CLOUDINARY_URL")
+WEATHER_API_KEY = env("WEATHER_API_KEY")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")
+STRIPE_PREMIUM_PRICE_ID = env("STRIPE_PREMIUM_PRICE_ID")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET")
+CLOUDINARY_CLOUD_NAME = cloudinary.config().cloud_name
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["127.0.0.1", "localhost"]
+)
+
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[]
+)
 
 
 # Application definition
@@ -38,25 +60,40 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_vite',
+    "allauth_ui",
+     "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+     'widget_tweaks',
+    "slippers",
     'accounts',
     'core',
     'destinations',
     'payments',
     'trips',
+     "crispy_forms",
+    "crispy_daisyui",
+    "formtools",
 
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'daisyui'
+CRISPY_TEMPLATE_PACK = 'daisyui'
 
 TEMPLATES = [
     {
@@ -73,19 +110,60 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {"client_id": "924212257986-995qe9avfshkohh9q7hdo52pf9t60ul4.apps.googleusercontent.com", 
+                "secret": GOOGLE_KEY, 
+                "key": ""},
+                'SCOPE': ['profile','email',],
+                'AUTH_PARAMS': {'access_type': 'online'},
+                'METHOD': 'oath2',
+                'VERIFIED_EMAIL': True, 
+    },
+}
+
+
+AUTHENTICATION_BACKENDS = [
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+LOGIN_URL = '/accounts/login/'
+
+LOGIN_REDIRECT_URL = '/home/'
+
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_LOGIN_METHODS = {'email'}
+
+ACCOUNT_SESSION_REMEMBER = False
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
+
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+ALLAUTH_UI_THEME = "fantasy"
+
+#ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
+
+ACCOUNT_UNIQUE_EMAIL = True
+
+WSGI_APPLICATION = "config.wsgi.application"
+
 
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": env.db(
+        "DATABASE_URL",
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+    )
 }
 
+DATABASES["default"]["CONN_MAX_AGE"] = 600
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
@@ -104,6 +182,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
 
 
 # Internationalization
@@ -134,11 +214,26 @@ DJANGO_VITE = {
     }
 }
 
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
+
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
 MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
+    "default": {
+        "BACKEND": "anymail.backends.brevo.EmailBackend",
+        "OPTIONS": {
+            "api_key": env("BREVO_API_KEY"),
+        },
+    }
 }
+
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+CONTACT_EMAIL = env("CONTACT_EMAIL")
