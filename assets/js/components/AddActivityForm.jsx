@@ -90,16 +90,16 @@ export default function AddActivityForm({
       <div className="collapse-content text-sm">
         <section className="space-y-4 rounded-lg border p-4">
           <h3 className="text-lg font-bold">Add an activity</h3>
-           <label className="flex items-center gap-3 cursor-pointer">
-  <input
-    type="checkbox"
-    className="toggle toggle-primary"
-    checked={forYouOnly}
-    onChange={(event) => setForYouOnly(event.target.checked)}
-    disabled={isAdding}
-  />
-  <span className="font-medium">For you</span>
-</label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              className="toggle toggle-primary"
+              checked={forYouOnly}
+              onChange={(event) => setForYouOnly(event.target.checked)}
+              disabled={isAdding}
+            />
+            <span className="font-medium">For you</span>
+          </label>
           <label className="form-control w-full">
             <span className="label-text mb-2">Attraction</span>
             <select
@@ -112,7 +112,9 @@ export default function AddActivityForm({
               {filteredAttractions.map((attraction) => (
                 <option key={attraction.id} value={attraction.id}>
                   {attraction.name}
-                  {attraction.matches_preferences ? " (Matches your interests)" : ""}
+                  {attraction.matches_preferences
+                    ? " (Matches your interests)"
+                    : ""}
                 </option>
               ))}
             </select>
