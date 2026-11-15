@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import Onboarding from './components/Onboarding.jsx';
 import SearchBar from './components/SearchBar.jsx';
-import { getCookie } from './utils.js';
+import { getCookie } from '../utils.js';
 const rootElement = document.getElementById("onboarding");
 const searchRoot = document.getElementById("searchDiv");
 if (rootElement) {
