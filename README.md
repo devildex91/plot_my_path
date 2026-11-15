@@ -524,6 +524,39 @@ Ran 7 tests in 6.185s
 OK
 Preserving test database for alias 'default'...
 
+###### Accounts View Testing-The Tests 
+Accounts view tests ran at commit ****
+
+- For all the views they are tested to confirm they require login and are subsequentally redirected to the login page if they are not. 
+
+**Profile page**
+- A signed-in user gets the profile template and sees their username.
+
+**Favourite destinations** 
+- A user sees only their own saved destinations and nobody elses.
+
+**Toggle favourite** 
+- The first POST saves the destination and returns {"is_favourite": true} and the second returns false.
+- GET requests are rejected 
+- An unknown destination returns 404.
+- Toggling one users favourite does not effect another users destinations.
+
+###### Accounts Testing-The Results
+--- 
+
+ * Note 7 of the tests are from the previous model testing but have been retested due to being in the same test folder that the model tests are in.
+
+python manage.py test accounts --keepdb
+Found 16 test(s).
+Using existing test database for alias 'default'...
+System check identified no issues (0 silenced).
+
+................
+----------------------------------------------------------------------
+Ran 16 tests in 17.661s
+
+OK
+Preserving test database for alias 'default'...
 ###### Destinations model testing- The tests 
 - destinations model tests ran at commit **72fe012**
 

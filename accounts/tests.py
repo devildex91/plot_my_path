@@ -1,3 +1,4 @@
+
 from decimal import Decimal
 
 from django.conf import settings
@@ -116,3 +117,135 @@ class SavedDestinationModelTests(TestCase):
 
         another_destination.delete()
         self.assertFalse(SavedDestination.objects.exists())
+
+
+# Shared view test setup
+
+class LoggedInTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username="alice", password="pass12345"
+        )
+        cls.other_user = User.objects.create_user(
+            username="bob", password="pass12345"
+        )
+        cls.paris = make_destination()
+        cls.rome = make_destination("Rome", "rome")
+
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    def assert_login_redirect(self, response, url):
+        self.assertRedirects(
+            response,
+            f"{settings.LOGIN_URL}?next={url}",
+            fetch_redirect_response=False,
+        )
+
+
+# View tests
+
+class ProfilePageViewTests(LoggedInTestCase):
+    def test_login_is_required(self):
+        url = reverse("profile")
+        self.client.logout()
+        self.assert_login_redirect(self.client.get(url), url)
+
+    def test_logged_in_user_can_view_profile(self):
+        response = self.client.get(reverse("profile"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/profile_page.html")
+        self.assertContains(response, self.user.username)
+
+
+class FavouriteDestinationsViewTests(LoggedInTestCase):
+    def test_login_is_required(self):
+        url = reverse("favourite_destinations")
+        self.client.logout()
+        self.assert_login_redirect(self.client.get(url), url)
+
+    def test_user_only_sees_their_own_saved_destinations(self):
+        mine = SavedDestination.objects.create(
+            user=self.user,
+            destination=self.paris,
+        )
+        SavedDestination.objects.create(
+            user=self.other_user,
+            destination=self.rome,
+        )
+
+        response = self.client.get(reverse("favourite_destinations"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response, "accounts/favourite_destinations.html"
+        )
+        self.assertEqual(
+            list(response.context["saved_destinations"]),
+            [mine],
+        )
+        self.assertContains(response, "Paris")
+        self.assertNotContains(response, "Rome")
+
+
+class ToggleDestinationFavouriteViewTests(LoggedInTestCase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse(
+            "toggle_destination_favourite",
+            args=[self.paris.id],
+        )
+
+    def test_login_is_required(self):
+        self.client.logout()
+        self.assert_login_redirect(self.client.post(self.url), self.url)
+        self.assertFalse(SavedDestination.objects.exists())
+
+    def test_post_toggles_favourite_on_and_off(self):
+        added = self.client.post(self.url)
+
+        self.assertEqual(added.status_code, 200)
+        self.assertEqual(added.json(), {"is_favourite": True})
+        self.assertTrue(
+            SavedDestination.objects.filter(
+                user=self.user,
+                destination=self.paris,
+            ).exists()
+        )
+
+        removed = self.client.post(self.url)
+
+        self.assertEqual(removed.status_code, 200)
+        self.assertEqual(removed.json(), {"is_favourite": False})
+        self.assertFalse(
+            SavedDestination.objects.filter(
+                user=self.user,
+                destination=self.paris,
+            ).exists()
+        )
+
+    def test_get_is_not_allowed(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 405)
+
+    def test_unknown_destination_returns_404(self):
+        url = reverse("toggle_destination_favourite", args=[99999])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_toggling_does_not_change_another_users_favourite(self):
+        SavedDestination.objects.create(
+            user=self.other_user,
+            destination=self.paris,
+        )
+
+        self.client.post(self.url)
+
+        self.assertTrue(
+            SavedDestination.objects.filter(
+                user=self.other_user,
+                destination=self.paris,
+            ).exists()
+        )
