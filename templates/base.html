@@ -13,6 +13,16 @@
     <title>
         {% block title %}Plot My Path{% endblock %}
     </title>
+        <script>
+  (function () {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute(
+      "data-theme",
+      saved || (prefersDark ? "sunset" : "fantasy")
+    );
+  })();
+</script>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
 </head>
 
@@ -46,7 +56,7 @@
         <a href="{% url 'destination_lists' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Explore">
             <i class="fa-solid fa-compass"></i><p class="text-xs">Destinations</p>
         </a>
-        <a href="" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Profile">
+        <a href="{% url 'profile' %}"  class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Profile">
             <i class="fa-solid fa-user"></i><p class="text-xs">Profile</p>
         </a>
         

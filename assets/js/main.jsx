@@ -19,6 +19,21 @@ if (searchRoot) {
 
 // Standard JS code for django templates not using react 
 
+// Theme toggle
+const toggle = document.getElementById("theme-toggle");
+const root = document.documentElement;
+
+if (toggle) {
+  toggle.checked = root.getAttribute("data-theme") === "sunset";
+
+  toggle.addEventListener("change", () => {
+    const theme = toggle.checked ? "sunset" : "fantasy";
+    root.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  });
+}
+
+
 // Favourite button for Django-rendered destination cards
 document.addEventListener("click", async (e) => {
   const button = e.target.closest(".favourite-btn");
