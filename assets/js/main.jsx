@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import Onboarding from './components/Onboarding.jsx';
 import SearchBar from './components/SearchBar.jsx';
-
+import { getCookie } from './utils.js';
 const rootElement = document.getElementById("onboarding");
 const searchRoot = document.getElementById("searchDiv");
 if (rootElement) {
@@ -74,20 +74,3 @@ document.addEventListener("click", async (e) => {
     button.disabled = false;
   }
 });
-
-// Retrieve Django CSRF cookie
-function getCookie(name) {
-  const cookies = document.cookie.split(";");
-
-  for (const cookie of cookies) {
-    const cookieValue = cookie.trim();
-
-    if (cookieValue.startsWith(name + "=")) {
-      return decodeURIComponent(
-        cookieValue.substring(name.length + 1)
-      );
-    }
-  }
-
-  return null;
-}
