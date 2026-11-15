@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_time
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 
 from destinations.models import Attraction
 
@@ -108,3 +108,26 @@ def add_activity(request, trip_id, day_id):
         },
         status=201,
     )
+
+
+@login_required
+@require_http_methods(["DELETE"])
+@transaction.atomic
+def delete_activity(request, trip_id, activity_id):
+    """Delete an activity owned through the requested trip, then close order gaps."""
+    activity = get_object_or_404(
+        PlannedActivity.objects.select_related("trip_day__trip"),
+        id=activity_id,
+        trip_day__trip_id=trip_id,  
+        trip_day__trip__user=request.user,
+    )
+    day = activity.trip_day
+    activity.delete()
+
+    remaining_activities = day.planned_activities.order_by("start_time")
+    for index, remaining_activity in enumerate(remaining_activities, start=1):
+        if remaining_activity.order != index:
+            remaining_activity.order = index
+            remaining_activity.save(update_fields=["order"])
+
+    return JsonResponse({"success": True, "message": "Activity deleted successfully."})
