@@ -1,4 +1,4 @@
-import { formatActivityTime } from "./utils";
+import { formatActivityTime } from "../../utils";
 
 /** Display the selected day's activities and expose their removal action. */
 export default function ActivityList({

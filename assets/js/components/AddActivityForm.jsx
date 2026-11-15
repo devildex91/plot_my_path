@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatActivityTime, getCookie } from "./utils";
+import { formatActivityTime, getCookie } from "../../utils";
 
 /** Validate and submit a new attraction activity for the currently selected day. */
 export default function AddActivityForm({

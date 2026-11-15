@@ -361,3 +361,31 @@ class AddActivityViewTests(TripsViewTestBase):
         self.assertEqual(PlannedActivity.objects.count(), 1)
 
 
+class ItineraryBuilderViewTests(TripsViewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("itinerary_builder", args=[self.trip.id])
+
+    def test_login_is_required(self):
+        self.client.logout()
+        self.assert_login_redirect(self.client.get(self.url), self.url)
+
+    def test_other_users_trip_returns_404(self):
+        self.client.force_login(self.other)
+        self.assertEqual(self.client.get(self.url).status_code, 404)
+
+    def test_renders_template_and_context(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "trips/itinerary_builder.html")
+        self.assertEqual(response.context["trip"], self.trip)
+
+    def test_days_are_generated_for_whole_trip(self):
+        data = self.client.get(self.url).context["app_data"]
+
+        self.assertEqual(
+            [day["day_number"] for day in data["days"]],
+            [1, 2, 3, 4, 5],
+        )
+        self.assertEqual(self.trip.trip_days.count(), 5)

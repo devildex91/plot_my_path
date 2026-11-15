@@ -1,15 +1,19 @@
 import json
+from datetime import timedelta
 from json import JSONDecodeError
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
+from django.urls import reverse
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_time
 
 from django.views.decorators.http import require_http_methods, require_POST
-
+from accounts.models import TravelPreference
 from destinations.models import Attraction
 
 from .models import PlannedActivity, Trip, TripDay
@@ -132,3 +136,132 @@ def delete_activity(request, trip_id, activity_id):
             remaining_activity.save(update_fields=["order"])
 
     return JsonResponse({"success": True, "message": "Activity deleted successfully."})
+
+
+@transaction.atomic
+def generate_trip_days(trip):
+    """Create any missing calendar days for a trip and return them in order.
+
+    ``get_or_create`` makes this safe to call whenever the itinerary is opened.
+    """
+    current_date = trip.start_date
+    day_number = 1
+
+    while current_date <= trip.end_date:
+        TripDay.objects.get_or_create(
+            trip=trip,
+            date=current_date,
+            defaults={
+                "day_number": day_number,
+            },
+        )
+
+        current_date += timedelta(days=1)
+        day_number += 1
+
+    return trip.trip_days.order_by("day_number")
+
+
+@login_required
+@ensure_csrf_cookie
+def itinerary_builder(request, trip_id):
+    """Render the owner's itinerary with serialized trip, attraction, and weather data."""
+    trip_instance = get_object_or_404(
+        Trip.objects.select_related("destination"),
+        id=trip_id,
+        user=request.user,
+    )
+    destination_attractions = Attraction.objects.filter(
+        destination=trip_instance.destination
+    )
+
+    weather_data = []
+    weather_error = None
+
+    
+    attractions_data = [
+        {
+            "id": attraction.id,
+            "name": attraction.name,
+            "description": attraction.description,
+            "entry_cost": attraction.entry_cost,
+            "image_url": attraction.get_image_url,
+            "category": attraction.category,
+            "latitude": str(attraction.latitude),
+            "longitude": str(attraction.longitude),
+        }
+        for attraction in destination_attractions
+    ]
+    trip_days = generate_trip_days(trip_instance)
+    pref_instance = TravelPreference.objects.filter(user=request.user).first()
+
+    preferences_data = None
+
+    if pref_instance:
+        preferences_data = {
+            "travel_style": pref_instance.travel_style,
+            "walking_preference": pref_instance.walking_preference,
+            "culture": pref_instance.culture,
+            "food": pref_instance.food,
+            "nature": pref_instance.nature,
+            "history": pref_instance.history,
+            "nightlife": pref_instance.nightlife,
+            "family_friendly": pref_instance.family_friendly,
+            "solo_travel": pref_instance.solo_travel,
+        }
+
+    days_data = [
+        {
+            "id": day.id,
+            "date": day.date.isoformat(),
+            "day_number": day.day_number,
+            "notes": day.notes,
+            "add_activity_url": reverse(
+                "add_activity",
+                kwargs={"trip_id": trip_instance.id, "day_id": day.id},
+            ),
+            "activities": [
+                {
+                    "id": activity.id,
+                    "attraction_id": activity.attraction_id,
+                    "start_time": activity.start_time.isoformat(),
+                    "end_time": activity.end_time.isoformat(),
+                    "order": activity.order,
+                    "notes": activity.notes,
+                    "status": activity.status,
+                }
+                for activity in day.planned_activities.all().order_by("order")
+            ],
+        }
+        for day in trip_days
+    ]
+
+    serialized_data = {
+        "trip": {
+            "id": trip_instance.id,
+            "name": trip_instance.name,
+            "start_date": trip_instance.start_date.isoformat(),
+            "end_date": trip_instance.end_date.isoformat(),
+            "budget": str(trip_instance.budget),
+            "destination": {
+                "id": trip_instance.destination.id,
+                "name": str(trip_instance.destination),
+                "latitude": str(trip_instance.destination.latitude),
+                "longitude": str(trip_instance.destination.longitude),
+            },
+        },
+        "preferences": preferences_data,
+        "days": days_data,
+        "attractions": attractions_data,
+        "weather": weather_data,
+        "weather_error": weather_error,
+    }
+
+    return render(
+        request,
+        "trips/itinerary_builder.html",
+        {
+            "trip": trip_instance,
+            "app_data": serialized_data,
+        },
+    )

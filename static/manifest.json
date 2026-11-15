@@ -3,7 +3,10 @@
     "file": "js/app-bundle.js",
     "name": "app",
     "src": "assets/js/main.jsx",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "css/app.css"
+    ]
   },
   "assets/styles/style.css": {
     "file": "css/style.css",
