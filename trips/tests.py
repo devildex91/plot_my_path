@@ -227,3 +227,59 @@ class RecommendationTests(TestCase):
         self.attraction.delete()
 
         self.assertFalse(Recommendation.objects.exists())
+        
+# Shared view test setup
+
+
+class TripsViewTestBase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username="alice", password="pass12345")
+        cls.other = User.objects.create_user(username="bob", password="pass12345")
+        cls.paris = make_destination()
+        cls.rome = make_destination("Rome", "rome")
+        cls.louvre = make_attraction(cls.paris)
+        cls.colosseum = make_attraction(cls.rome, "Colosseum", "colosseum")
+        cls.trip = Trip.objects.create(
+            user=cls.user,
+            destination=cls.paris,
+            name="Paris Break",
+            start_date=datetime.date(2026, 12, 1),
+            end_date=datetime.date(2026, 12, 5),
+            budget=Decimal("1000.00"),
+        )
+        cls.day = TripDay.objects.create(
+            trip=cls.trip,
+            date=datetime.date(2026, 12, 1),
+            day_number=1,
+        )
+
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    def assert_login_redirect(self, response, url):
+        self.assertRedirects(
+            response,
+            f"{settings.LOGIN_URL}?next={url}",
+            fetch_redirect_response=False,
+        )
+
+# Views
+
+
+class MyTripsViewTests(TripsViewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("my_trips")
+
+    def test_login_is_required(self):
+        self.client.logout()
+        self.assert_login_redirect(self.client.get(self.url), self.url)
+
+    def test_user_only_sees_their_own_trips(self):
+        make_trip(self.other, self.paris, "Bob's trip")
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["trips"]), [self.trip])

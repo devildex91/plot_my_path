@@ -50,7 +50,7 @@
         <a href="/home" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Home">
             <i class="fa-solid fa-house"></i><p class="text-xs">Home</p>
         </a>
-        <a href= "" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Trips">
+        <a href= "{% url 'my_trips' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Trips">
             <i class="fa-solid fa-briefcase primary"></i><p class="text-xs">Trips</p>
         </a>
         <a href="{% url 'destination_lists' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Explore">
