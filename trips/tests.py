@@ -227,7 +227,7 @@ class RecommendationTests(TestCase):
         self.attraction.delete()
 
         self.assertFalse(Recommendation.objects.exists())
-        
+
 # Shared view test setup
 
 
@@ -283,3 +283,28 @@ class MyTripsViewTests(TripsViewTestBase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context["trips"]), [self.trip])
+
+
+class DeleteTripViewTests(TripsViewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("delete_trip", args=[self.trip.id])
+
+    def test_post_deletes_trip_and_redirects(self):
+        response = self.client.post(self.url)
+
+        self.assertRedirects(
+            response,
+            reverse("my_trips"),
+            fetch_redirect_response=False,
+        )
+        self.assertFalse(Trip.objects.filter(pk=self.trip.pk).exists())
+
+    def test_cannot_delete_another_users_trip(self):
+        self.client.force_login(self.other)
+
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(Trip.objects.filter(pk=self.trip.pk).exists())
+
