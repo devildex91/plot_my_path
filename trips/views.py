@@ -1,16 +1,19 @@
 import json
 from json import JSONDecodeError
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_time
-from django.contrib import messages
-from .models import Trip, TripDay, PlannedActivity
+from django.views.decorators.http import require_POST
+
 from destinations.models import Attraction
+
+from .models import PlannedActivity, Trip, TripDay
+
+
 @login_required
 def my_trips(request):
     """Render the signed-in user's trips, with the most recent start date first."""
