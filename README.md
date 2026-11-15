@@ -564,7 +564,7 @@ OK
 Preserving test database for alias 'default'...
 
 ###### Destinations-Views Testing The Tests 
-- Destination view tests ran at commit ** **  
+- Destination view tests ran at commit **3482b9a15**  
 
 ###### Views
 
@@ -600,7 +600,7 @@ login page.
   ###### Destinations Views- The Results 
 
   * Note 18 of the tests are from the previous model testing but have been retested due to being in the same test folder that the model tests are in
-  
+
 python manage.py test destinations --keepdb
 
 ...............................

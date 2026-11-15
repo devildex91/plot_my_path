@@ -43,7 +43,7 @@
         <a href= "" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Trips">
             <i class="fa-solid fa-briefcase primary"></i><p class="text-xs">Trips</p>
         </a>
-        <a href="" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Explore">
+        <a href="{% url 'destination_lists' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Explore">
             <i class="fa-solid fa-compass"></i><p class="text-xs">Destinations</p>
         </a>
         <a href="" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Profile">
@@ -56,6 +56,6 @@
 </nav>
 
 <footer class ="hidden sm:flex flex-row justify-center items-center text-primary"><div id = "copyright" class = " hidden sm:flex flex-col justify-center items-center"><img src="{% static 'images/pmp-logo.png' %}" alt="Logo" class="w-15 h-auto"><p class = "text-xs">Plan · Explore · Make it Happen</p><p class = "text-xs">©2026</p></div></footer> 
-{% vite_asset 'assets/main.jsx' %}
+{% vite_asset 'assets/js/main.jsx' %}
 </body>
 </html>

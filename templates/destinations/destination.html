@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class ="title text-2xl text-primary text-center font-extrabold">Destinations</h1>
+<form method="GET">
+    <div id="continent-choice" class="join flex flex-row justify-evenly flex-wrap">
+
+        <input
+            class="join-item btn btn-primary"
+            type="radio"
+            name="continent"
+            value="all"
+            aria-label="All"
+            onchange="this.form.submit()"
+            {% if selected_continent == 'all' %}checked{% endif %}
+        />
+
+        {% for continent in continents %}
+            <input
+                class="join-item btn btn-primary"
+                type="radio"
+                name="continent"
+                value="{{ continent }}"
+                aria-label="{{ continent }}"
+                onchange="this.form.submit()"
+                {% if selected_continent == continent %}checked{% endif %}
+            />
+        {% endfor %}
+
+    </div>
+</form>
+<section>
+  <div class = "sm:grid grid-cols-2 md:grid-cols-3 text-primary">
+{% for destination in destinations %}
+
+<div class="card card-side bg-base-200 shadow-sm m-2 border border-primary">
+  <figure class="w-1/2">
+    <img
+    src="{{destination.get_image_url}}"alt="{{destination.name}}">
+  </figure>
+  <div class="card-body w-1/3">
+    <h2 class="card-title">{{destination.name}}</h2>
+    
+    <p>Average cost per day:£{{destination.average_cost_per_day}}</p>
+    <div class="card-actions justify-end">
+      <a href="{% url 'details' destination.id %}" class = "btn btn-primary p-0 ">View Details</a>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+</section>
+ 
+
+{% endblock %}
