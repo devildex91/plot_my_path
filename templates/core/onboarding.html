@@ -9,9 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plot My Path</title>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
-    <style>
+    <script>
        window.DJANGO_STATIC_URL = "{% static '' %}" 
-    </style>
+              
+  (function () {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute(
+      "data-theme",
+      saved || (prefersDark ? "sunset" : "fantasy")
+    );
+  })();
+</script>
+   
   </head>
   <body class="min-h-screen bg-base-100">
     <div id="onboarding" data-home-url="{% url 'home' %}"></div>
