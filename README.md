@@ -563,6 +563,54 @@ Ran 18 tests in 2.081s
 OK
 Preserving test database for alias 'default'...
 
+###### Destinations-Views Testing The Tests 
+- Destination view tests ran at commit ** **  
+
+###### Views
+
+All four views require login: logged-out visitors are redirected to the
+login page.
+
+**Destination list**
+- By default every destination is shown and the selected continent is "all".
+- Filtering by continent returns only matching destinations, ignores letter
+  case, and gives an empty list (not an error) for an unknown continent.
+- The continent dropdown values are distinct and sorted alphabetically.
+
+**Destination detail**
+- The correct destination and template are used, and an unknown ID returns 404.
+- Only that destination's attractions are listed.
+- The "is favourite" flag is false by default, true once the current user has
+  saved the destination, and not affected by other users' saves.
+
+**Search (JSON)**
+- A missing or blank query returns an empty result list.
+- Matching is partial and case-insensitive, and no match gives an empty list.
+- Each result contains the id, name, slug, description, cost (as a string)
+  and image URL.
+- Results are capped at 10.
+
+**Popular destinations (JSON)**
+- Returns an empty list when there are no destinations, all of them when
+  there are fewer than three, and at most three otherwise. The selection is
+  random, so the tests check counts rather than which destinations come back.
+- This view has no URL yet, so the tests call it directly with Django's
+  RequestFactory.
+
+  ###### Destinations Views- The Results 
+
+  * Note 18 of the tests are from the previous model testing but have been retested due to being in the same test folder that the model tests are in
+  
+python manage.py test destinations --keepdb
+
+...............................
+----------------------------------------------------------------------
+Ran 42 tests in 14.918s
+
+OK
+Preserving test database for alias 'default'...
+(.venv) 
+
 ###### Payments Model Testing-The Tests
 - payments model tests ran at commit **72fe012**
 --- 

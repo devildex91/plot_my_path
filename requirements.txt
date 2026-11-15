@@ -5,6 +5,7 @@ cffi==2.1.1
 charset-normalizer==3.5.2
 click==8.5.1
 cloudinary==1.47.0
+coverage==7.17.3
 crispy-daisyui==0.13.0
 cryptography==50.0.2
 dj-database-url==3.1.2
@@ -24,8 +25,7 @@ packaging==26.3
 pathspec==1.1.1
 pillow==13.0.0
 platformdirs==4.14.5
-psycopg==3.3.9
-psycopg-binary==3.3.9
+psycopg2-binary==2.9.13
 pycparser==3.12
 PyJWT==2.15.1
 pytokens==0.4.1

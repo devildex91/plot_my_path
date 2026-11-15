@@ -7,7 +7,6 @@ from accounts.models import SavedDestination
 from .models import Country, Destination
 
 
-# Create your views here.
 @login_required
 def destination_lists(request):
     """Render destinations, optionally filtered by the selected continent."""
