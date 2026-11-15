@@ -1,7 +1,6 @@
 import datetime
 import json
 from decimal import Decimal
-from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -11,13 +10,9 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from accounts.models import TravelPreference
 from destinations.models import Attraction, Country, Destination
-from payments.models import PremiumMembership
 
-
-from .models import PlannedActivity, Trip, TripDay, Recommendation
-
+from .models import PlannedActivity, Recommendation, Trip, TripDay
 
 User = get_user_model()
 
@@ -307,4 +302,62 @@ class DeleteTripViewTests(TripsViewTestBase):
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Trip.objects.filter(pk=self.trip.pk).exists())
+
+class AddActivityViewTests(TripsViewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("add_activity", args=[self.trip.id, self.day.id])
+        self.valid = {
+            "attraction_id": self.louvre.id,
+            "start_time": "10:00",
+            "end_time": "12:00",
+        }
+
+    def post_activity(self, payload):
+        return self.client.post(
+            self.url,
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+
+    def test_login_is_required(self):
+        self.client.logout()
+
+        response = self.post_activity(self.valid)
+
+        self.assert_login_redirect(response, self.url)
+        self.assertFalse(PlannedActivity.objects.exists())
+
+    def test_other_users_trip_returns_404(self):
+        self.client.force_login(self.other)
+
+        response = self.post_activity(self.valid)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(PlannedActivity.objects.exists())
+
+    def test_missing_fields_return_400(self):
+        for missing in self.valid:
+            with self.subTest(missing=missing):
+                payload = {
+                    key: value for key, value in self.valid.items() if key != missing
+                }
+                response = self.post_activity(payload)
+
+                self.assertEqual(response.status_code, 400)
+                self.assertIn("Missing", response.json()["error"])
+
+    def test_valid_post_creates_activity(self):
+        response = self.post_activity(self.valid)
+
+        self.assertEqual(response.status_code, 201)
+        activity = response.json()["activity"]
+        self.assertEqual(activity["attraction_id"], self.louvre.id)
+        self.assertEqual(activity["start_time"], "10:00:00")
+        self.assertEqual(activity["end_time"], "12:00:00")
+        self.assertEqual(activity["order"], 1)
+        self.assertEqual(activity["status"], "scheduled")
+        self.assertIsNone(activity["notes"])
+        self.assertEqual(PlannedActivity.objects.count(), 1)
+
 
