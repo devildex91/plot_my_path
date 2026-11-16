@@ -7,7 +7,9 @@ from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+
 from .models import Payment, PremiumMembership
+from .views import refund_allowed
 
 User = get_user_model()
 
@@ -92,21 +94,47 @@ class PremiumMembershipModelTests(TestCase):
         self.assertEqual(self.user.membership, self.membership)
         self.assertEqual(self.payment.membership, self.membership)
 
-        # View tests
 
-
-class PaymentFailedTests(TestCase):
-    def test_payment_failed_page_loads(self):
-        response = self.client.get(reverse("payment_failed"))
+# View tests
+class CheckoutTests(LoggedInTestCase):
+    def test_checkout_page_loads(self):
+        response = self.client.get(reverse("checkout"))
         self.assertEqual(response.status_code, 200)
 
-    def test_payment_failed_displays_error_message(self):
-        response = self.client.get(
-            reverse("payment_failed"), {"error": "Card declined"}
+    def test_checkout_requires_login(self):
+        self.client.logout()
+        response = self.client.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_active_member_is_redirected_from_checkout(self):
+        PremiumMembership.objects.create(user=self.user, status="active")
+        response = self.client.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 302)
+
+    @patch("payments.views.stripe.checkout.Session.create")
+    def test_create_checkout_session(self, mock_create):
+        mock_create.return_value.url = "https://stripe.test/checkout"
+
+        response = self.client.post(reverse("create_checkout_session"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["checkout_url"], "https://stripe.test/checkout"
         )
+        mock_create.assert_called_once()
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["error_message"], "Card declined")
+    @patch("payments.views.stripe.checkout.Session.create")
+    def test_active_member_cannot_create_checkout(self, mock_create):
+        PremiumMembership.objects.create(user=self.user, status="active")
+
+        response = self.client.post(reverse("create_checkout_session"))
+
+        self.assertEqual(response.status_code, 409)
+        mock_create.assert_not_called()
+
+    def test_create_checkout_session_requires_post(self):
+        response = self.client.get(reverse("create_checkout_session"))
+        self.assertEqual(response.status_code, 405)
 
 
 class PaymentSuccessTests(LoggedInTestCase):
@@ -170,45 +198,18 @@ class PaymentSuccessTests(LoggedInTestCase):
         self.assertEqual(PremiumMembership.objects.count(), 1)
 
 
-class CheckoutTests(LoggedInTestCase):
-    def test_checkout_page_loads(self):
-        response = self.client.get(reverse("checkout"))
+class PaymentFailedTests(TestCase):
+    def test_payment_failed_page_loads(self):
+        response = self.client.get(reverse("payment_failed"))
         self.assertEqual(response.status_code, 200)
 
-    def test_checkout_requires_login(self):
-        self.client.logout()
-        response = self.client.get(reverse("checkout"))
-        self.assertEqual(response.status_code, 302)
-
-    def test_active_member_is_redirected_from_checkout(self):
-        PremiumMembership.objects.create(user=self.user, status="active")
-        response = self.client.get(reverse("checkout"))
-        self.assertEqual(response.status_code, 302)
-
-    @patch("payments.views.stripe.checkout.Session.create")
-    def test_create_checkout_session(self, mock_create):
-        mock_create.return_value.url = "https://stripe.test/checkout"
-
-        response = self.client.post(reverse("create_checkout_session"))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json()["checkout_url"], "https://stripe.test/checkout"
+    def test_payment_failed_displays_error_message(self):
+        response = self.client.get(
+            reverse("payment_failed"), {"error": "Card declined"}
         )
-        mock_create.assert_called_once()
 
-    @patch("payments.views.stripe.checkout.Session.create")
-    def test_active_member_cannot_create_checkout(self, mock_create):
-        PremiumMembership.objects.create(user=self.user, status="active")
-
-        response = self.client.post(reverse("create_checkout_session"))
-
-        self.assertEqual(response.status_code, 409)
-        mock_create.assert_not_called()
-
-    def test_create_checkout_session_requires_post(self):
-        response = self.client.get(reverse("create_checkout_session"))
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["error_message"], "Card declined")
 
 
 class StripeWebhookTests(TestCase):
@@ -313,3 +314,70 @@ class StripeWebhookTests(TestCase):
     def test_webhook_requires_post(self):
         response = self.client.get(self.webhook_url)
         self.assertEqual(response.status_code, 405)
+
+
+class RefundTests(LoggedInTestCase):
+    def setUp(self):
+        super().setUp()
+        self.payment = Payment.objects.create(
+            user=self.user, stripe_payment_id="pi_123", amount=1999, status="succeeded"
+        )
+
+        self.membership = PremiumMembership.objects.create(
+            user=self.user,
+            payment=self.payment,
+            status="active",
+            started_at=timezone.now(),
+        )
+
+    def test_refund_allowed_within_14_days(self):
+        self.assertTrue(refund_allowed(self.membership))
+
+    def test_refund_not_allowed_without_start_date(self):
+        self.membership.started_at = None
+        self.assertFalse(refund_allowed(self.membership))
+
+    def test_refund_not_allowed_after_14_days(self):
+        self.membership.started_at = timezone.now() - timedelta(days=15)
+        self.assertFalse(refund_allowed(self.membership))
+
+    def test_refund_requires_post(self):
+        response = self.client.get(reverse("request_refund"))
+        self.assertEqual(response.status_code, 405)
+
+    def test_refund_requires_login(self):
+        self.client.logout()
+        response = self.client.post(reverse("request_refund"))
+        self.assertEqual(response.status_code, 302)
+
+    @patch("payments.views.stripe.Refund.create")
+    def test_successful_refund_deactivates_membership(self, mock_refund):
+        response = self.client.post(reverse("request_refund"))
+
+        self.payment.refresh_from_db()
+        self.membership.refresh_from_db()
+
+        self.assertEqual(response.status_code, 302)
+        mock_refund.assert_called_once()
+        self.assertEqual(self.payment.status, "refunded")
+        self.assertEqual(self.membership.status, "inactive")
+
+    @patch("payments.views.stripe.Refund.create")
+    def test_refund_is_not_processed_for_old_membership(self, mock_refund):
+        self.membership.started_at = timezone.now() - timedelta(days=15)
+        self.membership.save()
+
+        response = self.client.post(reverse("request_refund"))
+
+        self.assertEqual(response.status_code, 302)
+        mock_refund.assert_not_called()
+
+    @patch("payments.views.stripe.Refund.create")
+    def test_refund_is_not_processed_without_active_membership(self, mock_refund):
+        self.membership.status = "inactive"
+        self.membership.save()
+
+        response = self.client.post(reverse("request_refund"))
+
+        self.assertEqual(response.status_code, 302)
+        mock_refund.assert_not_called()
