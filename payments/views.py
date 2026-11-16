@@ -4,8 +4,11 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils import timezone
+from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 from .models import Payment, PremiumMembership
 
@@ -77,3 +80,42 @@ def fulfill_checkout(session):
                 },
             )
     return user
+
+def has_active_membership(user):
+    """Return whether the user already has a membership in the active state."""
+    return PremiumMembership.objects.filter(user=user, status="active").exists()
+
+@login_required
+def checkout(request):
+    """Show the checkout page unless the signed-in user is already premium."""
+    if has_active_membership(request.user):
+        messages.info(request, "You're already a premium member.")
+        return redirect("profile")
+    return render(request, 'payments/checkout.html')
+
+@login_required
+@require_POST
+def create_checkout_session(request):
+    """Create a one-time Stripe Checkout session for the signed-in user."""
+    if has_active_membership(request.user):
+        return JsonResponse(
+            {"error": "You already have an active premium membership."},
+            status=409,
+        )
+
+    try:
+        session = stripe.checkout.Session.create(
+            line_items=[{
+                'price': STRIPE_PREMIUM_PRICE_ID,
+                'quantity': 1,
+            }],
+            mode="payment",
+            success_url=request.build_absolute_uri(reverse('payment_success'))
+            + "?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=request.build_absolute_uri(reverse('payment_failed')),
+            client_reference_id=str(request.user.id),
+        )
+        return JsonResponse({'checkout_url': session.url})
+
+    except stripe.StripeError as e:
+        return JsonResponse({"error": str(e)}, status=400)

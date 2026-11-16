@@ -96,3 +96,28 @@ document.addEventListener("click", async (e) => {
     button.disabled = false;
   }
 });
+
+// Payment flow event handler
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("#checkout-button");
+  if (!btn || btn.disabled) return;
+
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(btn.dataset.url, {
+      method: "POST",
+      headers: { "X-CSRFToken": btn.dataset.csrf },
+    });
+    const data = await res.json();
+
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url;
+      return;
+    }
+    alert(data.error || "Error: Unable to proceed to payment");
+  } catch (err) {
+    alert("Payment processing failed");
+  }
+  btn.disabled = false;
+});

@@ -119,3 +119,90 @@ class PaymentSuccessTests(LoggedInTestCase):
                 "payment_status": "paid",
             }
         )
+
+    def test_missing_session_id_returns_error(self):
+        response = self.client.get(reverse("payment_success"))
+        self.assertEqual(response.status_code, 400)
+
+    @patch("payments.views.stripe.checkout.Session.retrieve")
+    def test_successful_payment_creates_membership(self, mock_retrieve):
+        mock_retrieve.return_value = self.session
+
+        response = self.client.get(reverse("payment_success"), {"session_id": "cs_123"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Payment.objects.filter(stripe_payment_id="pi_123").exists())
+        self.assertTrue(
+            PremiumMembership.objects.filter(user=self.user, status="active").exists()
+        )
+
+    @patch("payments.views.stripe.checkout.Session.retrieve")
+    def test_session_belonging_to_another_user_is_rejected(self, mock_retrieve):
+        mock_retrieve.return_value = CheckoutSession(
+            {**self.session, "client_reference_id": "999"}
+        )
+
+        response = self.client.get(reverse("payment_success"), {"session_id": "cs_123"})
+
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(Payment.objects.exists())
+
+    @patch("payments.views.stripe.checkout.Session.retrieve")
+    def test_unpaid_session_is_rejected(self, mock_retrieve):
+        self.session["payment_status"] = "unpaid"
+        mock_retrieve.return_value = self.session
+
+        response = self.client.get(reverse("payment_success"), {"session_id": "cs_123"})
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(Payment.objects.exists())
+
+    @patch("payments.views.stripe.checkout.Session.retrieve")
+    def test_same_payment_is_not_recorded_twice(self, mock_retrieve):
+        mock_retrieve.return_value = self.session
+
+        self.client.get(reverse("payment_success"), {"session_id": "cs_123"})
+        self.client.get(reverse("payment_success"), {"session_id": "cs_123"})
+
+        self.assertEqual(Payment.objects.count(), 1)
+        self.assertEqual(PremiumMembership.objects.count(), 1)
+
+class CheckoutTests(LoggedInTestCase):
+    def test_checkout_page_loads(self):
+        response = self.client.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_checkout_requires_login(self):
+        self.client.logout()
+        response = self.client.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_active_member_is_redirected_from_checkout(self):
+        PremiumMembership.objects.create(user=self.user, status="active")
+        response = self.client.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 302)
+
+    @patch("payments.views.stripe.checkout.Session.create")
+    def test_create_checkout_session(self, mock_create):
+        mock_create.return_value.url = "https://stripe.test/checkout"
+
+        response = self.client.post(reverse("create_checkout_session"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["checkout_url"], "https://stripe.test/checkout"
+        )
+        mock_create.assert_called_once()
+
+    @patch("payments.views.stripe.checkout.Session.create")
+    def test_active_member_cannot_create_checkout(self, mock_create):
+        PremiumMembership.objects.create(user=self.user, status="active")
+
+        response = self.client.post(reverse("create_checkout_session"))
+
+        self.assertEqual(response.status_code, 409)
+        mock_create.assert_not_called()
+
+    def test_create_checkout_session_requires_post(self):
+        response = self.client.get(reverse("create_checkout_session"))
+        self.assertEqual(response.status_code, 405)
