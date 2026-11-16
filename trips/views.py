@@ -33,6 +33,7 @@ FORMS = [
     ("review", ReviewForm),
 ]
 
+
 @login_required
 def my_trips(request):
     """Render the signed-in user's trips, with the most recent start date first."""
@@ -137,7 +138,7 @@ def delete_activity(request, trip_id, activity_id):
     activity = get_object_or_404(
         PlannedActivity.objects.select_related("trip_day__trip"),
         id=activity_id,
-        trip_day__trip_id=trip_id,  
+        trip_day__trip_id=trip_id,
         trip_day__trip__user=request.user,
     )
     day = activity.trip_day
@@ -213,7 +214,6 @@ def itinerary_builder(request, trip_id):
     else:
         weather_error = "Destination coordinates are unavailable."
 
-    
     attractions_data = [
         {
             "id": attraction.id,
@@ -341,5 +341,3 @@ def get_destination_weather(latitude, longitude, start_date, end_date):
         }
         for day in data.get("days", [])
     ]
-
-

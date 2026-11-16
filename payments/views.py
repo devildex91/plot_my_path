@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from .models import Payment, PremiumMembership
@@ -119,3 +120,30 @@ def create_checkout_session(request):
 
     except stripe.StripeError as e:
         return JsonResponse({"error": str(e)}, status=400)
+
+
+
+
+@csrf_exempt
+@require_POST
+def stripe_webhook(request):
+    """Accept signed Stripe events and fulfill completed, paid Checkout sessions.Also checks for refunds and partial refunds"""
+    payload = request.body
+    sig_header = request.headers.get("Stripe-Signature")
+
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except ValueError:
+        return JsonResponse({"error": "Invalid payload"}, status=400)
+    except stripe.SignatureVerificationError:
+        return JsonResponse({"error": "Invalid signature"}, status=400)
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        if session["payment_status"] == "paid":
+            try:
+                fulfill_checkout(session)
+            except get_user_model().DoesNotExist:
+                print("Webhook: no user for", session["client_reference_id"])
+
+    return JsonResponse({"status": "success"}, status=200)

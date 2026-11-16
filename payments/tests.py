@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
-
+from django.utils import timezone
 from .models import Payment, PremiumMembership
 
 User = get_user_model()
@@ -92,7 +92,8 @@ class PremiumMembershipModelTests(TestCase):
         self.assertEqual(self.user.membership, self.membership)
         self.assertEqual(self.payment.membership, self.membership)
 
-        #View tests
+        # View tests
+
 
 class PaymentFailedTests(TestCase):
     def test_payment_failed_page_loads(self):
@@ -106,6 +107,7 @@ class PaymentFailedTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["error_message"], "Card declined")
+
 
 class PaymentSuccessTests(LoggedInTestCase):
     def setUp(self):
@@ -167,6 +169,7 @@ class PaymentSuccessTests(LoggedInTestCase):
         self.assertEqual(Payment.objects.count(), 1)
         self.assertEqual(PremiumMembership.objects.count(), 1)
 
+
 class CheckoutTests(LoggedInTestCase):
     def test_checkout_page_loads(self):
         response = self.client.get(reverse("checkout"))
@@ -205,4 +208,108 @@ class CheckoutTests(LoggedInTestCase):
 
     def test_create_checkout_session_requires_post(self):
         response = self.client.get(reverse("create_checkout_session"))
+        self.assertEqual(response.status_code, 405)
+
+
+class StripeWebhookTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="alice", password="pass12345")
+        self.webhook_url = reverse("stripe_webhook")
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_paid_checkout_webhook_creates_payment(self, mock_event):
+        mock_event.return_value = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "client_reference_id": str(self.user.id),
+                    "payment_intent": "pi_123",
+                    "amount_total": 1999,
+                    "currency": "gbp",
+                    "payment_status": "paid",
+                }
+            },
+        }
+
+        response = self.client.post(
+            self.webhook_url,
+            data=b"test payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test signature",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Payment.objects.filter(stripe_payment_id="pi_123").exists())
+        self.assertTrue(
+            PremiumMembership.objects.filter(user=self.user, status="active").exists()
+        )
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_unpaid_checkout_webhook_does_not_create_payment(self, mock_event):
+        mock_event.return_value = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "client_reference_id": str(self.user.id),
+                    "payment_intent": "pi_123",
+                    "amount_total": 1999,
+                    "currency": "gbp",
+                    "payment_status": "unpaid",
+                }
+            },
+        }
+
+        response = self.client.post(
+            self.webhook_url,
+            data=b"test payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test signature",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Payment.objects.exists())
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_invalid_webhook_payload_returns_error(self, mock_event):
+        mock_event.side_effect = ValueError
+
+        response = self.client.post(
+            self.webhook_url,
+            data=b"invalid payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="bad signature",
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_refund_webhook_deactivates_membership(self, mock_event):
+        payment = Payment.objects.create(
+            user=self.user, stripe_payment_id="pi_123", amount=1999, status="succeeded"
+        )
+        PremiumMembership.objects.create(
+            user=self.user, payment=payment, status="active", started_at=timezone.now()
+        )
+
+        mock_event.return_value = {
+            "type": "charge.refunded",
+            "data": {"object": {"refunded": True, "payment_intent": "pi_123"}},
+        }
+
+        response = self.client.post(
+            self.webhook_url,
+            data=b"test payload",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test signature",
+        )
+
+        payment.refresh_from_db()
+        self.user.membership.refresh_from_db()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(payment.status, "refunded")
+        self.assertEqual(self.user.membership.status, "inactive")
+
+    def test_webhook_requires_post(self):
+        response = self.client.get(self.webhook_url)
         self.assertEqual(response.status_code, 405)
