@@ -6,20 +6,32 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
 from django.db import transaction
 from django.http import JsonResponse
-from django.urls import reverse
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.dateparse import parse_time
-
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods, require_POST
+
+
 from accounts.models import TravelPreference
 from destinations.models import Attraction
 
+from .forms import (
+    DestinationWizardForm,
+    PreferenceWizardForm,
+    ReviewForm,
+    TripDetailsWizardForm,
+)
 from .models import PlannedActivity, Trip, TripDay
 
+FORMS = [
+    ("preferences", PreferenceWizardForm),
+    ("destination", DestinationWizardForm),
+    ("details", TripDetailsWizardForm),
+    ("review", ReviewForm),
+]
 
 @login_required
 def my_trips(request):
@@ -329,3 +341,5 @@ def get_destination_weather(latitude, longitude, start_date, end_date):
         }
         for day in data.get("days", [])
     ]
+
+

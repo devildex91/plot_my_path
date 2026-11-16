@@ -13,6 +13,12 @@ from django.utils import timezone
 
 from destinations.models import Attraction, Country, Destination
 
+from .forms import (
+    DestinationWizardForm,
+    PreferenceWizardForm,
+    ReviewForm,
+    TripDetailsWizardForm,
+)
 from .models import PlannedActivity, Recommendation, Trip, TripDay
 from .views import get_destination_weather
 
@@ -430,3 +436,66 @@ class GetDestinationWeatherTests(TestCase):
                 }
             ],
         )
+
+# Forms
+
+
+class WizardFormTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.paris = make_destination()
+
+    def test_preference_form(self):
+        form = PreferenceWizardForm(data={"travel_style": "culture"})
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.cleaned_data["nightlife"])
+
+    def test_preference_travel_style_is_required(self):
+        form = PreferenceWizardForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertIn("travel_style", form.errors)
+
+    def test_destination_form(self):
+        form = DestinationWizardForm(
+            data={
+                "destination": self.paris.id,
+                "name": "Paris Break",
+            }
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.cleaned_data["destination"], self.paris)
+
+    def test_destination_fields_are_required(self):
+        form = DestinationWizardForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(set(form.errors), {"destination", "name"})
+
+    def test_trip_details_form_accepts_future_dates(self):
+        start = timezone.now().date() + datetime.timedelta(days=10)
+        form = TripDetailsWizardForm(
+            data={
+                "start_date": start.isoformat(),
+                "end_date": (start + datetime.timedelta(days=3)).isoformat(),
+                "budget": "500.00",
+            }
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_trip_details_form_rejects_past_start_date(self):
+        today = timezone.now().date()
+        start = today - datetime.timedelta(days=1)
+        form = TripDetailsWizardForm(
+            data={
+                "start_date": start.isoformat(),
+                "end_date": (today + datetime.timedelta(days=2)).isoformat(),
+                "budget": "500.00",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["start_date"],
+            ["Start date cannot be before today."],
+        )
+
+    def test_empty_review_form_is_valid(self):
+        self.assertTrue(ReviewForm(data={}).is_valid())
