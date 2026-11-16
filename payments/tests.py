@@ -6,10 +6,8 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import timezone
 
 from .models import Payment, PremiumMembership
-
 
 User = get_user_model()
 
@@ -108,3 +106,16 @@ class PaymentFailedTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["error_message"], "Card declined")
+
+class PaymentSuccessTests(LoggedInTestCase):
+    def setUp(self):
+        super().setUp()
+        self.session = CheckoutSession(
+            {
+                "client_reference_id": str(self.user.id),
+                "payment_intent": "pi_123",
+                "amount_total": 1999,
+                "currency": "gbp",
+                "payment_status": "paid",
+            }
+        )
