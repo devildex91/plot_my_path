@@ -2,9 +2,11 @@ import json
 from datetime import timedelta
 from json import JSONDecodeError
 
+import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+
 from django.db import transaction
 from django.http import JsonResponse
 from django.urls import reverse
@@ -178,6 +180,27 @@ def itinerary_builder(request, trip_id):
     weather_data = []
     weather_error = None
 
+    if not settings.WEATHER_API_KEY:
+        weather_error = "Weather API key is not configured."
+
+    elif (
+        trip_instance.destination.latitude is not None
+        and trip_instance.destination.longitude is not None
+    ):
+        try:
+            weather_data = get_destination_weather(
+                latitude=trip_instance.destination.latitude,
+                longitude=trip_instance.destination.longitude,
+                start_date=trip_instance.start_date,
+                end_date=trip_instance.end_date,
+            )
+
+        except (requests.RequestException, ValueError):
+            weather_error = "Trip weather is temporarily unavailable."
+
+    else:
+        weather_error = "Destination coordinates are unavailable."
+
     
     attractions_data = [
         {
@@ -265,3 +288,44 @@ def itinerary_builder(request, trip_id):
             "app_data": serialized_data,
         },
     )
+
+
+def get_destination_weather(latitude, longitude, start_date, end_date):
+    """Fetch daily forecast data for the destination and trip date range.
+
+    Raises request or response parsing errors so the caller can report unavailable
+    weather without preventing the itinerary itself from loading.
+    """
+    url = (
+        "https://weather.visualcrossing.com/"
+        "VisualCrossingWebServices/rest/services/"
+        f"timeline/{latitude},{longitude}/"
+        f"{start_date.isoformat()}/{end_date.isoformat()}"
+    )
+
+    response = requests.get(
+        url,
+        params={
+            "unitGroup": "metric",
+            "key": settings.WEATHER_API_KEY,
+            "contentType": "json",
+            "include": "days",
+        },
+        timeout=10,
+    )
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    return [
+        {
+            "date": day["datetime"],
+            "tempmax": day.get("tempmax"),
+            "tempmin": day.get("tempmin"),
+            "conditions": day.get("conditions"),
+            "precipprob": day.get("precipprob"),
+            "icon": day.get("icon"),
+        }
+        for day in data.get("days", [])
+    ]

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ItineraryMap from "./ItineraryMap";
 import ActivityList from "./ActivityList";
 import AddActivityForm from "./AddActivityForm";
+import WeatherPanel from "./WeatherPanel";
 import { getCookie } from "../../utils";
 
 const isValidCoord = (lat, lng) => Number.isFinite(lat) && Number.isFinite(lng);
@@ -24,6 +25,8 @@ function ItineraryBuilder({
   preferences,
   days,
   attractions,
+  weather,
+  weatherError,
 }) {
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [deletingActivityId, setDeletingActivityId] = useState(null);
@@ -261,7 +264,20 @@ function ItineraryBuilder({
         />
       </div>
 
-
+      <input
+        type="radio"
+        name="my_tabs_6"
+        className="tab text-primary"
+        aria-label="Weather"
+      />
+      <div className="tab-content bg-base-100 border-base-300 p-6">
+        <WeatherPanel
+          destinationName={trip?.destination?.name}
+          day={currentDay}
+          weather={weather}
+          error={weatherError}
+        />
+      </div>
     </div>
   );
 }

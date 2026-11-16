@@ -1,6 +1,7 @@
 import datetime
 import json
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -13,6 +14,7 @@ from django.utils import timezone
 from destinations.models import Attraction, Country, Destination
 
 from .models import PlannedActivity, Recommendation, Trip, TripDay
+from .views import get_destination_weather
 
 User = get_user_model()
 
@@ -360,7 +362,7 @@ class AddActivityViewTests(TripsViewTestBase):
         self.assertIsNone(activity["notes"])
         self.assertEqual(PlannedActivity.objects.count(), 1)
 
-
+@override_settings(WEATHER_API_KEY="")
 class ItineraryBuilderViewTests(TripsViewTestBase):
     def setUp(self):
         super().setUp()
@@ -389,3 +391,42 @@ class ItineraryBuilderViewTests(TripsViewTestBase):
             [1, 2, 3, 4, 5],
         )
         self.assertEqual(self.trip.trip_days.count(), 5)
+
+class GetDestinationWeatherTests(TestCase):
+    @override_settings(WEATHER_API_KEY="test-key")
+    @patch("trips.views.requests.get")
+    def test_maps_weather_response(self, mock_get):
+        mock_get.return_value.json.return_value = {
+            "days": [
+                {
+                    "datetime": "2026-12-01",
+                    "tempmax": 10,
+                    "tempmin": 3,
+                    "conditions": "Rain",
+                    "precipprob": 80,
+                    "icon": "rain",
+                    "unrelated": "dropped",
+                }
+            ]
+        }
+
+        result = get_destination_weather(
+            latitude=Decimal("48.856600"),
+            longitude=Decimal("2.352200"),
+            start_date=datetime.date(2026, 12, 1),
+            end_date=datetime.date(2026, 12, 5),
+        )
+
+        self.assertEqual(
+            result,
+            [
+                {
+                    "date": "2026-12-01",
+                    "tempmax": 10,
+                    "tempmin": 3,
+                    "conditions": "Rain",
+                    "precipprob": 80,
+                    "icon": "rain",
+                }
+            ],
+        )

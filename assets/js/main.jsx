@@ -34,6 +34,8 @@ if (builder) {
       preferences={preferences}
       days={days}
       attractions={attractions}
+      weather={weather}
+      weatherError={weatherError}
     />,
   );
 }
