@@ -11,7 +11,9 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
+from accounts.models import TravelPreference
 from destinations.models import Attraction, Country, Destination
+from payments.models import PremiumMembership
 
 from .forms import (
     DestinationWizardForm,
@@ -20,6 +22,7 @@ from .forms import (
     TripDetailsWizardForm,
 )
 from .models import PlannedActivity, Recommendation, Trip, TripDay
+from .permissions import can_create_trip, is_premium
 from .views import get_destination_weather
 
 User = get_user_model()

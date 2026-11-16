@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load daisyui_filters %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+{{ wizard.form.media }}
+
+<div class="max-w-md mx-auto px-4 py-6 text-primary">
+
+  <!-- Progress steps -->
+  <ul class="steps w-full text-xs font-medium mb-6">
+    {% for step in wizard.steps.all %}
+      <li class="step {% if forloop.counter <= wizard.steps.step1 %}step-primary font-semibold{% endif %}">
+        Step {{ forloop.counter }}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <!-- Form card -->
+  <div class="card bg-base-200 shadow-sm border border-primary">
+    <div class="card-body">
+
+      <form action="" method="post" class="space-y-5">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        {% if wizard.form.forms %}
+          {{ wizard.form.management_form }}
+        {% endif %}
+
+        <div class="space-y-4">
+          {% if wizard.form.forms %}
+
+            {% for form in wizard.form.forms %}
+              {% for field in form %}
+                <div class="form-control w-full">
+                  <label class="label pt-0 pb-1">
+                    <span class="label-text text-xs font-semibold text-primary uppercase tracking-wide">
+                      {% if field.name == 'username' %}
+                        {% translate 'Your Unique Username' %}
+                      {% else %}
+                        {{ field.label }}
+                      {% endif %}
+                    </span>
+                  </label>
+                  {{ field|as_crispy_field }}
+                </div>
+              {% endfor %}
+            {% endfor %}
+
+          {% else %}
+
+            {% for field in wizard.form %}
+              <div class="form-control w-full">
+
+                {% if field.name == 'travel_style' %}
+                  <label class="label pt-0 pb-2">
+                    <span class="label-text text-xs font-semibold text-primary uppercase tracking-wide">
+                      {% translate 'What kind of trip are you planning?' %}
+                    </span>
+                  </label>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    {% for choice_value, choice_label in field.field.choices %}
+                      <label for="id_{{ field.name }}_{{ forloop.counter }}"
+                             class="flex items-center justify-between p-4 border border-primary/30 rounded-2xl cursor-pointer bg-base-100 hover:bg-base-300/50 transition has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary">
+                        <span class="text-sm font-medium">{{ choice_label }}</span>
+
+                        <input type="radio"
+                               name="{{ wizard.form.prefix }}-{{ field.name }}"
+                               value="{{ choice_value }}"
+                               id="id_{{ field.name }}_{{ forloop.counter }}"
+                               class="sr-only"
+                               {% if field.value|stringformat:"s" == choice_value|stringformat:"s" %}checked{% endif %}>
+                      </label>
+                    {% endfor %}
+                  </div>
+
+                  {% if field.errors %}
+                    <span class="text-error text-xs mt-1 font-medium">{{ field.errors.as_text }}</span>
+                  {% endif %}
+
+                {% else %}
+
+                  {% if field.name == 'walking_preference' or field.name == 'family_friendly' or field.name == 'solo_friendly' or field.name == 'culture' or field.name == 'food' or field.name == 'nature' or field.name == 'history' or field.name == 'nightlife' %}
+
+                    {% if field.name == 'walking_preference' %}
+                      <div class="pt-4 pb-2 mt-2 border-t border-primary/20 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                        </svg>
+                        <span class="text-xs font-bold uppercase tracking-wide">
+                          {% translate 'Additional Preferences' %}
+                        </span>
+                      </div>
+                    {% endif %}
+
+                    <div class="py-1">
+                      {{ field|as_crispy_field }}
+                    </div>
+
+                  {% else %}
+
+                    <label class="label pt-0 pb-1">
+                      <span class="label-text text-xs font-semibold text-primary uppercase tracking-wide">
+                        {% if field.name == 'email' %}
+                          {% translate 'Email Address' %}
+                        {% elif field.name == 'password' %}
+                          {% translate 'Choose Password' %}
+                        {% else %}
+                          {{ field.label }}
+                        {% endif %}
+                      </span>
+                    </label>
+                    {{ field|as_crispy_field }}
+
+                  {% endif %}
+                {% endif %}
+
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="flex flex-col gap-3 mt-6 pt-4 border-t border-primary/20">
+          <button type="submit" class="btn btn-primary rounded-xl w-full">
+            {% if wizard.steps.current == wizard.steps.last %}
+              {% translate 'Finish Setup' %}
+            {% else %}
+              {% translate 'Next' %}
+            {% endif %}
+          </button>
+
+          {% if wizard.steps.prev %}
+            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate
+                    class="btn btn-ghost btn-sm w-full">
+              {% translate 'Go Back' %}
+            </button>
+          {% endif %}
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

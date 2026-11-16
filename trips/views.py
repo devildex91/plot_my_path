@@ -6,6 +6,7 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -13,7 +14,7 @@ from django.urls import reverse
 from django.utils.dateparse import parse_time
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods, require_POST
-
+from formtools.wizard.views import SessionWizardView
 
 from accounts.models import TravelPreference
 from destinations.models import Attraction
@@ -25,6 +26,7 @@ from .forms import (
     TripDetailsWizardForm,
 )
 from .models import PlannedActivity, Trip, TripDay
+from .permissions import can_create_trip
 
 FORMS = [
     ("preferences", PreferenceWizardForm),
@@ -32,6 +34,55 @@ FORMS = [
     ("details", TripDetailsWizardForm),
     ("review", ReviewForm),
 ]
+
+
+class CreateTripView(LoginRequiredMixin, SessionWizardView):
+    """Collect trip preferences and details across the multi-step creation flow."""
+
+    form_list = FORMS
+    template_name = "trips/trips.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        """Block users who have used their free trip before any step loads"""
+        if request.user.is_authenticated and not can_create_trip(request.user):
+            messages.info(
+                request, "Youve used your free trip. Upgrade to premium to create more."
+            )
+            return redirect("profile")
+        return super().dispatch(request, *args, **kwargs)
+
+    def done(self, form_list, **kwargs):
+        """Save the user's preferences and trip after all wizard steps validate."""
+        if not can_create_trip(self.request.user):
+            messages.info(
+                self.request,
+                "You've used your free trip. Upgrade to premium to create more.",
+            )
+            return redirect("profile")
+        preference_form = form_list[0]
+        destination_form = form_list[1]
+        details_form = form_list[2]
+
+        preference, created = TravelPreference.objects.get_or_create(
+            user=self.request.user
+        )
+
+        for field, value in preference_form.cleaned_data.items():
+            setattr(preference, field, value)
+
+        preference.save()
+
+        trip = Trip.objects.create(
+            destination=destination_form.cleaned_data["destination"],
+            name=destination_form.cleaned_data["name"],
+            start_date=details_form.cleaned_data["start_date"],
+            end_date=details_form.cleaned_data["end_date"],
+            budget=details_form.cleaned_data["budget"],
+            user=self.request.user,
+        )
+
+        return redirect("itinerary_builder", trip_id=trip.id)
+
 
 
 @login_required
@@ -176,7 +227,6 @@ def generate_trip_days(trip):
 
     return trip.trip_days.order_by("day_number")
 
-
 @login_required
 @ensure_csrf_cookie
 def itinerary_builder(request, trip_id):
@@ -300,7 +350,6 @@ def itinerary_builder(request, trip_id):
             "app_data": serialized_data,
         },
     )
-
 
 def get_destination_weather(latitude, longitude, start_date, end_date):
     """Fetch daily forecast data for the destination and trip date range.
