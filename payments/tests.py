@@ -93,3 +93,18 @@ class PremiumMembershipModelTests(TestCase):
     def test_membership_is_related_to_user_and_payment(self):
         self.assertEqual(self.user.membership, self.membership)
         self.assertEqual(self.payment.membership, self.membership)
+
+        #View tests
+
+class PaymentFailedTests(TestCase):
+    def test_payment_failed_page_loads(self):
+        response = self.client.get(reverse("payment_failed"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_payment_failed_displays_error_message(self):
+        response = self.client.get(
+            reverse("payment_failed"), {"error": "Card declined"}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["error_message"], "Card declined")

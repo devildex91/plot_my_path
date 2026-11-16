@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-4 py-6">
+  <div class="card bg-base-200 shadow-sm border border-primary">
+    <div class="card-body items-center text-center text-primary">
+
+      <div class="bg-error text-error-content w-16 h-16 rounded-full flex items-center justify-center text-2xl mb-2">
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+
+      <h1 class="card-title text-2xl md:text-3xl font-bold text-primary">Payment unsuccessful</h1>
+      <p class="opacity-70">We're sorry, something went wrong and your payment could not be processed. You have not been charged.</p>
+
+      <p class="text-sm opacity-70 mt-2">
+        If the problem continues, please get in touch via our
+        <a href="{% url 'contact' %}" class="link link-primary">Help and Support</a> page.
+      </p>
+
+      <div class="card-actions w-full flex-col gap-2 mt-4">
+        <a href="{% url 'profile' %}" class="btn btn-ghost btn-sm w-full text-primary">Back to profile</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
