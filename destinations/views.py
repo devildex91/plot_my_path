@@ -32,7 +32,6 @@ def destination_lists(request):
         },
     )
 
-
 @login_required
 def destination_detail_view(request, destination_id):
     """Render one destination and its related attractions."""
