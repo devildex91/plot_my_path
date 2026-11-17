@@ -9,14 +9,10 @@
     <title>Plot My Path</title>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
         <script>
-  (function () {
-    const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.setAttribute(
-      "data-theme",
-      saved || "fantasy");
-  
-  })();
+(function () {
+  const saved = localStorage.getItem("theme");
+  document.documentElement.setAttribute("data-theme", saved || "fantasy");
+})();
 </script>
   </head>
   <body class="relative min-h-screen flex flex-col bg-cover bg-center bg-no-repeat" style="background-image: url('{% static 'images/landing_background.avif' %}');">

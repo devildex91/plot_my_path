@@ -14,14 +14,10 @@
         {% block title %}Plot My Path{% endblock %}
     </title>
         <script>
-  (function () {
-    const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.setAttribute(
-      "data-theme",
-      saved || (prefersDark ? "sunset" : "fantasy")
-    );
-  })();
+(function () {
+  const saved = localStorage.getItem("theme");
+  document.documentElement.setAttribute("data-theme", saved || "fantasy");
+})();
 </script>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
 </head>
