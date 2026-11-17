@@ -232,13 +232,9 @@ if not DEBUG:
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    "default": {
-        "BACKEND": "anymail.backends.brevo.EmailBackend",
-        "OPTIONS": {
-            "api_key": env("BREVO_API_KEY"),
-        },
-    }
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
+ANYMAIL = {
+    "BREVO_API_KEY": env("BREVO_API_KEY"),
 }
 
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
