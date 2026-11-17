@@ -10,13 +10,8 @@
     <title>Plot My Path</title>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
     <script>
-       window.DJANGO_STATIC_URL = "{% static '' %}" 
-              
-  (function () {
-  const saved = localStorage.getItem("theme");
-  document.documentElement.setAttribute("data-theme", saved || "fantasy");
-})();
-</script>
+      window.DJANGO_STATIC_URL = "{% static '' %}";
+    </script>
    
   </head>
   <body class="min-h-screen bg-base-100">
