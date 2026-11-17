@@ -158,7 +158,6 @@ class CustomSignupFormTests(TestCase):
         self.assertEqual(user.first_name, "Alice")
         self.assertEqual(user.last_name, "Smith")
 
-
 # Contact form tests
 
 class ContactFormTests(TestCase):
