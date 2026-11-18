@@ -460,7 +460,6 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 [back to top](#plot-my-path)
 ### Testing
 ---
-
 #### Lighthouse tests 
 ---
 [back to top](#plot-my-path)
@@ -473,14 +472,25 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 #### Python code validation
 ---
 
+All code has been formatted to PEP8 style standards using black and the command 
+black . and then checked to confirm as is shown below
+
+black --check .
+All done! ✨ 🍰 ✨
+54 files would be left unchanged.
+(.venv) 
 
 [back to top](#plot-my-path)
+
 #### JSX Testing
 ---
+
 [back to top](#plot-my-path)
+
 #### API Testing 
 ---
 [back to top](#plot-my-path)
+
 #### Security 
 ---
 [back to top](#plot-my-path)
