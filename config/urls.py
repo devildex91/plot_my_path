@@ -5,7 +5,7 @@ from core.views import CustomSignUpView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('accounts/signup/', CustomSignUpView.as_view(), name='account_signup'),
+    path("accounts/signup/", CustomSignUpView.as_view(), name="account_signup"),
     path("accounts/", include("allauth.urls")),
     path("", include("core.urls")),
     path("destination/", include("destinations.urls")),
@@ -13,6 +13,3 @@ urlpatterns = [
     path("profile/", include("accounts.urls")),
     path("payments/", include("payments.urls")),
 ]
-
-  
-

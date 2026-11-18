@@ -9,10 +9,15 @@ from destinations.models import Attraction, Destination
 
 class Trip(models.Model):
     """A user's trip, including its destination, dates, and budget."""
-    user =  models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='trips')
-    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='trips')
-    name=models.CharField(max_length=150)
-    start_date=models.DateField()
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="trips"
+    )
+    destination = models.ForeignKey(
+        Destination, on_delete=models.CASCADE, related_name="trips"
+    )
+    name = models.CharField(max_length=150)
+    start_date = models.DateField()
     end_date = models.DateField()
     budget = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,14 +25,15 @@ class Trip(models.Model):
 
     def get_absolute_url(self):
         return reverse("itinerary_builder", kwargs={"trip_id": self.pk})
-    
+
     def __str__(self):
         return self.name
 
 
 class TripDay(models.Model):
     """One calendar day within a trip, with an ordered list of planned activities."""
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='trip_days')
+
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="trip_days")
     date = models.DateField()
     day_number = models.IntegerField()
     notes = models.TextField(blank=True, null=True)
@@ -38,16 +44,21 @@ class TripDay(models.Model):
 
 class PlannedActivity(models.Model):
     """An attraction scheduled for a trip day with a time and display order."""
-    trip_day = models.ForeignKey(TripDay, on_delete=models.CASCADE, related_name='planned_activities')
-    attraction = models.ForeignKey(Attraction, on_delete=models.CASCADE, related_name='planned_activities')
+
+    trip_day = models.ForeignKey(
+        TripDay, on_delete=models.CASCADE, related_name="planned_activities"
+    )
+    attraction = models.ForeignKey(
+        Attraction, on_delete=models.CASCADE, related_name="planned_activities"
+    )
     start_time = models.TimeField(auto_now=False, auto_now_add=False)
     end_time = models.TimeField(auto_now=False, auto_now_add=False)
     order = models.IntegerField()
     notes = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=50, default='scheduled')
+    status = models.CharField(max_length=50, default="scheduled")
 
     class Meta:
-        ordering: ClassVar[list[str]] = ['order']
+        ordering: ClassVar[list[str]] = ["order"]
 
     def __str__(self):
         return f"{self.attraction.name} ({self.start_time})"
@@ -55,20 +66,27 @@ class PlannedActivity(models.Model):
 
 class Recommendation(models.Model):
     """Store a scored attraction recommendation and why it was suggested."""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='recommendations')
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='recommendations')
-    attraction = models.ForeignKey(Attraction, on_delete=models.CASCADE, related_name='recommendations')
-    
-    
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="recommendations",
+    )
+    trip = models.ForeignKey(
+        Trip, on_delete=models.CASCADE, related_name="recommendations"
+    )
+    attraction = models.ForeignKey(
+        Attraction, on_delete=models.CASCADE, related_name="recommendations"
+    )
+
     score = models.DecimalField(max_digits=5, decimal_places=2)
     reason = models.TextField(max_length=200)
-    
-   
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        
-        ordering = ('-score',)
+
+        ordering = ("-score",)
 
     def __str__(self):
         return f"Rec for {self.user.username}: {self.attraction.name} (Score: {self.score})"

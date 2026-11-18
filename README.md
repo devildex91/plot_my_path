@@ -414,6 +414,37 @@ Plot My Paths features will include:
          
 #### Existing features
 ---
+
+#### Features
+
+##### Trip planning
+- **Guided trip creation:** a four-step wizard collects your travel preferences, destination and trip name, dates and budget, then a review step before the trip is created.
+- **Travel preferences:** choose a travel style and interests such as culture, food, nature, history, nightlife, family-friendly and solo travel. Your preferences are saved to your profile.
+- **Itinerary builder:** every trip gets a day-by-day itinerary generated automatically from its start and end dates.
+- **Plan activities:** add attractions from your destination to any day with start and end times, and remove them again. Activities are numbered in order, and the numbering closes up when one is deleted.
+- **Weather forecast:** daily forecasts (temperatures, conditions and chance of rain) are shown for your trip dates, powered by Visual Crossing. If the forecast is unavailable, the itinerary still loads.
+- **My trips:** view and delete your own trips.
+
+##### Destinations
+- **Browse destinations and attractions:** explore destinations, each with its own set of attractions (category, entry cost, typical visit length and opening times).
+- **Favourites:** save destinations with a one-click favourite button, without reloading the page.
+- **Search:** a live search bar for finding destinations.
+
+##### Accounts and membership
+- **Sign up and log in:** email-based accounts, plus sign in with Google.
+- **Onboarding:** a short onboarding flow for new users.
+- **Free and premium plans:** free accounts can create one trip, and premium members can create as many as they like. Premium upgrades are handled through Stripe Checkout.
+- **Profile page** for managing your account and membership.
+
+##### Design and experience
+- **Responsive layout:** a bottom navigation bar on mobile that moves to the top on larger screens.
+- **Light and dark themes:** a theme toggle (Fantasy and Sunset) that remembers your choice and falls back to your system preference.
+- **Flash messages** that fade out automatically.
+- **Custom 404 page.**
+
+##### Built with
+Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI, Cloudinary for images, Stripe for payments, Brevo for email, and WhiteNoise for static files.
+
 [back to top](#plot-my-path)
 #### User Goals mapping
 ---

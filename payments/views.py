@@ -26,6 +26,7 @@ endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 REFUND_WINDOW_DAYS = 14
 REFUND_MAX_TRIPS = 3
 
+
 @login_required
 def payment_success(request):
     """Verify the returned Checkout session before showing payment success."""
@@ -46,9 +47,11 @@ def payment_success(request):
 
         fulfill_checkout(session)
 
-        return render(request, 'payments/success.html', {
-            "customer_name": request.user.get_full_name() or request.user.username
-        })
+        return render(
+            request,
+            "payments/success.html",
+            {"customer_name": request.user.get_full_name() or request.user.username},
+        )
 
     except stripe.StripeError as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -56,9 +59,11 @@ def payment_success(request):
 
 def payment_failed(request):
     """Render the payment failure page with an optional message from the URL."""
-    error_message = request.GET.get("error", "Your payment could not be processed. Please try again")
+    error_message = request.GET.get(
+        "error", "Your payment could not be processed. Please try again"
+    )
 
-    return render(request, "payments/failed.html", {'error_message': error_message})
+    return render(request, "payments/failed.html", {"error_message": error_message})
 
 
 def fulfill_checkout(session):
@@ -91,9 +96,11 @@ def fulfill_checkout(session):
             )
     return user
 
+
 def has_active_membership(user):
     """Return whether the user already has a membership in the active state."""
     return PremiumMembership.objects.filter(user=user, status="active").exists()
+
 
 @login_required
 def checkout(request):
@@ -101,7 +108,8 @@ def checkout(request):
     if has_active_membership(request.user):
         messages.info(request, "You're already a premium member.")
         return redirect("profile")
-    return render(request, 'payments/checkout.html')
+    return render(request, "payments/checkout.html")
+
 
 @login_required
 @require_POST
@@ -115,20 +123,23 @@ def create_checkout_session(request):
 
     try:
         session = stripe.checkout.Session.create(
-            line_items=[{
-                'price': STRIPE_PREMIUM_PRICE_ID,
-                'quantity': 1,
-            }],
+            line_items=[
+                {
+                    "price": STRIPE_PREMIUM_PRICE_ID,
+                    "quantity": 1,
+                }
+            ],
             mode="payment",
-            success_url=request.build_absolute_uri(reverse('payment_success'))
+            success_url=request.build_absolute_uri(reverse("payment_success"))
             + "?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url=request.build_absolute_uri(reverse('payment_failed')),
+            cancel_url=request.build_absolute_uri(reverse("payment_failed")),
             client_reference_id=str(request.user.id),
         )
-        return JsonResponse({'checkout_url': session.url})
+        return JsonResponse({"checkout_url": session.url})
 
     except stripe.StripeError as e:
         return JsonResponse({"error": str(e)}, status=400)
+
 
 def revoke_membership(payment_intent_id):
     """Deactivate the membership tied to a refunded payment."""
@@ -136,9 +147,9 @@ def revoke_membership(payment_intent_id):
         PremiumMembership.objects.filter(
             payment__stripe_payment_id=payment_intent_id
         ).update(status="inactive")
-        Payment.objects.filter(
-            stripe_payment_id=payment_intent_id
-        ).update(status="refunded")
+        Payment.objects.filter(stripe_payment_id=payment_intent_id).update(
+            status="refunded"
+        )
 
 
 @csrf_exempt
@@ -165,11 +176,11 @@ def stripe_webhook(request):
 
     elif event["type"] == "charge.refunded":
         charge = event["data"]["object"]
-        if charge["refunded"]: 
+        if charge["refunded"]:
             revoke_membership(charge["payment_intent"])
 
-
     return JsonResponse({"status": "success"}, status=200)
+
 
 def refund_allowed(membership):
     if not membership.started_at:
@@ -178,7 +189,7 @@ def refund_allowed(membership):
         return False
     trips_since = Trip.objects.filter(
         user=membership.user,
-        created_at__gte=membership.created_at,  
+        created_at__gte=membership.created_at,
     ).count()
     return trips_since <= REFUND_MAX_TRIPS
 
@@ -203,7 +214,9 @@ def request_refund(request):
             idempotency_key=f"refund-{membership.pk}-{payment_id}",
         )
     except stripe.StripeError:
-        messages.error(request, "We couldn't process the refund. Please contact support.")
+        messages.error(
+            request, "We couldn't process the refund. Please contact support."
+        )
         return redirect("profile")
 
     revoke_membership(payment_id)

@@ -84,7 +84,6 @@ class CreateTripView(LoginRequiredMixin, SessionWizardView):
         return redirect("itinerary_builder", trip_id=trip.id)
 
 
-
 @login_required
 def my_trips(request):
     """Render the signed-in user's trips, with the most recent start date first."""
@@ -227,6 +226,7 @@ def generate_trip_days(trip):
 
     return trip.trip_days.order_by("day_number")
 
+
 @login_required
 @ensure_csrf_cookie
 def itinerary_builder(request, trip_id):
@@ -350,6 +350,7 @@ def itinerary_builder(request, trip_id):
             "app_data": serialized_data,
         },
     )
+
 
 def get_destination_weather(latitude, longitude, start_date, end_date):
     """Fetch daily forecast data for the destination and trip date range.

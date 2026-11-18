@@ -7,27 +7,22 @@ from destinations.models import Destination
 
 # Create your models here.
 
+
 class TravelPreference(models.Model):
     """Store the travel style and interests used to personalize trips."""
 
     TRAVEL_STYLE_CHOICES: ClassVar[list[tuple[str, str]]] = [
-    ("adventure", "Adventure"),
-    ("relaxation", "Relaxation"),
-    ("city_break", "City Break"),
-    ("culture", "Culture"),
-    ("foodie", "Food & Drink"),
-    ("nature", "Nature"),
-]
+        ("adventure", "Adventure"),
+        ("relaxation", "Relaxation"),
+        ("city_break", "City Break"),
+        ("culture", "Culture"),
+        ("foodie", "Food & Drink"),
+        ("nature", "Nature"),
+    ]
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    travel_style = models.CharField(
-        max_length=50,
-        choices=TRAVEL_STYLE_CHOICES
-    )
+    travel_style = models.CharField(max_length=50, choices=TRAVEL_STYLE_CHOICES)
 
     walking_preference = models.BooleanField(default=False)
     culture = models.BooleanField(default=False)
@@ -44,13 +39,19 @@ class TravelPreference(models.Model):
 
 class SavedDestination(models.Model):
     """Associate a user with a destination they have saved for later."""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='saved_destinations')
-    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='saved_by_users')
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="saved_destinations",
+    )
+    destination = models.ForeignKey(
+        Destination, on_delete=models.CASCADE, related_name="saved_by_users"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'destination')
+        unique_together = ("user", "destination")
 
     def __str__(self):
         return f"{self.user.username} saved {self.destination.name}"
-

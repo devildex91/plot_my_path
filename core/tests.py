@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from unittest.mock import patch
 
@@ -14,13 +13,12 @@ User = get_user_model()
 
 # Page tests
 
+
 class CorePageTests(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
-            username="alice",
-            email="alice@example.com",
-            password="pass12345"
+            username="alice", email="alice@example.com", password="pass12345"
         )
 
     def test_landing_page_loads(self):
@@ -71,6 +69,7 @@ class CorePageTests(TestCase):
 
 # Contact page tests
 
+
 class ContactPageTests(TestCase):
 
     def setUp(self):
@@ -79,7 +78,7 @@ class ContactPageTests(TestCase):
             username="alice",
             email="alice@example.com",
             password="pass12345",
-            first_name="Alice"
+            first_name="Alice",
         )
 
     def test_contact_page_loads(self):
@@ -93,30 +92,28 @@ class ContactPageTests(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.context["form"].initial["name"], "Alice")
-        self.assertEqual(
-            response.context["form"].initial["email"],
-            "alice@example.com"
-        )
+        self.assertEqual(response.context["form"].initial["email"], "alice@example.com")
 
     def test_valid_contact_form_sends_email(self):
-        response = self.client.post(self.url, {
-            "name": "Alice",
-            "email": "alice@example.com",
-            "subject": "Help",
-            "message": "I need some help."
-        })
+        response = self.client.post(
+            self.url,
+            {
+                "name": "Alice",
+                "email": "alice@example.com",
+                "subject": "Help",
+                "message": "I need some help.",
+            },
+        )
 
         self.assertRedirects(response, self.url)
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("I need some help.", mail.outbox[0].body)
 
     def test_invalid_contact_form_does_not_send_email(self):
-        response = self.client.post(self.url, {
-            "name": "",
-            "email": "invalid-email",
-            "subject": "",
-            "message": ""
-        })
+        response = self.client.post(
+            self.url,
+            {"name": "", "email": "invalid-email", "subject": "", "message": ""},
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(mail.outbox), 0)
@@ -124,13 +121,11 @@ class ContactPageTests(TestCase):
 
 # Signup form tests
 
+
 class CustomSignupFormTests(TestCase):
 
     def test_valid_signup_form(self):
-        form = CustomSignupForm(data={
-            "first_name": "Alice",
-            "last_name": "Smith"
-        })
+        form = CustomSignupForm(data={"first_name": "Alice", "last_name": "Smith"})
 
         self.assertTrue(form.is_valid())
 
@@ -140,15 +135,9 @@ class CustomSignupFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_signup_saves_names_to_user(self):
-        user = User.objects.create_user(
-            username="alice",
-            password="pass12345"
-        )
+        user = User.objects.create_user(username="alice", password="pass12345")
 
-        form = CustomSignupForm(data={
-            "first_name": "Alice",
-            "last_name": "Smith"
-        })
+        form = CustomSignupForm(data={"first_name": "Alice", "last_name": "Smith"})
 
         self.assertTrue(form.is_valid())
         form.signup(None, user)
@@ -158,17 +147,21 @@ class CustomSignupFormTests(TestCase):
         self.assertEqual(user.first_name, "Alice")
         self.assertEqual(user.last_name, "Smith")
 
+
 # Contact form tests
+
 
 class ContactFormTests(TestCase):
 
     def test_valid_contact_form(self):
-        form = ContactForm(data={
-            "name": "Alice",
-            "email": "alice@example.com",
-            "subject": "Help",
-            "message": "I need some help."
-        })
+        form = ContactForm(
+            data={
+                "name": "Alice",
+                "email": "alice@example.com",
+                "subject": "Help",
+                "message": "I need some help.",
+            }
+        )
 
         self.assertTrue(form.is_valid())
 
@@ -178,11 +171,13 @@ class ContactFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_contact_form_rejects_invalid_email(self):
-        form = ContactForm(data={
-            "name": "Alice",
-            "email": "invalid-email",
-            "subject": "Help",
-            "message": "I need some help."
-        })
+        form = ContactForm(
+            data={
+                "name": "Alice",
+                "email": "invalid-email",
+                "subject": "Help",
+                "message": "I need some help.",
+            }
+        )
 
         self.assertFalse(form.is_valid())

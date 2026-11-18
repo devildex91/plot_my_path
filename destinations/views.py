@@ -32,6 +32,7 @@ def destination_lists(request):
         },
     )
 
+
 @login_required
 def destination_detail_view(request, destination_id):
     """Render one destination and its related attractions."""
@@ -39,15 +40,19 @@ def destination_detail_view(request, destination_id):
     attractions = destination.attractions.all()
 
     is_favourite = SavedDestination.objects.filter(
-        user=request.user,
-        destination=destination
+        user=request.user, destination=destination
     ).exists()
 
     return render(
         request,
         "destinations/destination_detail.html",
-        {"destination": destination, "attractions": attractions, "is_favourite": is_favourite,},
+        {
+            "destination": destination,
+            "attractions": attractions,
+            "is_favourite": is_favourite,
+        },
     )
+
 
 @login_required
 def search_destinations(request):

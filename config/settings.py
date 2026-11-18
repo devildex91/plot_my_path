@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -39,44 +40,37 @@ CLOUDINARY_CLOUD_NAME = cloudinary.config().cloud_name
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = env.list(
-    "ALLOWED_HOSTS",
-    default=["127.0.0.1", "localhost"]
-)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1", "localhost"])
 
-CSRF_TRUSTED_ORIGINS = env.list(
-    "CSRF_TRUSTED_ORIGINS",
-    default=[]
-)
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_vite',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_vite",
     "allauth_ui",
-     "allauth",
+    "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-     'widget_tweaks',
+    "widget_tweaks",
     "slippers",
-    'accounts',
-    'core',
-    'destinations',
-    'payments',
-    'trips',
-     "crispy_forms",
+    "accounts",
+    "core",
+    "destinations",
+    "payments",
+    "trips",
+    "crispy_forms",
     "crispy_daisyui",
     "formtools",
     "anymail",
-
 ]
 
 MIDDLEWARE = [
@@ -91,21 +85,23 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'daisyui'
-CRISPY_TEMPLATE_PACK = 'daisyui'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "daisyui"
+CRISPY_TEMPLATE_PACK = "daisyui"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / "templates",],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
@@ -113,13 +109,18 @@ TEMPLATES = [
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
-        "APP": {"client_id": "924212257986-995qe9avfshkohh9q7hdo52pf9t60ul4.apps.googleusercontent.com", 
-                "secret": GOOGLE_KEY, 
-                "key": ""},
-                'SCOPE': ['profile','email',],
-                'AUTH_PARAMS': {'access_type': 'online'},
-                'METHOD': 'oath2',
-                'VERIFIED_EMAIL': True, 
+        "APP": {
+            "client_id": "924212257986-995qe9avfshkohh9q7hdo52pf9t60ul4.apps.googleusercontent.com",
+            "secret": GOOGLE_KEY,
+            "key": "",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "METHOD": "oath2",
+        "VERIFIED_EMAIL": True,
     },
 }
 
@@ -128,30 +129,29 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = "/accounts/login/"
 
-LOGIN_REDIRECT_URL = '/home/'
+LOGIN_REDIRECT_URL = "/home/"
 
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
-ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_LOGIN_METHODS = {"email"}
 
 ACCOUNT_SESSION_REMEMBER = False
 
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
-ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
+ACCOUNT_SIGNUP_FORM_CLASS = "core.forms.CustomSignupForm"
 
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 
 ALLAUTH_UI_THEME = "fantasy"
 
-#ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
+# ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
 
 ACCOUNT_UNIQUE_EMAIL = True
 
 WSGI_APPLICATION = "config.wsgi.application"
-
 
 
 # Database
@@ -171,28 +171,26 @@ DATABASES["default"]["CONN_MAX_AGE"] = 600
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
-
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 

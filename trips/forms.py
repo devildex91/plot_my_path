@@ -8,6 +8,7 @@ from .models import Trip
 
 class PreferenceWizardForm(forms.ModelForm):
     """Capture travel preferences as the first step of trip creation."""
+
     class Meta:
         model = TravelPreference
         exclude = ("user",)
@@ -15,14 +16,12 @@ class PreferenceWizardForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["travel_style"].choices = (
-            TravelPreference.TRAVEL_STYLE_CHOICES
-        )
-
+        self.fields["travel_style"].choices = TravelPreference.TRAVEL_STYLE_CHOICES
 
 
 class DestinationWizardForm(forms.ModelForm):
     """Capture the destination and display name for a new trip."""
+
     class Meta:
         model = Trip
         fields = (
@@ -33,6 +32,7 @@ class DestinationWizardForm(forms.ModelForm):
 
 class TripDetailsWizardForm(forms.ModelForm):
     """Capture trip dates and budget, validating the date range."""
+
     class Meta:
         model = Trip
         fields = (
@@ -56,24 +56,15 @@ class TripDetailsWizardForm(forms.ModelForm):
         today = timezone.now().date()
 
         if start_date and start_date < today:
-            self.add_error(
-                "start_date",
-                "Start date cannot be before today."
-            )
+            self.add_error("start_date", "Start date cannot be before today.")
 
         if start_date and end_date:
 
             if end_date < start_date:
-                self.add_error(
-                    "end_date",
-                    "End date cannot be before the start date."
-                )
+                self.add_error("end_date", "End date cannot be before the start date.")
 
             elif end_date == start_date:
-                self.add_error(
-                    "end_date",
-                    "Trip must be at least one day long."
-                )
+                self.add_error("end_date", "Trip must be at least one day long.")
 
         return cleaned_data
 

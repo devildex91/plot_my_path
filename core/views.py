@@ -59,23 +59,18 @@ def homepage_view(request):
         greeting = "Good morning"
         icon = "fa-solid fa-mountain-sun"
     elif hour < 18:
-        greeting ="Good afternoon"
-        icon ="fa-solid fa-sun"
+        greeting = "Good afternoon"
+        icon = "fa-solid fa-sun"
     else:
         greeting = "Good evening"
         icon = "fa-solid fa-moon"
 
-    destinations = Destination.objects.order_by('?')[:2]
+    destinations = Destination.objects.order_by("?")[:2]
 
-    
-    context = {
-        'greeting': greeting,
-        'icon': icon,
-        'popular_destinations': destinations
-        
-    }
-    
-    return render(request, 'core/home.html', context)
+    context = {"greeting": greeting, "icon": icon, "popular_destinations": destinations}
+
+    return render(request, "core/home.html", context)
+
 
 def contact(request):
     """Renders a contact form for help page"""

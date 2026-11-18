@@ -1,4 +1,3 @@
-
 from decimal import Decimal
 
 from django.conf import settings
@@ -16,6 +15,7 @@ User = get_user_model()
 
 
 # Helpers
+
 
 def make_destination(name="Paris", slug="paris"):
     country, _ = Country.objects.get_or_create(
@@ -35,12 +35,11 @@ def make_destination(name="Paris", slug="paris"):
 
 # Model tests
 
+
 class TravelPreferenceTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user(
-            username="alice", password="pass12345"
-        )
+        cls.user = User.objects.create_user(username="alice", password="pass12345")
         cls.preference = TravelPreference.objects.create(
             user=cls.user,
             travel_style="adventure",
@@ -50,8 +49,14 @@ class TravelPreferenceTests(TestCase):
         self.assertEqual(str(self.preference), "Preferences for alice")
 
         for field in (
-            "walking_preference", "culture", "food", "nature",
-            "history", "nightlife", "family_friendly", "solo_travel",
+            "walking_preference",
+            "culture",
+            "food",
+            "nature",
+            "history",
+            "nightlife",
+            "family_friendly",
+            "solo_travel",
         ):
             with self.subTest(field=field):
                 self.assertFalse(getattr(self.preference, field))
@@ -72,12 +77,8 @@ class TravelPreferenceTests(TestCase):
 class SavedDestinationModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user(
-            username="alice", password="pass12345"
-        )
-        cls.other_user = User.objects.create_user(
-            username="bob", password="pass12345"
-        )
+        cls.user = User.objects.create_user(username="alice", password="pass12345")
+        cls.other_user = User.objects.create_user(username="bob", password="pass12345")
         cls.paris = make_destination()
         cls.saved = SavedDestination.objects.create(
             user=cls.user,
@@ -121,15 +122,12 @@ class SavedDestinationModelTests(TestCase):
 
 # Shared view test setup
 
+
 class LoggedInTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user(
-            username="alice", password="pass12345"
-        )
-        cls.other_user = User.objects.create_user(
-            username="bob", password="pass12345"
-        )
+        cls.user = User.objects.create_user(username="alice", password="pass12345")
+        cls.other_user = User.objects.create_user(username="bob", password="pass12345")
         cls.paris = make_destination()
         cls.rome = make_destination("Rome", "rome")
 
@@ -145,6 +143,7 @@ class LoggedInTestCase(TestCase):
 
 
 # View tests
+
 
 class ProfilePageViewTests(LoggedInTestCase):
     def test_login_is_required(self):
@@ -179,9 +178,7 @@ class FavouriteDestinationsViewTests(LoggedInTestCase):
         response = self.client.get(reverse("favourite_destinations"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(
-            response, "accounts/favourite_destinations.html"
-        )
+        self.assertTemplateUsed(response, "accounts/favourite_destinations.html")
         self.assertEqual(
             list(response.context["saved_destinations"]),
             [mine],
