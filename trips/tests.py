@@ -119,6 +119,13 @@ class TripTests(TestCase):
         self.assertEqual(str(self.activity), "Louvre (10:00:00)")
         self.assertEqual(self.activity.status, "scheduled")
 
+    def test_get_absolute_url(self):
+        expected = reverse(
+            "itinerary_builder",
+            kwargs={"trip_id": self.trip.pk},
+        )
+        self.assertEqual(self.trip.get_absolute_url(), expected)
+
     def test_budget_too_large_fails_validation(self):
         trip = Trip(
             user=self.user,
@@ -140,44 +147,18 @@ class TripTests(TestCase):
         self.assertFalse(TripDay.objects.exists())
         self.assertFalse(PlannedActivity.objects.exists())
 
+
 class RecommendationTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user(
-            username="alice",
-            password="pass12345",
+        cls.user = User.objects.create_user(username="alice", password="pass12345")
+        cls.destination = make_destination()
+        cls.attraction = make_attraction(
+            cls.destination,
+            "Eiffel Tower",
+            "eiffel-tower",
         )
-        country = Country.objects.create(name="France", code="FRA", continent="Europe")
-        cls.destination = Destination.objects.create(
-            country=country,
-            name="Paris",
-            slug="paris",
-            description="The city of light.",
-            latitude=Decimal("48.856600"),
-            longitude=Decimal("2.352200"),
-            average_cost_per_day=Decimal("150.00"),
-        )
-        cls.attraction = Attraction.objects.create(
-            destination=cls.destination,
-            name="Eiffel Tower",
-            slug="eiffel-tower",
-            description="An iron lattice tower.",
-            category="landmark",
-            latitude=Decimal("48.858400"),
-            longitude=Decimal("2.294500"),
-            average_visit_minutes=90,
-            entry_cost=Decimal("25.00"),
-            opening_time=datetime.time(9, 0),
-            closing_time=datetime.time(23, 0),
-        )
-        cls.trip = Trip.objects.create(
-            user=cls.user,
-            destination=cls.destination,
-            name="Paris Trip",
-            start_date=datetime.date(2026, 12, 1),
-            end_date=datetime.date(2026, 12, 5),
-            budget=Decimal("1000.00"),
-        )
+        cls.trip = make_trip(cls.user, cls.destination, "Paris Trip")
 
     def make_recommendation(self, score):
         return Recommendation.objects.create(
@@ -234,6 +215,7 @@ class RecommendationTests(TestCase):
 
         self.assertFalse(Recommendation.objects.exists())
 
+
 # Shared view test setup
 
 
@@ -269,6 +251,7 @@ class TripsViewTestBase(TestCase):
             f"{settings.LOGIN_URL}?next={url}",
             fetch_redirect_response=False,
         )
+
 
 # Views
 
@@ -313,6 +296,78 @@ class DeleteTripViewTests(TripsViewTestBase):
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Trip.objects.filter(pk=self.trip.pk).exists())
+
+
+@override_settings(WEATHER_API_KEY="")
+class ItineraryBuilderViewTests(TripsViewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("itinerary_builder", args=[self.trip.id])
+
+    def test_login_is_required(self):
+        self.client.logout()
+        self.assert_login_redirect(self.client.get(self.url), self.url)
+
+    def test_other_users_trip_returns_404(self):
+        self.client.force_login(self.other)
+        self.assertEqual(self.client.get(self.url).status_code, 404)
+
+    def test_renders_template_and_context(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "trips/itinerary_builder.html")
+        self.assertEqual(response.context["trip"], self.trip)
+
+    def test_days_are_generated_for_whole_trip(self):
+        data = self.client.get(self.url).context["app_data"]
+
+        self.assertEqual(
+            [day["day_number"] for day in data["days"]],
+            [1, 2, 3, 4, 5],
+        )
+        self.assertEqual(self.trip.trip_days.count(), 5)
+
+
+class GetDestinationWeatherTests(TestCase):
+    @override_settings(WEATHER_API_KEY="test-key")
+    @patch("trips.views.requests.get")
+    def test_maps_weather_response(self, mock_get):
+        mock_get.return_value.json.return_value = {
+            "days": [
+                {
+                    "datetime": "2026-12-01",
+                    "tempmax": 10,
+                    "tempmin": 3,
+                    "conditions": "Rain",
+                    "precipprob": 80,
+                    "icon": "rain",
+                    "unrelated": "dropped",
+                }
+            ]
+        }
+
+        result = get_destination_weather(
+            latitude=Decimal("48.856600"),
+            longitude=Decimal("2.352200"),
+            start_date=datetime.date(2026, 12, 1),
+            end_date=datetime.date(2026, 12, 5),
+        )
+
+        self.assertEqual(
+            result,
+            [
+                {
+                    "date": "2026-12-01",
+                    "tempmax": 10,
+                    "tempmin": 3,
+                    "conditions": "Rain",
+                    "precipprob": 80,
+                    "icon": "rain",
+                }
+            ],
+        )
+
 
 class AddActivityViewTests(TripsViewTestBase):
     def setUp(self):
@@ -371,74 +426,42 @@ class AddActivityViewTests(TripsViewTestBase):
         self.assertIsNone(activity["notes"])
         self.assertEqual(PlannedActivity.objects.count(), 1)
 
-@override_settings(WEATHER_API_KEY="")
-class ItineraryBuilderViewTests(TripsViewTestBase):
+
+class DeleteActivityViewTests(TripsViewTestBase):
     def setUp(self):
         super().setUp()
-        self.url = reverse("itinerary_builder", args=[self.trip.id])
+        self.activity = make_activity(
+            self.day,
+            self.louvre,
+            datetime.time(9, 0),
+            datetime.time(10, 0),
+        )
+        self.url = reverse(
+            "delete_activity",
+            args=[self.trip.id, self.activity.id],
+        )
 
-    def test_login_is_required(self):
-        self.client.logout()
-        self.assert_login_redirect(self.client.get(self.url), self.url)
-
-    def test_other_users_trip_returns_404(self):
-        self.client.force_login(self.other)
-        self.assertEqual(self.client.get(self.url).status_code, 404)
-
-    def test_renders_template_and_context(self):
-        response = self.client.get(self.url)
+    def test_delete_removes_activity(self):
+        response = self.client.delete(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "trips/itinerary_builder.html")
-        self.assertEqual(response.context["trip"], self.trip)
-
-    def test_days_are_generated_for_whole_trip(self):
-        data = self.client.get(self.url).context["app_data"]
-
         self.assertEqual(
-            [day["day_number"] for day in data["days"]],
-            [1, 2, 3, 4, 5],
+            response.json(),
+            {
+                "success": True,
+                "message": "Activity deleted successfully.",
+            },
         )
-        self.assertEqual(self.trip.trip_days.count(), 5)
+        self.assertFalse(PlannedActivity.objects.filter(pk=self.activity.pk).exists())
 
-class GetDestinationWeatherTests(TestCase):
-    @override_settings(WEATHER_API_KEY="test-key")
-    @patch("trips.views.requests.get")
-    def test_maps_weather_response(self, mock_get):
-        mock_get.return_value.json.return_value = {
-            "days": [
-                {
-                    "datetime": "2026-12-01",
-                    "tempmax": 10,
-                    "tempmin": 3,
-                    "conditions": "Rain",
-                    "precipprob": 80,
-                    "icon": "rain",
-                    "unrelated": "dropped",
-                }
-            ]
-        }
+    def test_other_users_activity_returns_404(self):
+        self.client.force_login(self.other)
 
-        result = get_destination_weather(
-            latitude=Decimal("48.856600"),
-            longitude=Decimal("2.352200"),
-            start_date=datetime.date(2026, 12, 1),
-            end_date=datetime.date(2026, 12, 5),
-        )
+        response = self.client.delete(self.url)
 
-        self.assertEqual(
-            result,
-            [
-                {
-                    "date": "2026-12-01",
-                    "tempmax": 10,
-                    "tempmin": 3,
-                    "conditions": "Rain",
-                    "precipprob": 80,
-                    "icon": "rain",
-                }
-            ],
-        )
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(PlannedActivity.objects.filter(pk=self.activity.pk).exists())
+
 
 # Forms
 
@@ -502,3 +525,152 @@ class WizardFormTests(TestCase):
 
     def test_empty_review_form_is_valid(self):
         self.assertTrue(ReviewForm(data={}).is_valid())
+
+
+# Permissions
+
+
+class PermissionsTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.destination = make_destination()
+
+    def setUp(self):
+        self.user = User.objects.create_user(username="alice", password="pass12345")
+
+    def test_user_without_membership_is_not_premium(self):
+        self.assertFalse(is_premium(self.user))
+
+    def test_active_membership_is_premium(self):
+        PremiumMembership.objects.create(
+            user=self.user,
+            status="active",
+        )
+        self.assertTrue(is_premium(User.objects.get(pk=self.user.pk)))
+
+    def test_free_user_can_create_only_one_trip(self):
+        self.assertTrue(can_create_trip(self.user))
+
+        make_trip(self.user, self.destination)
+
+        self.assertFalse(can_create_trip(self.user))
+
+    def test_premium_user_can_create_multiple_trips(self):
+        PremiumMembership.objects.create(
+            user=self.user,
+            status="active",
+        )
+        make_trip(self.user, self.destination)
+        make_trip(self.user, self.destination, "Second trip")
+
+        self.assertTrue(can_create_trip(User.objects.get(pk=self.user.pk)))
+
+
+# Trip creation wizard
+
+
+class CreateTripViewTests(TestCase):
+    PREFIX = "create_trip_view"
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username="alice", password="pass12345")
+        cls.destination = make_destination()
+        cls.url = reverse("organise_trip")
+
+    def setUp(self):
+        self.today = timezone.now().date()
+        self.client.force_login(self.user)
+
+    def post_step(self, step, data=None):
+        payload = {f"{self.PREFIX}-current_step": step}
+        for key, value in (data or {}).items():
+            payload[f"{step}-{key}"] = value
+        return self.client.post(self.url, payload)
+
+    def walk_to_review(self, **preferences):
+        self.client.get(self.url)
+        self.post_step(
+            "preferences",
+            {"travel_style": "culture", **preferences},
+        )
+        self.post_step(
+            "destination",
+            {
+                "destination": self.destination.id,
+                "name": "Paris Break",
+            },
+        )
+        start = self.today + datetime.timedelta(days=10)
+        return self.post_step(
+            "details",
+            {
+                "start_date": start.isoformat(),
+                "end_date": (start + datetime.timedelta(days=3)).isoformat(),
+                "budget": "800.00",
+            },
+        )
+
+    def test_login_is_required(self):
+        self.client.logout()
+
+        response = self.client.get(self.url)
+
+        self.assertRedirects(
+            response,
+            f"{settings.LOGIN_URL}?next={self.url}",
+            fetch_redirect_response=False,
+        )
+
+    def test_free_user_with_a_trip_is_redirected_to_profile(self):
+        make_trip(self.user, self.destination)
+
+        response = self.client.get(self.url)
+
+        self.assertRedirects(
+            response,
+            reverse("profile"),
+            fetch_redirect_response=False,
+        )
+        messages = [str(message) for message in get_messages(response.wsgi_request)]
+        self.assertEqual(len(messages), 1)
+        self.assertIn("free trip", messages[0])
+
+    def test_wizard_steps_advance_in_order(self):
+        self.client.get(self.url)
+
+        first = self.post_step(
+            "preferences",
+            {"travel_style": "culture"},
+        )
+        self.assertEqual(first.context["wizard"]["steps"].current, "destination")
+
+        second = self.post_step(
+            "destination",
+            {
+                "destination": self.destination.id,
+                "name": "Paris Break",
+            },
+        )
+        self.assertEqual(second.context["wizard"]["steps"].current, "details")
+
+    def test_completing_wizard_creates_trip_and_preferences(self):
+        self.walk_to_review(nature="on", solo_travel="on")
+        response = self.post_step("review")
+
+        trip = Trip.objects.get(user=self.user)
+
+        self.assertRedirects(
+            response,
+            reverse("itinerary_builder", args=[trip.id]),
+            fetch_redirect_response=False,
+        )
+        self.assertEqual(trip.name, "Paris Break")
+        self.assertEqual(trip.destination, self.destination)
+        self.assertEqual(trip.budget, Decimal("800.00"))
+
+        preference = TravelPreference.objects.get(user=self.user)
+        self.assertEqual(preference.travel_style, "culture")
+        self.assertTrue(preference.nature)
+        self.assertTrue(preference.solo_travel)
+        self.assertFalse(preference.food)
