@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="fantasy">
   <head>
+    {% vite_react_refresh %}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,11 +18,10 @@
 
     {% block extra_head %}
       <script>
-        ;(function () {
-          const saved = localStorage.getItem('theme')
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-          document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'sunset' : 'fantasy'))
-        })()
+        (function () {
+  const saved = localStorage.getItem("theme");
+  document.documentElement.setAttribute("data-theme", saved || "fantasy");
+})();
       </script>
     {% endblock %}
 
@@ -42,7 +42,7 @@
 
         <!-- Messages -->
         {% if messages %}
-          <div class="mb-4 space-y-2">
+          <div id = "message-container" class="mb-4 space-y-2">
             {% for message in messages %}
               <div role="alert" class="alert alert-{{ message.tags }} text-sm">
                 <span>{{ message }}</span>
@@ -65,5 +65,6 @@
     {% block extra_body %}
 
     {% endblock %}
+    {% vite_asset 'assets/js/main.jsx' %}
   </body>
 </html>

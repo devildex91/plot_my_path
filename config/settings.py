@@ -225,10 +225,15 @@ SECURE_PROXY_SSL_HEADER = (
     "https",
 )
 
+SECURE_SSL_REDIRECT = env.bool(
+    "SECURE_SSL_REDIRECT",
+    default=not DEBUG
+    and not set(ALLOWED_HOSTS).issubset({"localhost", "127.0.0.1", "::1"}),
+)
+
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 

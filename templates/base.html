@@ -31,13 +31,15 @@
     </header>
 
     <main class="flex-grow pb-[65px] sm:pb-0 sm:pt-[65px]">
-        {% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-info">{{ message }}</div>
-  {% endfor %}
+    {% if messages %}
+  <div id="message-container">
+    {% for message in messages %}
+      <div role="alert" class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  </div>
 {% endif %}
-        {% block content %}
-        {% endblock %}
+ {% block content %}
+ {% endblock %}
     </main>
 
     

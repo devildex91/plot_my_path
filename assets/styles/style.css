@@ -7,3 +7,11 @@
   name: "fantasy";
   --color-primary: #322EB5; 
 }
+
+.alert {
+  @apply transition-opacity duration-5000;
+}
+
+.alert.fade-out {
+  @apply opacity-0;
+}

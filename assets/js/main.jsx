@@ -121,3 +121,15 @@ document.addEventListener("click", async (e) => {
   }
   btn.disabled = false;
 });
+
+// message fade out functionality
+
+document.addEventListener('DOMContentLoaded', () => {
+  const alerts = document.querySelectorAll('#message-container .alert');
+
+  alerts.forEach((alert) => {
+    setTimeout(() => {
+      alert.classList.add('fade-out');
+    }, 3000);
+  });
+});
