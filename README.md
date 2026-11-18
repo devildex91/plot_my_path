@@ -411,9 +411,7 @@ Desktop Wireframes
 ---
 Plot My Paths features will include:
 
-
-                    
-
+         
 #### Existing features
 ---
 [back to top](#plot-my-path)
@@ -458,253 +456,369 @@ Plot My Paths features will include:
 #### Automated Testing
 ---
 
-##### Django Testing(Using Djangos testing suite)
----
-###### Core Tests-The Tests
----
-**core tests ran at commit 173448e**
- **Pages Tests**
+#### Django Testing – Using Django's Testing Suite
 
-- The landing page and onboarding page load for anyone and use their
-  expected templates.
-- The homepage requires login: a logged-out visitor is redirected.
-- The homepage greeting depends on the time of day: "Good morning" at 9am,
-  "Good afternoon" at 2pm and "Good evening" at 8pm. The clock is mocked, so
-  the tests give the same result whenever they run.
+---
+- All django testing was carried out using the command python manage.py test "appname" --keepdb
+- All sections have their corrosponding commit number for when they were originaly carried out underneath each section header 
+##### Core Testing – The Tests
+
+- Core tests ran at commit **173448e**.
+
+**Pages**
+
+- The landing page and onboarding page load for anyone and use their expected templates.
+- The homepage requires login: a logged-out visitor is redirected to the login page.
+- The homepage greeting depends on the time of day: "Good morning" at 9am, "Good afternoon" at 2pm and "Good evening" at 8pm. The clock is mocked, so the tests give the same result whenever they run.
 
 **Contact page**
 
-- The page loads and uses the contact template.
-- For a logged-in user the form is pre-filled with their first name and
-  email address.
-- A valid submission sends one email containing the message and redirects
-  back to the contact page.(Using Django's in-memory test mailbox.)
+- The page loads and uses the correct contact template.
+- For a logged-in user, the form is pre-filled with their first name and email address.
+- A valid submission sends one email containing the message and redirects back to the contact page. Django's in-memory test mailbox is used.
 - An invalid submission re-renders the form and sends no email.
 
-**Forms**
-
 **Signup form**
-- Valid with a first and last name, and invalid when they are missing.
+
+- The form is valid with a first and last name, and invalid when either is missing.
 - Calling signup saves the first and last name onto the user.
 
 **Contact form**
-- Valid with a name, email, subject and message.
-- Invalid when any field is missing, and invalid for a malformed email
-  address.
 
-###### core tests results 
-- ran using python manage.py test core.tests --keepdb and all tests passed 
+- The form is valid with a name, email, subject and message.
+- The form is invalid when any required field is missing.
+- A malformed email address is rejected.
+
+##### Core Testing – Results
+
+System check identified no issues (0 silenced).
+.........................................
 ----------------------------------------------------------------------
-Ran 16 tests in 17.075s
+Ran 41 tests in 33.193s
 
 OK
 Preserving test database for alias 'default'...
- 
-###### Accounts model testing- the tests 
-**accounts tests ran at commit **df124fc**
+
+---
+
+##### Accounts Model Testing – The Tests
+
+- Accounts model tests ran at commit **df124fc**.
 
 **Travel Preference**
-- A new preference defaults every interest flag(eg walking,culture) to False, and its string form is "Preferences for <username>
+
+- A new preference defaults every interest flag (e.g. walking and culture) to False, and its string representation is "Preferences for <username>".
 - A travel style outside the allowed choices is rejected by validation.
-- Deleting a user deletes their preferences
+- Deleting a user deletes their travel preferences.
 
 **Saved Destination**
-- Its string form reads "<username> saved <destination>" and a creation timestamp is set automatically.
+
+- Its string representation reads "<username> saved <destination>", and a creation timestamp is set automatically.
 - A user cannot save the same destination twice.
 - Different users can save the same destination.
-- Deleting a destination removes saved records pointing at it and deleting the user removes all the saved records.
-###### Accounts model testing- the results 
-python manage.py test accounts --keepdb
-Found 7 test(s).
-Using existing test database for alias 'default'...
-.......
-----------------------------------------------------------------------
-Ran 7 tests in 6.185s
+- Deleting a destination removes saved records pointing to it.
+- Deleting a user removes all their saved destination records.
 
-OK
-Preserving test database for alias 'default'...
 
-###### Accounts View Testing-The Tests 
-Accounts view tests ran at commit ****
+##### Accounts View Testing – The Tests
+- Account view tests carried out at **commit 7e57d3c**
 
-- For all the views they are tested to confirm they require login and are subsequentally redirected to the login page if they are not. 
+Accounts view tests cover authentication, profile information, saved destinations and favourite functionality.
+
+All views are tested to confirm they require login and redirect logged-out users to the login page.
 
 **Profile page**
-- A signed-in user gets the profile template and sees their username.
 
-**Favourite destinations** 
-- A user sees only their own saved destinations and nobody elses.
+- A signed-in user receives the correct profile template and sees their username.
 
-**Toggle favourite** 
-- The first POST saves the destination and returns {"is_favourite": true} and the second returns false.
-- GET requests are rejected 
-- An unknown destination returns 404.
-- Toggling one users favourite does not effect another users destinations.
+**Favourite destinations**
 
-###### Accounts Testing-The Results
---- 
+- A user sees only their own saved destinations and cannot see another user's saved destinations.
 
- * Note 7 of the tests are from the previous model testing but have been retested due to being in the same test folder that the model tests are in.
+**Toggle favourite**
 
-python manage.py test accounts --keepdb
-Found 16 test(s).
-Using existing test database for alias 'default'...
+- The first POST request saves the destination and returns `{"is_favourite": true}`.
+- A second POST request removes the saved destination and returns `{"is_favourite": false}`.
+- GET requests are rejected.
+- An unknown destination returns a 404 response.
+- Toggling one user's favourite does not affect another user's saved destinations.
+
+##### Accounts Testing – Results
+
 System check identified no issues (0 silenced).
-
 ................
 ----------------------------------------------------------------------
-Ran 16 tests in 17.661s
+Ran 16 tests in 16.829s
 
 OK
 Preserving test database for alias 'default'...
-###### Destinations model testing- The tests 
-- destinations model tests ran at commit **72fe012**
+
+---
+
+##### Destinations Model Testing – The Tests
+
+- Destinations model tests ran at commit **72fe012**.
 
 **Country**
-- Its string form is the country name.
-- The natural key is the name, and looking a country up by natural key
-  returns the right record or raises `DoesNotExist` for an unknown name.
+
+- Its string representation is the country name.
+- The natural key is the name, and looking a country up by natural key returns the correct record.
+- Looking up an unknown country by natural key raises `DoesNotExist`.
 
 **Destination**
-- Its string form is the destination name.
+
+- Its string representation is the destination name.
 - The natural key is the slug, and lookup by natural key works.
-- Slugs must be unique (database constraint).
-- The image URL is built from the Cloudinary cloud name and the slug. This
-  only builds a string, so no request is made to Cloudinary.
-- Destinations are reachable from their country, and deleting a country
-  deletes its destinations.
+- Slugs must be unique, enforced by a database constraint.
+- The image URL is built from the Cloudinary cloud name and the destination slug. This only builds a string, so no request is made to Cloudinary.
+- Destinations are accessible through their country, and deleting a country deletes its destinations.
 
 **Attraction**
-- Its string form is the attraction name, and the rating is optional.
-- The same slug cannot be used twice within one destination, but can be
-  reused in a different destination.
-- The image URL is built from the cloud name and slug.
-- Attractions are reachable from their destination, and deleting a
-  destination deletes its attractions.
 
-###### Destinations model testing- The results 
-python manage.py test destinations --keepdb
-Found 18 test(s).
-Using existing test database for alias 'default'...
-System check identified some issues:
+- Its string representation is the attraction name, and the rating is optional.
+- The same slug cannot be used twice within one destination, but can be reused in a different destination.
+- The image URL is built from the Cloudinary cloud name and attraction slug.
+- Attractions are accessible through their destination, and deleting a destination deletes its attractions.
 
 
-..................
-----------------------------------------------------------------------
-Ran 18 tests in 2.081s
+##### Destinations View Testing – The Tests
 
-OK
-Preserving test database for alias 'default'...
+- Destination view tests ran at commit **3482b9a15**.
 
-###### Destinations-Views Testing The Tests 
-- Destination view tests ran at commit **3482b9a15**  
-
-###### Views
-
-All four views require login: logged-out visitors are redirected to the
-login page.
+All four views require login: logged-out visitors are redirected to the login page.
 
 **Destination list**
-- By default every destination is shown and the selected continent is "all".
-- Filtering by continent returns only matching destinations, ignores letter
-  case, and gives an empty list (not an error) for an unknown continent.
+
+- By default, every destination is shown and the selected continent is "all".
+- Filtering by continent returns only matching destinations.
+- Continent filtering ignores letter case.
+- An unknown continent returns an empty list rather than an error.
 - The continent dropdown values are distinct and sorted alphabetically.
 
 **Destination detail**
-- The correct destination and template are used, and an unknown ID returns 404.
+
+- The correct destination and template are used, and an unknown destination ID returns a 404.
 - Only that destination's attractions are listed.
-- The "is favourite" flag is false by default, true once the current user has
-  saved the destination, and not affected by other users' saves.
+- The "is favourite" flag is false by default.
+- The flag becomes true once the current user has saved the destination.
+- Another user's saved destination does not affect the current user's favourite status.
 
 **Search (JSON)**
+
 - A missing or blank query returns an empty result list.
-- Matching is partial and case-insensitive, and no match gives an empty list.
-- Each result contains the id, name, slug, description, cost (as a string)
-  and image URL.
+- Matching is partial and case-insensitive.
+- A query with no matches returns an empty list.
+- Each result contains the destination ID, name, slug, description, cost (as a string) and image URL.
 - Results are capped at 10.
 
 **Popular destinations (JSON)**
-- Returns an empty list when there are no destinations, all of them when
-  there are fewer than three, and at most three otherwise. The selection is
-  random, so the tests check counts rather than which destinations come back.
-- This view has no URL yet, so the tests call it directly with Django's
-  RequestFactory.
 
-  ###### Destinations Views- The Results 
+- Returns an empty list when there are no destinations.
+- Returns all destinations when there are fewer than three.
+- Returns at most three destinations when more are available.
+- The selection is random, so the tests check the number of results rather than which destinations are returned.
+- This view does not currently have a URL, so the tests call it directly using Django's RequestFactory.
 
-  * Note 18 of the tests are from the previous model testing but have been retested due to being in the same test folder that the model tests are in
+##### Destinations Testing – Results
 
-python manage.py test destinations --keepdb
-
-...............................
+System check identified no issues (0 silenced).
+..........................................
 ----------------------------------------------------------------------
-Ran 42 tests in 14.918s
+Ran 42 tests in 15.698s
 
 OK
 Preserving test database for alias 'default'...
-(.venv) 
 
-###### Payments Model Testing-The Tests
-- payments model tests ran at commit **72fe012**
---- 
+---
+
+##### Payments Model Testing – The Tests
+
+- Payments model tests ran at commit **72fe012**.
+
 **Payment model**
-- Its string form is the username, amount and currency.
+
+- Its string representation contains the username, amount and currency.
 - A new payment defaults to GBP and a pending status.
-- amount_pounds converts the stored pence amount to pounds (1999 becomes 19.99).
+- amount_pounds converts the stored pence amount into pounds (1999 becomes 19.99).
 - The created_at timestamp is set automatically.
-- The Stripe payment ID must be unique (database constraint).
-- A negative amount fails validation.
-- Payments are reachable from their user.
+- The Stripe payment ID must be unique, enforced by a database constraint.
+- A negative payment amount fails validation.
+- Payments are accessible through their associated user.
 
 **PremiumMembership model**
-- Its string form is the username and membership status.
+
+- Its string representation contains the username and membership status.
 - A new membership defaults to inactive.
-- is_active is true for an active membership and false for an inactive one.
+- is_active returns true for an active membership and false for an inactive one.
 - The created_at timestamp is set automatically.
-- A membership is reachable from both its user and its payment.
+- A membership is accessible through both its associated user and payment.
 
-###### Payments model Testing-Results 
----
-python manage.py test payments --keepdb
-Found 13 test(s).
+##### Payment Views Testing – The Tests
+
+- Payment view testing carried out from **commit 2a9e879 to commit 9708d8c**
+
+**Checkout**
+
+- The checkout page loads for a logged-in user.
+- Logged-out users are redirected away from checkout.
+- Users who already have an active membership are redirected away from checkout.
+- Creating a checkout session returns the Stripe checkout URL as JSON.
+- Users who already have an active membership cannot create a new checkout session (409 response), and Stripe is not called.
+- The create checkout session view only accepts POST requests.
+
+**Payment success**
+
+- A request with no session ID returns an error (400).
+- A paid session creates a payment record and an active membership.
+- A session belonging to a different user is rejected (403), and nothing is saved.
+- An unpaid session is rejected (400), and nothing is saved.
+- Loading the success page twice for the same session does not create duplicate payments or memberships.
+
+**Payment failed**
+
+- The payment failed page loads successfully.
+- An error message passed in the URL is displayed on the page.
+
+**Stripe webhook**
+
+- A paid checkout.session.completed event creates a payment and an active membership.
+- An unpaid checkout.session.completed event is accepted but creates no payment.
+- An invalid payload or signature returns an error (400).
+- A charge.refunded event marks the payment as refunded and sets the membership to inactive.
+- The webhook only accepts POST requests.
+
+**Refunds**
+
+- A refund is allowed within 14 days of the membership start date.
+- A refund is not allowed if the membership has no start date or started more than 14 days ago.
+- The refund view only accepts POST requests.
+- Logged-out users are redirected away from the refund view.
+- A successful refund calls Stripe once, marks the payment as refunded and sets the membership to inactive.
+- No refund is processed for a membership older than 14 days or for a membership that is not active. In both cases, the user is redirected.
+
+##### Payments Testing – Results
+
+Found 39 test(s).
 Using existing test database for alias 'default'...
-System check identified some issues:
-
-.............
+System check identified no issues (0 silenced).
+.......................................
 ----------------------------------------------------------------------
-Ran 13 tests in 19.705s
+Ran 39 tests in 66.204s
 
 OK
 Preserving test database for alias 'default'...
 
-###### Trips model Testing-The Tests 
-Trips model testing carried out at **commit 9bc6522** 
+---
 
-External calls are mocked or disabled (the weather API is patched or its key
-is blanked), so no real requests are made during testing.
+##### Trips Model Testing – The Tests
+
+---
+
+Trips model testing covers the Trip, TripDay, PlannedActivity and Recommendation models.
 
 **Trip, TripDay and PlannedActivity models**
-- The string form of a trip is its name, a day is "Day N - trip name", and an
-  activity is the attraction name followed by its start time.
-- A new activity defaults to a scheduled status.
 
+- The string form of a trip is its name, a day is "Day N - trip name", and an activity is the attraction name followed by its start time.
+- A new activity defaults to a scheduled status.
+- The trip's absolute URL returns the correct itinerary builder URL.
 - A budget that is too large fails validation.
 - Deleting a user deletes their trips.
 - Deleting a trip deletes its days and planned activities.
 
-###### Trips model Testing-Results 
-python manage.py test trips --keepdb
-Found 10 test(s).
-Using existing test database for alias 'default'...
-System check identified some issues:
+**Recommendation model**
 
-..........
+- A recommendation can be created with the correct score, reason, user, trip and attraction.
+- The string representation includes the username, attraction name and recommendation score.
+- Recommendations are ordered by score, with the highest-scoring recommendation first.
+- Deleting a user deletes their recommendations.
+- Deleting a trip deletes its recommendations.
+- Deleting an attraction deletes its recommendations.
+
+##### Trips View Testing – The Tests
+
+-- All trip views and forms testing carried out from **commit efca79f to commit 994e04**
+ 
+
+**My trips**
+
+- Logged-out users are redirected to the login page.
+- Users only see their own trips, never another user's.
+
+**Delete trip**
+
+- A POST request deletes the trip and redirects to the my trips page.
+- A user cannot delete another user's trip (404), and the trip is kept.
+
+**Itinerary builder**
+
+- Logged-out users are redirected to the login page.
+- Another user's trip returns a 404.
+- The page renders the correct template and passes the trip in the context.
+- A day is generated for every date of the trip (a five-day trip gives five days) and saved to the database.
+
+**Weather**
+
+- The weather API response is mapped to the fields the site uses (date, maximum and minimum temperature, conditions, chance of rain and icon), and any unrelated fields are dropped.
+- The API call is mocked to prevent an actual external request.
+
+**Add activity**
+
+- Logged-out users are redirected to the login page and nothing is saved.
+- Another user's trip returns a 404 and nothing is saved.
+- Each required field (attraction, start time and end time) is checked in turn, and leaving any one out returns an error (400).
+- A valid request creates the activity (201), returns its details as JSON and saves it with the correct order and a scheduled status.
+- The response includes the attraction ID, start and end times, order, status and notes.
+
+**Delete activity**
+
+- Deleting an activity removes it from the database and returns a success response (200) with a confirmation message.
+- Another user's activity returns a 404 and the activity is kept.
+
+**Wizard forms**
+
+- The preferences form is valid with just a travel style, and optional preference checkboxes default to false.
+- Travel style is required.
+- The destination form is valid with a destination and trip name, and both fields are required.
+- The trip details form accepts a future start date, end date and budget.
+- A start date in the past is rejected with an error message.
+- The review form is valid when empty.
+
+##### Trips Permissions Testing – The Tests
+- Permission tests carried out at **commit 94e3ae2
+as well as some missing view tests** 
+**Premium membership**
+
+- A user without a membership is not considered premium.
+- A user with an active premium membership is recognised as a premium user.
+
+**Trip creation limits**
+
+- A free user can create only one trip. Once a trip exists, they cannot create another.
+- A premium user can create multiple trips.
+
+##### Trip Creation Wizard Testing – The Tests
+
+**Create trip**
+
+- Logged-out users are redirected to the login page.
+- A free user who already has a trip is redirected to their profile with a message explaining the free trip limit.
+- The wizard steps advance in order: preferences, destination, details, then review.
+- Completing the wizard creates the trip with the correct name, destination and budget, saves the user's travel preferences, and redirects to the itinerary builder for the new trip.
+
+##### Trips Testing – Results
+
+System check identified no issues (0 silenced).
+.........................................
 ----------------------------------------------------------------------
-Ran 10 tests in 4.336s
+Ran 41 tests in 33.193s
 
 OK
 Preserving test database for alias 'default'...
+
+---
+
 [back to top](#plot-my-path)
+
 #### Contrast tests 
 ---
 [back to top](#plot-my-path)
