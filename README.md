@@ -578,8 +578,8 @@ All views are tested to confirm they require login and redirect logged-out users
 
 **Toggle favourite**
 
-- The first POST request saves the destination and returns `{"is_favourite": true}`.
-- A second POST request removes the saved destination and returns `{"is_favourite": false}`.
+- The first POST request saves the destination and returns is_favourite": true.
+- A second POST request removes the saved destination and returns is_favourite": false.
 - GET requests are rejected.
 - An unknown destination returns a 404 response.
 - Toggling one user's favourite does not affect another user's saved destinations.
@@ -604,7 +604,7 @@ Preserving test database for alias 'default'...
 
 - Its string representation is the country name.
 - The natural key is the name, and looking a country up by natural key returns the correct record.
-- Looking up an unknown country by natural key raises `DoesNotExist`.
+- Looking up an unknown country by natural key raises DoesNotExist.
 
 **Destination**
 
@@ -662,7 +662,7 @@ All four views require login: logged-out visitors are redirected to the login pa
 
 ##### Destinations Testing – Results
 
-System check identified no issues (0 silenced).
+System check identified no issues (0 silenced).  
 ..........................................
 ----------------------------------------------------------------------
 Ran 42 tests in 15.698s
@@ -883,6 +883,148 @@ Preserving test database for alias 'default'...
 [back to top](#plot-my-path)
 #### How to run this project 
 ---
+
+##### Running the project locally
+
+##### Prerequisites
+| Prerequisities             	|                                                                                                                                                                                                                                                                                                                                                                                                                                                           	|
+|----------------------------	|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Python 3.13+               	|                                                                                                                                                                                                                                                                                                                                                                                                                                                           	|
+| Node.js and npm            	|                                                                                                                                                                                                                                                                                                                                                                                                                                                           	|
+| Accounts and API keys for: 	| [Google Oauth](https://console.cloud.google.com/)                                                                                                                                                                                                                                                                                                                                                                                                         	|
+|                            	| [Cloudinary](https://cloudinary.com/)                                                                                                                                                                                                                                                                                                                                                                                                                     	|
+|                            	| [Visual Crossing-weather](https://www.visualcrossing.com/weather-api/?gad_source=1&gad_campaignid=24350121815&gbraid=0AAAAAD5PI1guCiiB5CO6i6Gr6iyF0mTAk&gclid=Cj0KCQiA2frXBhC_ARIsAPTFcdOHmhO251Vdqm46Gflnlb2foYK_axHaT7EdnsF_oblQBBoz6kJSa94aAsQkEALw_wcB)                                                                                                                                                                                               	|
+|                            	| [Stripe](https://stripe.com/gb)                                                                                                                                                                                                                                                                                                                                                                                                                           	|
+|                            	| [Brevo](https://www.brevo.com/?utm_source=adwords_brand&utm_medium=lastclick&utm_content=SendinBlue&utm_extension=&utm_term=brevo&utm_matchtype=e&utm_campaign=20034978946&utm_network=g&km_adid=656209990479&km_adposition=&km_device=c&utm_adgroupid=154059591968&gad_source=1&gad_campaignid=20034978946&gbraid=0AAAAADjx0RZ0m1tDrAySz3JS956PLKRkX&gclid=Cj0KCQiA2frXBhC_ARIsAPTFcdMoQX2Y0-tUNGsEwPEgtr7g9DBSuTeHYQXxyMebxE64B90z0RfJ_cYaAuGBEALw_wcB) 	|
+
+
+##### 1. Clone and install
+
+
+git clone https://github.com/devildex91/plot_my_path.git
+cd plot_my_path
+
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+pip install -r requirements.txt
+npm install
+
+
+##### 2. Configure environment variables
+
+Create a .env file in the project root and add the following variables:
+
+
+| Env variable            	| Value                                             	| NOTES                                                                                       	|
+|-------------------------	|---------------------------------------------------	|---------------------------------------------------------------------------------------------	|
+| DEBUG                   	| True                                              	| Set to False on your deployment                                                             	|
+| ALLOWED HOSTS           	| 127.0.0.1,localhost                               	| Set to your URL from deployment when creating Env variables on your deployment of choice    	|
+| SECURE_SSL_REDIRECT     	| False                                             	|                                                                                             	|
+| GOOGLE_KEY              	| your-google-oauth-client-secret                   	|                                                                                             	|
+| CLOUDINARY_URL          	| cloudinary://api_key:api_secret@cloud_name        	|                                                                                             	|
+| WEATHER_API_KEY         	| your-visual-crossing-key                          	|                                                                                             	|
+| STRIPE_SECRET_KEY       	| sk_test_...                                       	|                                                                                             	|
+| STRIPE_PUBLISHABLE_KEY  	| pk_test_...                                       	|                                                                                             	|
+| STRIPE_PREMIUM_PRICE_ID 	| price_...                                         	|                                                                                             	|
+| STRIPE_WEBHOOK_SECRET   	| whsec_...                                         	|                                                                                             	|
+| BREVO_API_KEY           	| your-brevo-key                                    	|                                                                                             	|
+| DEFAULT_FROM_EMAIL      	| you@example.com                                   	|                                                                                             	|
+| CONTACT_EMAIL           	| you@example.com                                   	|                                                                                             	|
+| DATABASE_URL            	| Optional but highly reccommended for deployment   	| Neon was used for this deployment                                                           	|
+| DJANGO_SECRET_KEY       	| your django secret key                            	| python -c "from django.core.management.utils import get_random_secret_key as g; print(g())" 	|
+|                         	|                                                   	|                                                                                             	|
+
+
+##### 3. Set up the database
+
+1. python manage.py makemigrations(To check whats being migrated)
+2. python manage.py migrate
+3. python manage.py createsuperuser and follow the terminal instructions to create a superuser.
+
+
+- Add destinations and attractions through the admin at /admin/. or create a json of data in the format of the example shown below and run:
+-python manage.py loaddata path to your file.json
+
+Examples of data:
+countries example:   
+{  
+    "model": "destinations.country",  
+    "fields": {  
+      "name": "Japan",  
+      "code": "JPN",  
+      "continent": "Asia"  
+    }  
+  },
+
+  destinations example:  
+    {    
+    "model": "destinations.destination",  
+    "fields": {  
+      "country": ["Japan"],  
+      "name": "Tokyo",  
+      "slug": "tokyo",  
+      "description": "A hyper-modern metropolis blending neon skyscrapers   with historic Shinto shrines.",  
+      "latitude": "35.676200",  
+      "longitude": "139.650300",  
+      "average_cost_per_day": "150.00"  
+    }  
+  },  
+
+attractions example:  
+  {  
+    "model": "destinations.attraction",  
+    "fields": {  
+      "destination": ["tokyo"],  
+      "name": "Senso-ji Temple",  
+      "slug": "senso-ji-temple",  
+      "description": "Tokyo's oldest and most iconic Buddhist temple located in the heart of Asakusa.",  
+      "category": "Historic",  
+      "latitude": "35.714800",  
+      "longitude": "139.796700",  
+      "average_visit_minutes": 90,  
+      "entry_cost": "0.00",  
+      "rating": "4.70",  
+      "opening_time": "06:00:00",  
+      "closing_time": "17:00:00"  
+    }  
+  
+  
+
+
+
+##### 4. Start the app
+
+Run both servers, each in its own terminal:
+
+
+##### Terminal 1: frontend (Vite)
+npm run dev
+
+##### Terminal 2: backend (Django)
+python manage.py runserver
+
+
+Open http://localhost:8000.
+
+##### Running the tests
+
+
+python manage.py test
+
+##### Code formatting
+
+black --check .
+
+
+### Deployment 
+- The following steps were used to deploy on render. Please follow the instruction whichever deployment site you choose to use 
+
+The included  Dockerfile builds the frontend, installs the Python dependencies, then on startup runs migrations, collects static files and starts Gunicorn on $PORT. Set these environment variables on your host of choice:
+
+DEBUG=False, DJANGO_SECRET_KEY, ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, DATABASE_URL, plus all the keys listed in the .env example above (using live Stripe keys).
+
+Then register your production URLs for Google OAuth (/accounts/google/login/callback/) and the Stripe webhook.
 [back to top](#plot-my-path)
 ### Credits
 ---
@@ -897,3 +1039,178 @@ Preserving test database for alias 'default'...
 
 
 
+
+```
+plot_my_path
+├─ .coverage
+├─ .dockerignore
+├─ accounts
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ migrations
+│  │  ├─ 0001_initial.py
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+├─ assets
+│  ├─ js
+│  │  ├─ components
+│  │  │  ├─ ActivityList.jsx
+│  │  │  ├─ AddActivityForm.jsx
+│  │  │  ├─ ItineraryMap.jsx
+│  │  │  ├─ itinerary_builder.jsx
+│  │  │  ├─ Onboarding.jsx
+│  │  │  ├─ SearchBar.jsx
+│  │  │  └─ WeatherPanel.jsx
+│  │  └─ main.jsx
+│  ├─ styles
+│  │  └─ style.css
+│  └─ utils.js
+├─ config
+│  ├─ asgi.py
+│  ├─ settings.py
+│  ├─ urls.py
+│  ├─ wsgi.py
+│  └─ __init__.py
+├─ core
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ forms.py
+│  ├─ migrations
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+├─ destinations
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ migrations
+│  │  ├─ 0001_initial.py
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+├─ Dockerfile
+├─ manage.py
+├─ package-lock.json
+├─ package.json
+├─ payments
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ migrations
+│  │  ├─ 0001_initial.py
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+├─ README.md
+├─ requirements.txt
+├─ static
+│  ├─ css
+│  │  ├─ app.css
+│  │  └─ style.css
+│  ├─ images
+│  │  ├─ home_img.avif
+│  │  ├─ images
+│  │  │  ├─ destination-img
+│  │  │  ├─ home_img.avif
+│  │  │  ├─ landing_background.avif
+│  │  │  ├─ new_discovery.avif
+│  │  │  ├─ personalised_itinery.avif
+│  │  │  ├─ pmp-logo.png
+│  │  │  ├─ readme-img
+│  │  │  │  ├─ mobile-create-plan copy.png
+│  │  │  │  ├─ mobile-create-plan.png
+│  │  │  │  ├─ mobile-destination-detail.png
+│  │  │  │  ├─ mobile-explore-destination.png
+│  │  │  │  ├─ mobile-homepage.png
+│  │  │  │  ├─ mobile-itinerary-builder.png
+│  │  │  │  ├─ mobile-landing-page.png
+│  │  │  │  ├─ mobile-login-page.png
+│  │  │  │  ├─ mobile-onboarding-pages.png
+│  │  │  │  ├─ mobile-profile.png
+│  │  │  │  ├─ mobile-register-page.png
+│  │  │  │  └─ mobile-trip-summary.png
+│  │  │  └─ real_time.avif
+│  │  ├─ landing_background.avif
+│  │  ├─ new_discovery.avif
+│  │  ├─ personalised_itinery.avif
+│  │  ├─ pmp-logo.png
+│  │  ├─ readme-img
+│  │  │  ├─ mobile-create-plan.png
+│  │  │  ├─ mobile-destination-detail.png
+│  │  │  ├─ mobile-explore-destination.png
+│  │  │  ├─ mobile-homepage.png
+│  │  │  ├─ mobile-itinerary-builder.png
+│  │  │  ├─ mobile-landing-page.png
+│  │  │  ├─ mobile-login-page.png
+│  │  │  ├─ mobile-onboarding-pages.png
+│  │  │  ├─ mobile-profile.png
+│  │  │  ├─ mobile-register-page.png
+│  │  │  ├─ mobile-trip-summary.png
+│  │  │  └─ pmp-erd.png
+│  │  └─ real_time.avif
+│  ├─ js
+│  │  └─ app-bundle.js
+│  ├─ manifest.json
+│  └─ maplibre
+│     ├─ maplibre-gl-shared.mjs
+│     └─ maplibre-gl-worker.mjs
+├─ templates
+│  ├─ 404.html
+│  ├─ account
+│  │  ├─ email.html
+│  │  ├─ login.html
+│  │  ├─ password_change.html
+│  │  └─ signup.html
+│  ├─ accounts
+│  │  ├─ favourite_destinations.html
+│  │  └─ profile_page.html
+│  ├─ allauth
+│  │  └─ layouts
+│  │     └─ base.html
+│  ├─ base.html
+│  ├─ components.yaml
+│  ├─ core
+│  │  ├─ contact.html
+│  │  ├─ home.html
+│  │  ├─ landing_page.html
+│  │  └─ onboarding.html
+│  ├─ destinations
+│  │  ├─ destination.html
+│  │  └─ destination_detail.html
+│  ├─ includes
+│  ├─ payments
+│  │  ├─ checkout.html
+│  │  ├─ failed.html
+│  │  └─ success.html
+│  └─ trips
+│     ├─ itinerary_builder.html
+│     ├─ my_trips.html
+│     └─ trips.html
+├─ trips
+│  ├─ admin.py
+│  ├─ apps.py
+│  ├─ forms.py
+│  ├─ migrations
+│  │  ├─ 0001_initial.py
+│  │  ├─ 0002_remove_trip_status.py
+│  │  └─ __init__.py
+│  ├─ models.py
+│  ├─ permissions.py
+│  ├─ tests.py
+│  ├─ urls.py
+│  ├─ views.py
+│  └─ __init__.py
+└─ vite.config.mjs
+
+```

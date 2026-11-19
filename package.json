@@ -21,9 +21,14 @@
   "homepage": "https://github.com/devildex91/plot_my_path#readme",
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.5",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.13",
     "@vitejs/plugin-react": "^6.3.0",
     "daisyui": "^5.7.46",
-    "vite": "^8.3.7"
+    "jsdom": "^29.1.1",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.1"
   },
   "dependencies": {
     "maplibre-gl": "^6.16.0",
