@@ -105,7 +105,7 @@ Acceptance criteria are listed beneath each user story.
   - After signing up I am told to check my inbox to verify my email.
   - I cannot sign in until my email address has been verified.
 
-- As a visitor, I can view a landing page and an onboarding carousel so that I understand what the app does before I sign up.
+- As a visitor, I can view a landing page and information so that I understand what the app does before I sign up.
   - Both pages can be viewed without signing in.
 
 - As a signed-in user, I can see a personalised homepage so that I feel welcomed and get ideas straight away.
@@ -408,15 +408,9 @@ Desktop Wireframes
  
 [back to top](#plot-my-path)
 ### Features
----
-Plot My Paths features will include:
-
-         
+---      
 #### Existing features
 ---
-
-#### Features
-
 ##### Trip planning
 - **Guided trip creation:** a four-step wizard collects your travel preferences, destination and trip name, dates and budget, then a review step before the trip is created.
 - **Travel preferences:** choose a travel style and interests such as culture, food, nature, history, nightlife, family-friendly and solo travel. Your preferences are saved to your profile.
@@ -448,6 +442,7 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 [back to top](#plot-my-path)
 #### User Goals mapping
 ---
+
 [back to top](#plot-my-path)
 #### Features left to implement
 ---
@@ -1251,6 +1246,12 @@ Preserving test database for alias 'default'...
 
 #### Contrast tests 
 ---
+| Theme   | Primary colour          | background colour     | Contrast Result | Evidence                                                                           |
+|---------|-------------------------|-----------------------|-----------------|------------------------------------------------------------------------------------|
+| Sunset  | primary(#FF865B)        | bg-base-100(#121C22)  | Pass            | [sunset-base-100](./static/images/readme-img/text-colour-bg-base-100-sunset.png)   |
+| Sunset  | primary(#FF865B)        | bg-baser-200(#0E171E) | Pass            | [sunset-base-200](./static/images/readme-img/text-colour-bg-base-200-sunset.png)   |
+| Fantasy | custom primary(#322EB5) | bg-base-100(#ffffff)  | Pass            | [fantasy-base-100](./static/images/readme-img/text-colour-bg-base-100-fantasy.png) |
+| Fantasy | custom-primary(#322EB5) | bg-base-200(#E8E8E8)  | Pass            | [fantasy-base-200](./static/images/readme-img/text-colour-bg-base-200-fantasy.png) |
 [back to top](#plot-my-path)
 #### Keyboard Accessibility tests 
 ---
