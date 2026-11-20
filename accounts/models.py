@@ -1,3 +1,5 @@
+"""Models for traveller preferences and saved destinations."""
+
 from typing import ClassVar
 
 from django.conf import settings
@@ -34,6 +36,7 @@ class TravelPreference(models.Model):
     solo_travel = models.BooleanField(default=False)
 
     def __str__(self):
+        """Return a readable label for the user's preferences."""
         return f"Preferences for {self.user.username}"
 
 
@@ -54,4 +57,5 @@ class SavedDestination(models.Model):
         unique_together = ("user", "destination")
 
     def __str__(self):
+        """Return a readable label for the saved destination."""
         return f"{self.user.username} saved {self.destination.name}"

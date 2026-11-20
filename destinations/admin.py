@@ -8,3 +8,4 @@ admin.site.register(Destination)
 admin.site.register(Attraction)
 
 admin.site.register(Country)
+"""Register destination models with the Django administration site."""

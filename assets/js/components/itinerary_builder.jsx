@@ -161,7 +161,7 @@ function ItineraryBuilder({
       return isValidCoord(aLat, aLng)
         ? {
             id: activity.id,
-            attractionId: attraction.id, // new
+            attractionId: attraction.id,
             lat: aLat,
             lng: aLng,
             name: attraction?.name,

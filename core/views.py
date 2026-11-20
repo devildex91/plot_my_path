@@ -1,3 +1,5 @@
+"""Views for public pages, account registration, and contact support."""
+
 from datetime import datetime
 
 from allauth.account import app_settings
@@ -14,6 +16,8 @@ from .forms import ContactForm
 
 
 class CustomSignUpView(SignupView):
+    """Configure the confirmation shown after a successful allauth signup."""
+
     def form_valid(self, form):
         """Show the appropriate confirmation after allauth accepts the signup."""
         response = super().form_valid(form)
@@ -73,7 +77,7 @@ def homepage_view(request):
 
 
 def contact(request):
-    """Renders a contact form for help page"""
+    """Render the contact form and email valid support enquiries."""
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():

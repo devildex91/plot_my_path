@@ -1,8 +1,8 @@
 # Plot My Path
 ---
 
-[To view site]
-[To view backend]
+[To view site](https://plot-my-path.onrender.com/)
+[To view backend](https://plot-my-path.onrender.com/admin/login/?next=/admin/)
  
 ## Table of Contents
 
@@ -485,6 +485,395 @@ All done! ✨ 🍰 ✨
 #### JSX Testing
 ---
 
+- Testing was carried out use vitest using the following command 
+npx vitest run assets/js/tests/filename.test.js
+
+##### Utils.js testing 
+**The Tests**
+---
+
+The utility function tests verify the behaviour of the application's reusable helper functions.
+
+**getCookie()**
+- Checks that the function correctly retrieves the value of an existing cookie.
+- Confirms that null is returned when the requested cookie does not exist.
+- Tests that equals signs within cookie values are preserved.
+- Verifies that URL-encoded cookie values are correctly decoded.
+
+**formatActivityTime()**
+- Checks that empty or null values return the default time of 00:00.
+- Verifies that ISO datetime strings are correctly converted into HH:MM format.
+- Checks that existing time strings are correctly shortened to HH:MM.
+- Handles ISO datetime strings that contain no time component.
+
+These tests help ensure that cookie handling and activity time formatting work reliably throughout the application.
+
+**The Results**
+---
+npx vitest run assets/js/tests/utils.test.js
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/utils.test.js (9 tests) 15ms  
+   ✓ getCookie (4)  
+     ✓ returns the value of an existing cookie 11ms  
+     ✓ returns null when the cookie does not exist 1ms  
+     ✓ preserves equals signs in cookie values 0ms  
+     ✓ decodes URL-encoded cookie values 0ms  
+   ✓ formatActivityTime (5)  
+     ✓ returns 00:00 when given an empty value 0ms  
+     ✓ returns 00:00 when given null 0ms  
+     ✓ extracts the time from an ISO datetime string 0ms  
+     ✓ returns an existing time in HH:MM format 0ms  
+     ✓ returns 00:00 when an ISO datetime has no time after T 0ms  
+
+ Test Files  1 passed (1)  
+      Tests  9 passed (9)  
+
+##### ActivityList.jsx Testing
+---
+**The Tests**
+
+The ActivityList component tests verify that itinerary activities are displayed correctly and that users can interact with them.
+
+The tests cover:
+
+- Displaying activity names by matching activities to their corresponding attractions using attraction IDs.
+- Formatting and displaying activity start and end times.
+- Displaying attraction entry costs.
+- Showing an indicator when an attraction matches the user's interests.
+- Providing a fallback message when an attraction cannot be found.
+- Calling the removal callback with the correct activity ID when the user clicks the Remove button.
+- Disabling removal buttons and displaying a loading state while an activity is being deleted.
+- Displaying error messages when an error is provided.
+- Showing an appropriate empty-state message when no activities exist.
+
+These tests help ensure that itinerary information is presented accurately and that the activity removal interface behaves as expected.
+
+**The Results**
+---
+npx vitest run assets/js/tests/ActivityList.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/ActivityList.test.jsx (9 tests) 265ms  
+   ✓ ActivityList (9)  
+     ✓ displays the activities and their attraction names 45ms  
+     ✓ displays activity start and end times 8ms  
+     ✓ displays the attraction entry costs 7ms  
+     ✓ displays a preference match indicator when applicable 4ms  
+     ✓ displays a fallback when an attraction cannot be found 3ms  
+     ✓ calls onRemove with the activity ID when Remove is clicked 175ms  
+     ✓ disables all Remove buttons while an activity is being deleted 11ms  
+     ✓ displays an error message when an error is provided 7ms  
+     ✓ displays an empty message when there are no activities 2ms  
+
+ Test Files  1 passed (1)  
+      Tests  9 passed (9)
+
+##### AddActivityForm.jsx-Testing
+--- 
+**The Tests**
+
+The AddActivityForm component tests verify that users can select attractions, enter activity times and add activities to their itinerary.
+
+The tests cover:
+
+- Rendering the attraction selector and start and end time inputs.
+- Displaying the available attractions.
+- Validating that an attraction has been selected.
+- Validating that the start time is earlier than the end time.
+- Filtering attractions when the user selects the "For you" option.
+- Successfully submitting a new activity and calling the `onAdded` callback.
+- Verifying that the API request contains the correct URL, HTTP method, headers, CSRF token and activity data.
+- Displaying an error when the API request fails.
+
+These tests help ensure that the activity form validates user input correctly and communicates reliably with the Django backend.
+
+**The Results**
+---
+
+npx vitest run assets/js/tests/AddActivityForm.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/AddActivityForm.test.jsx (8 tests) 1111ms
+   ✓ AddActivityForm (8)
+     ✓ renders the attraction selector and time inputs 162ms
+     ✓ displays the available attractions 19ms
+     ✓ displays a validation error when no attraction is selected 51ms
+     ✓ displays a validation error when the start time is after the end time 430ms
+     ✓ filters attractions when the For you checkbox is selected 124ms
+     ✓ submits the selected activity successfully 107ms
+     ✓ sends the correct request details when adding an activity 111ms
+     ✓ displays an error when the API request fails 104ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+
+##### itinerary_builder.jsx Testing 
+**The Tests** 
+---
+The ItineraryBuilder component tests verify that users can manage their daily itinerary, navigate between trip days and monitor their remaining budget.
+
+The tests cover:
+- Displaying itinerary days in the correct order.
+- Showing a message when no itinerary days are available.
+- Navigating forwards and backwards between itinerary days.
+- Disabling navigation buttons when the first or last day is selected.
+- Calculating the daily budget and remaining budget based on planned activities.
+- Adding activities to the selected itinerary day.
+- Successfully deleting activities through the Django backend.
+- Displaying an error when an activity cannot be deleted.
+- Rendering the map and weather components.
+
+Child components are mocked to allow the tests to focus on the functionality and state management of ItineraryBuilder independently.
+
+These tests help ensure that itinerary management, day navigation, budget calculations and communication with the backend work correctly.
+
+**The Results**
+---
+npx vitest run assets/js/tests/ItineraryBuilder.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/ItineraryBuilder.test.jsx (8 tests) 455ms
+ 
+   ✓ ItineraryBuilder (8)
+     ✓ renders the first itinerary day in day-number order 178ms
+     ✓ displays a message when no itinerary days are available 4ms
+     ✓ allows the user to move between itinerary days 118ms
+     ✓ calculates the daily budget and remaining budget 7ms
+     ✓ adds a new activity to the selected day 44ms
+     ✓ deletes an activity successfully 37ms
+     ✓ displays an error when deleting an activity fails 59ms
+     ✓ renders the map and weather components 5ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+
+##### ItineraryMap.jsx testing 
+---
+**The Tests**
+---
+
+The ItineraryMap component tests verify that the interactive map correctly displays available attractions and scheduled itinerary stops using MapLibre.
+
+The tests cover:
+- Initialising the map with the supplied destination coordinates.
+- Using fallback coordinates when the destination coordinates are invalid.
+- Creating separate GeoJSON sources and layers for available attractions and planned stops.
+- Excluding scheduled attractions from the available attractions source.
+- Adjusting the map view to fit multiple scheduled stops.
+- Centring the map on a single scheduled stop.
+- Updating map sources when itinerary stops or attractions change.
+- Opening popups when map features are clicked.
+- Cleaning up the map and resize observer when the component unmounts.
+
+MapLibre is mocked to allow the component's map interactions, data updates and lifecycle behaviour to be tested without loading an actual map.
+
+These tests help ensure that map data remains synchronised with the itinerary and that map resources are properly managed.
+
+**The Results**
+---
+ npx vitest run assets/js/tests/ItineraryMap.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/ItineraryMap.test.jsx (9 tests) 94ms
+   ✓ ItineraryMap (9)
+     ✓ initialises the map using the supplied destination coordinates 59ms
+     ✓ uses the fallback centre when destination coordinates are invalid 5ms
+     ✓ creates the attraction and planned-stop sources and layers when the map loads 6ms
+     ✓ excludes scheduled attractions from the available attractions source 4ms
+     ✓ fits the map around multiple scheduled stops 3ms
+     ✓ centres the map on a single scheduled stop 3ms
+     ✓ updates map sources when the attractions or stops change 5ms
+     ✓ opens a popup when a map feature is clicked 3ms
+     ✓ disconnects the resize observer and removes the map on unmount 3ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+
+##### WeatherPanel.jsx Testing
+--- 
+**The tests**
+---
+
+The WeatherPanel component tests verify that the correct weather forecast is displayed for the currently selected itinerary day.
+
+The tests cover:
+- Displaying the destination name, itinerary day number and date.
+- Showing the weather conditions for the selected day.
+- Displaying the maximum and minimum temperatures.
+- Displaying the probability of rain.
+- Ensuring weather information from other dates is not displayed.
+- Displaying an error message when weather data cannot be loaded.
+- Showing a fallback message when no weather data is available.
+- Handling weather data that does not contain a forecast for the selected date.
+
+These tests help ensure that users see accurate weather information for the day they are planning.
+
+**The Results**
+---
+ npx vitest run assets/js/tests/WeatherPanel.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/WeatherPanel.test.jsx (6 tests) 176ms
+   ✓ WeatherPanel (6)
+     ✓ displays the destination and selected itinerary day 140ms
+     ✓ displays the forecast matching the selected day 11ms
+     ✓ does not display weather for a different day 4ms
+     ✓ displays an error message when an error is provided 8ms
+     ✓ displays a message when no weather data is available 6ms
+     ✓ displays a message when weather data does not match the selected day 4ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+
+##### SearchBar.jsx Testing
+--- 
+**The tests**
+---
+
+#### Search Bar Tests (`SearchBar.test.jsx`)
+
+The SearchBar component tests verify that users can search for destinations and view matching results returned by the Django API.
+
+The tests cover:
+- Rendering the destination search input.
+- Debouncing search requests by 300 milliseconds.
+- Sending API requests after the debounce period.
+- Encoding special characters in search queries.
+- Resetting the debounce timer when the search query changes.
+- Displaying a loading indicator while requests are pending.
+- Displaying destination search results, including names and countries.
+- Generating destination links using a supplied base URL.
+- Using a default destination URL when no base URL is provided.
+- Displaying destination images with appropriate alternative text.
+- Clearing search results when the search input is emptied.
+
+The Fetch API is mocked to test the component without making actual requests to the Django backend.
+
+These tests help ensure that destination searches are responsive, efficient and display the correct results.
+
+**The Results**
+---
+npx vitest run assets/js/tests/SearchBar.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/SearchBar.test.jsx (11 tests) 246ms
+   ✓ SearchBar (11)
+     ✓ renders the destination search input 43ms
+     ✓ does not search before the 300ms debounce period 10ms
+     ✓ searches after the 300ms debounce period 7ms
+     ✓ encodes special characters in the search query 5ms
+     ✓ resets the debounce timer when the query changes 5ms
+     ✓ displays the loading indicator while the search request is pending 14ms
+     ✓ displays destination results returned by the API 12ms
+     ✓ uses the supplied base URL when creating destination links 112ms
+     ✓ uses the default destination URL when no base URL is supplied 13ms
+     ✓ displays the destination image and its alternative text 13ms
+     ✓ clears the results when the search query is emptied 9ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+
+##### Onboarding.jsx testing
+---
+** The Tests**
+---
+
+#### Onboarding Tests (`Onboarding.test.jsx`)
+
+The Onboarding component tests verify that new users are presented with an introductory carousel explaining the main features of the application.
+
+The tests cover:
+- Displaying the main onboarding heading.
+- Rendering all three introductory sections.
+- Displaying the correct descriptions for each section.
+- Providing a skip link to the home page.
+- Providing next and previous navigation links between carousel slides.
+- Providing a Get Started link on the final slide.
+- Displaying all three onboarding images with descriptive alternative text.
+- Using the Django static URL when loading onboarding images.
+- Falling back to the default static directory when the Django static URL is unavailable.
+
+These tests help ensure that users can navigate the onboarding experience and understand the main features of the application.
+
+**The Results**
+---
+npx vitest run assets/js/tests/Onboarding.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/Onboarding.test.jsx (9 tests) 294ms
+   ✓ Onboarding (9)
+     ✓ displays the main onboarding heading 160ms
+     ✓ displays all three onboarding sections 19ms
+     ✓ displays the introductory descriptions 9ms
+     ✓ provides a skip link to the home page 18ms
+     ✓ provides next and previous links between slides 22ms
+     ✓ provides a Get Started link to the home page 14ms
+     ✓ displays all three onboarding images with descriptive alternative text 18ms
+     ✓ uses the Django static URL for onboarding images 17ms
+     ✓ uses the default static URL when Django static URL is unavailable 13ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+
+##### main.jsx Testing 
+--- 
+**The Tests**
+
+#### Main JavaScript Tests (`main.test.jsx`)
+
+The main JavaScript tests verify the functionality that connects the Django templates with the React components and handles interactive elements across the application.
+
+The tests cover:
+- Mounting the Onboarding, SearchBar and ItineraryBuilder React components into their correct Django template elements.
+- Initialising the theme toggle using the current HTML theme.
+- Switching between the fantasy and sunset themes.
+- Saving the selected theme to localStorage.
+- Sending POST requests when users add or remove destinations from their favourites.
+- Updating favourite button icons, colours and accessibility labels.
+- Preventing requests when a favourite button is already disabled.
+- Handling errors when favourite requests fail.
+- Sending checkout requests with the correct URL, HTTP method and CSRF token.
+- Displaying appropriate error messages when checkout cannot proceed or payment processing fails.
+- Adding a fade-out class to Django alert messages after three seconds.
+
+The tests mock React mounting and API requests so that the application's JavaScript functionality can be tested independently of the Django backend.
+
+**The Results**
+--- 
+
+ npx vitest run assets/js/tests/main.test.jsx
+
+ RUN  v5.1.1 C:/Users/devil/Documents/milestone-four/plot_my_path
+
+ ✓ assets/js/tests/main.test.jsx (15 tests) 265ms
+   ✓ main.jsx (15)
+     ✓ mounts React components into the correct Django template elements 19ms
+     ✓ initialises the theme checkbox using the current HTML theme 1ms
+     ✓ changes the theme to fantasy when the toggle is unchecked 2ms
+     ✓ changes the theme to sunset when the toggle is checked 1ms
+     ✓ does not throw an error when the theme toggle is missing 1ms
+     ✓ sends a POST request when a favourite button is clicked 16ms
+     ✓ updates the favourite button when an attraction is added to favourites 7ms
+     ✓ updates the favourite button when an attraction is removed from favourites 16ms
+     ✓ does not send a request when a favourite button is disabled 2ms
+     ✓ logs an error when the favourite request fails 17ms
+     ✓ sends a POST request when the checkout button is clicked 15ms
+     ✓ displays an error when checkout cannot proceed 16ms
+     ✓ displays a fallback message when checkout returns no error 17ms
+     ✓ displays an error when payment processing fails 15ms
+     ✓ adds the fade-out class to alerts after three seconds 7ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
 [back to top](#plot-my-path)
 
 #### API Testing 
@@ -1038,179 +1427,3 @@ Then register your production URLs for Google OAuth (/accounts/google/login/call
 [back to top](#plot-my-path)
 
 
-
-
-```
-plot_my_path
-├─ .coverage
-├─ .dockerignore
-├─ accounts
-│  ├─ admin.py
-│  ├─ apps.py
-│  ├─ migrations
-│  │  ├─ 0001_initial.py
-│  │  └─ __init__.py
-│  ├─ models.py
-│  ├─ tests.py
-│  ├─ urls.py
-│  ├─ views.py
-│  └─ __init__.py
-├─ assets
-│  ├─ js
-│  │  ├─ components
-│  │  │  ├─ ActivityList.jsx
-│  │  │  ├─ AddActivityForm.jsx
-│  │  │  ├─ ItineraryMap.jsx
-│  │  │  ├─ itinerary_builder.jsx
-│  │  │  ├─ Onboarding.jsx
-│  │  │  ├─ SearchBar.jsx
-│  │  │  └─ WeatherPanel.jsx
-│  │  └─ main.jsx
-│  ├─ styles
-│  │  └─ style.css
-│  └─ utils.js
-├─ config
-│  ├─ asgi.py
-│  ├─ settings.py
-│  ├─ urls.py
-│  ├─ wsgi.py
-│  └─ __init__.py
-├─ core
-│  ├─ admin.py
-│  ├─ apps.py
-│  ├─ forms.py
-│  ├─ migrations
-│  │  └─ __init__.py
-│  ├─ models.py
-│  ├─ tests.py
-│  ├─ urls.py
-│  ├─ views.py
-│  └─ __init__.py
-├─ destinations
-│  ├─ admin.py
-│  ├─ apps.py
-│  ├─ migrations
-│  │  ├─ 0001_initial.py
-│  │  └─ __init__.py
-│  ├─ models.py
-│  ├─ tests.py
-│  ├─ urls.py
-│  ├─ views.py
-│  └─ __init__.py
-├─ Dockerfile
-├─ manage.py
-├─ package-lock.json
-├─ package.json
-├─ payments
-│  ├─ admin.py
-│  ├─ apps.py
-│  ├─ migrations
-│  │  ├─ 0001_initial.py
-│  │  └─ __init__.py
-│  ├─ models.py
-│  ├─ tests.py
-│  ├─ urls.py
-│  ├─ views.py
-│  └─ __init__.py
-├─ README.md
-├─ requirements.txt
-├─ static
-│  ├─ css
-│  │  ├─ app.css
-│  │  └─ style.css
-│  ├─ images
-│  │  ├─ home_img.avif
-│  │  ├─ images
-│  │  │  ├─ destination-img
-│  │  │  ├─ home_img.avif
-│  │  │  ├─ landing_background.avif
-│  │  │  ├─ new_discovery.avif
-│  │  │  ├─ personalised_itinery.avif
-│  │  │  ├─ pmp-logo.png
-│  │  │  ├─ readme-img
-│  │  │  │  ├─ mobile-create-plan copy.png
-│  │  │  │  ├─ mobile-create-plan.png
-│  │  │  │  ├─ mobile-destination-detail.png
-│  │  │  │  ├─ mobile-explore-destination.png
-│  │  │  │  ├─ mobile-homepage.png
-│  │  │  │  ├─ mobile-itinerary-builder.png
-│  │  │  │  ├─ mobile-landing-page.png
-│  │  │  │  ├─ mobile-login-page.png
-│  │  │  │  ├─ mobile-onboarding-pages.png
-│  │  │  │  ├─ mobile-profile.png
-│  │  │  │  ├─ mobile-register-page.png
-│  │  │  │  └─ mobile-trip-summary.png
-│  │  │  └─ real_time.avif
-│  │  ├─ landing_background.avif
-│  │  ├─ new_discovery.avif
-│  │  ├─ personalised_itinery.avif
-│  │  ├─ pmp-logo.png
-│  │  ├─ readme-img
-│  │  │  ├─ mobile-create-plan.png
-│  │  │  ├─ mobile-destination-detail.png
-│  │  │  ├─ mobile-explore-destination.png
-│  │  │  ├─ mobile-homepage.png
-│  │  │  ├─ mobile-itinerary-builder.png
-│  │  │  ├─ mobile-landing-page.png
-│  │  │  ├─ mobile-login-page.png
-│  │  │  ├─ mobile-onboarding-pages.png
-│  │  │  ├─ mobile-profile.png
-│  │  │  ├─ mobile-register-page.png
-│  │  │  ├─ mobile-trip-summary.png
-│  │  │  └─ pmp-erd.png
-│  │  └─ real_time.avif
-│  ├─ js
-│  │  └─ app-bundle.js
-│  ├─ manifest.json
-│  └─ maplibre
-│     ├─ maplibre-gl-shared.mjs
-│     └─ maplibre-gl-worker.mjs
-├─ templates
-│  ├─ 404.html
-│  ├─ account
-│  │  ├─ email.html
-│  │  ├─ login.html
-│  │  ├─ password_change.html
-│  │  └─ signup.html
-│  ├─ accounts
-│  │  ├─ favourite_destinations.html
-│  │  └─ profile_page.html
-│  ├─ allauth
-│  │  └─ layouts
-│  │     └─ base.html
-│  ├─ base.html
-│  ├─ components.yaml
-│  ├─ core
-│  │  ├─ contact.html
-│  │  ├─ home.html
-│  │  ├─ landing_page.html
-│  │  └─ onboarding.html
-│  ├─ destinations
-│  │  ├─ destination.html
-│  │  └─ destination_detail.html
-│  ├─ includes
-│  ├─ payments
-│  │  ├─ checkout.html
-│  │  ├─ failed.html
-│  │  └─ success.html
-│  └─ trips
-│     ├─ itinerary_builder.html
-│     ├─ my_trips.html
-│     └─ trips.html
-├─ trips
-│  ├─ admin.py
-│  ├─ apps.py
-│  ├─ forms.py
-│  ├─ migrations
-│  │  ├─ 0001_initial.py
-│  │  ├─ 0002_remove_trip_status.py
-│  │  └─ __init__.py
-│  ├─ models.py
-│  ├─ permissions.py
-│  ├─ tests.py
-│  ├─ urls.py
-│  ├─ views.py
-│  └─ __init__.py
-└─ vite.config.mjs
-
-```

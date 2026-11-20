@@ -1,3 +1,5 @@
+"""Views and helpers for creating and editing user itineraries."""
+
 import json
 from datetime import timedelta
 from json import JSONDecodeError

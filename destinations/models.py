@@ -1,8 +1,12 @@
+"""Models for countries, destinations, and attractions."""
+
 from django.conf import settings
 from django.db import models
 
 
 class CountryManager(models.Manager):
+    """Provide lookup helpers for country fixture data."""
+
     def get_by_natural_key(self, name):
         """Resolve fixture natural keys using the country's unique name."""
         return self.get(name=name)
@@ -22,10 +26,13 @@ class Country(models.Model):
         return (self.name,)
 
     def __str__(self):
+        """Return the country name."""
         return self.name
 
 
 class DestinationManager(models.Manager):
+    """Provide lookup helpers for destination fixture data."""
+
     def get_by_natural_key(self, slug):
         """Resolve destination fixtures by their unique slug."""
         return self.get(slug=slug)
@@ -58,6 +65,7 @@ class Destination(models.Model):
         return (self.slug,)
 
     def __str__(self):
+        """Return the destination name."""
         return self.name
 
 
@@ -90,4 +98,5 @@ class Attraction(models.Model):
         return f"https://res.cloudinary.com/{cloud_name}/image/upload/v1/{self.slug}"
 
     def __str__(self):
+        """Return the attraction name."""
         return self.name

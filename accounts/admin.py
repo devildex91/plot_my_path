@@ -7,3 +7,4 @@ from .models import SavedDestination, TravelPreference
 admin.site.register(TravelPreference)
 
 admin.site.register(SavedDestination)
+"""Register account models with the Django administration site."""

@@ -1,3 +1,5 @@
+"""Models for trips, itinerary days, scheduled activities, and recommendations."""
+
 from typing import ClassVar
 
 from django.conf import settings
@@ -24,9 +26,11 @@ class Trip(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
+        """Return the URL for this trip's itinerary."""
         return reverse("itinerary_builder", kwargs={"trip_id": self.pk})
 
     def __str__(self):
+        """Return the trip name."""
         return self.name
 
 
@@ -39,6 +43,7 @@ class TripDay(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
+        """Return the trip day number and trip name."""
         return f"Day {self.day_number} - {self.trip.name}"
 
 
@@ -61,6 +66,7 @@ class PlannedActivity(models.Model):
         ordering: ClassVar[list[str]] = ["order"]
 
     def __str__(self):
+        """Return the attraction name and scheduled start time."""
         return f"{self.attraction.name} ({self.start_time})"
 
 
@@ -89,4 +95,5 @@ class Recommendation(models.Model):
         ordering = ("-score",)
 
     def __str__(self):
+        """Return a readable label for the scored recommendation."""
         return f"Rec for {self.user.username}: {self.attraction.name} (Score: {self.score})"

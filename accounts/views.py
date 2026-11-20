@@ -1,3 +1,5 @@
+"""Views for managing traveller profiles and saved destinations."""
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -8,7 +10,6 @@ from destinations.models import Destination
 from .models import SavedDestination
 
 
-# Create your views here.
 @login_required
 def profile_page(request):
     """Render the signed-in user's profile page."""
@@ -18,7 +19,7 @@ def profile_page(request):
 @login_required
 @require_POST
 def toggle_destination_favourite(request, destination_id):
-
+    """Add or remove a destination in the signed-in user's saved list."""
     destination = get_object_or_404(Destination, id=destination_id)
 
     favourite, created = SavedDestination.objects.get_or_create(
@@ -36,6 +37,7 @@ def toggle_destination_favourite(request, destination_id):
 
 @login_required
 def favourite_destinations(request):
+    """Render the destinations saved by the signed-in user."""
     saved = SavedDestination.objects.filter(user=request.user).select_related(
         "destination"
     )

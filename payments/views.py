@@ -155,7 +155,7 @@ def revoke_membership(payment_intent_id):
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
-    """Accept signed Stripe events and fulfill completed, paid Checkout sessions.Also checks for refunds and partial refunds"""
+    """Verify signed Stripe events and fulfill payments or process refunds."""
     payload = request.body
     sig_header = request.headers.get("Stripe-Signature")
 
@@ -183,6 +183,7 @@ def stripe_webhook(request):
 
 
 def refund_allowed(membership):
+    """Return whether a membership purchase is within the refund policy."""
     if not membership.started_at:
         return False
     if timezone.now() - membership.started_at > timedelta(days=REFUND_WINDOW_DAYS):

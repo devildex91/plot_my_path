@@ -39,9 +39,7 @@ if (builder) {
     />,
   );
 }
-// Standard JS code for django templates not using react 
-
-// Theme toggle
+// Theme toggle for Django-rendered pages.
 const toggle = document.getElementById("theme-toggle");
 const root = document.documentElement;
 
@@ -56,7 +54,7 @@ if (toggle) {
 }
 
 
-// Favourite button for Django-rendered destination cards
+// Toggle saved-destination state for Django-rendered destination cards.
 document.addEventListener("click", async (e) => {
   const button = e.target.closest(".favourite-btn");
 
@@ -97,7 +95,7 @@ document.addEventListener("click", async (e) => {
   }
 });
 
-// Payment flow event handler
+// Start Checkout for Django-rendered payment buttons.
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest("#checkout-button");
   if (!btn || btn.disabled) return;
@@ -122,8 +120,7 @@ document.addEventListener("click", async (e) => {
   btn.disabled = false;
 });
 
-// message fade out functionality
-
+// Fade out success and error messages after a short display period.
 document.addEventListener('DOMContentLoaded', () => {
   const alerts = document.querySelectorAll('#message-container .alert');
 

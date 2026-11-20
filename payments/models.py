@@ -1,3 +1,5 @@
+"""Models for Stripe payments and premium membership access."""
+
 from typing import ClassVar
 
 from django.conf import settings
@@ -31,6 +33,7 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """Return a readable label for the payment."""
         return f"{self.user} - {self.amount} {self.currency}"
 
     @property
@@ -75,6 +78,7 @@ class PremiumMembership(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """Return a readable label for the membership status."""
         return f"{self.user} - {self.status}"
 
     @property

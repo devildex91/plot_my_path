@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import react from "react";
 
 /** Present the introductory carousel and links into the signed-in experience. */
 function Onboarding({ homeUrl }) {

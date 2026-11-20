@@ -1,3 +1,5 @@
+"""Forms used across the guided trip creation flow."""
+
 from django import forms
 from django.utils import timezone
 
@@ -14,6 +16,7 @@ class PreferenceWizardForm(forms.ModelForm):
         exclude = ("user",)
 
     def __init__(self, *args, **kwargs):
+        """Customize travel style choices and initialize the model form."""
         super().__init__(*args, **kwargs)
 
         self.fields["travel_style"].choices = TravelPreference.TRAVEL_STYLE_CHOICES
@@ -70,4 +73,6 @@ class TripDetailsWizardForm(forms.ModelForm):
 
 
 class ReviewForm(forms.Form):
+    """Mark the final, read-only step of the trip creation wizard."""
+
     pass

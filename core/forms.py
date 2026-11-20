@@ -1,3 +1,5 @@
+"""Forms used for account signup and customer contact enquiries."""
+
 from django import forms
 
 
@@ -20,6 +22,8 @@ class CustomSignupForm(forms.Form):
 
 
 class ContactForm(forms.Form):
+    """Collect the details and message for a customer support enquiry."""
+
     name = forms.CharField(max_length=100)
     email = forms.EmailField()
     subject = forms.CharField(max_length=150)
