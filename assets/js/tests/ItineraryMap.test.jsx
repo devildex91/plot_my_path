@@ -140,6 +140,7 @@ describe("ItineraryMap", () => {
   });
 
   const triggerMapLoad = () => {
+    // Invoke the mocked map's load callback to test its deferred setup.
     act(() => {
       mocks.map.handlers.load();
     });

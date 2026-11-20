@@ -70,6 +70,7 @@ const mockAttractions = [
   },
 ];
 const mockDays = [
+  // Keep the fixture out of order to verify the builder sorts days by number.
   {
     id: 2,
     day_number: 2,
@@ -186,8 +187,7 @@ describe("ItineraryBuilder", () => {
   it("calculates the daily budget and remaining budget", () => {
     renderItinerary();
 
-    // £200 divided across two days gives £100 per day.
-    // The Roman Baths activity costs £25.
+    // £200 split across two days gives £100; the scheduled Eiffel Tower costs £25.
     expect(screen.getByText("Today's budget: £100.00")).toBeInTheDocument();
     expect(screen.getByText("Remaining budget: £75.00")).toBeInTheDocument();
   });

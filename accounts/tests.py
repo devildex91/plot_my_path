@@ -66,6 +66,7 @@ class TravelPreferenceTests(TestCase):
             user=self.user,
             travel_style="not-a-valid-style",
         )
+        # Choice validation runs through full_clean(), not when the model is saved.
         with self.assertRaises(ValidationError):
             preference.full_clean()
 
@@ -90,6 +91,7 @@ class SavedDestinationModelTests(TestCase):
         self.assertIsNotNone(self.saved.created_at)
 
     def test_user_cannot_save_same_destination_twice(self):
+        # Keep the expected database error inside a savepoint for the test transaction.
         with self.assertRaises(IntegrityError), transaction.atomic():
             SavedDestination.objects.create(
                 user=self.user,

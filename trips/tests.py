@@ -322,6 +322,7 @@ class ItineraryBuilderViewTests(TripsViewTestBase):
     def test_days_are_generated_for_whole_trip(self):
         data = self.client.get(self.url).context["app_data"]
 
+        # Opening the itinerary creates a day for every date in the trip range.
         self.assertEqual(
             [day["day_number"] for day in data["days"]],
             [1, 2, 3, 4, 5],
@@ -342,6 +343,7 @@ class GetDestinationWeatherTests(TestCase):
                     "conditions": "Rain",
                     "precipprob": 80,
                     "icon": "rain",
+                    # The view should omit API fields outside its response shape.
                     "unrelated": "dropped",
                 }
             ]
@@ -583,6 +585,7 @@ class CreateTripViewTests(TestCase):
         self.client.force_login(self.user)
 
     def post_step(self, step, data=None):
+        # Formtools expects each submitted field under its current step's prefix.
         payload = {f"{self.PREFIX}-current_step": step}
         for key, value in (data or {}).items():
             payload[f"{step}-{key}"] = value
