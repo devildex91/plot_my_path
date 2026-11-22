@@ -114,7 +114,6 @@ Acceptance criteria are listed beneath each user story.
 
 4. As a signed-in user, I can view my profile page so that I can see my account and membership in one place.
   - Messages about my membership and refunds appear here.
-
 **Discovering destinations**
 
 1. As a signed-in user, I can browse destinations by continent so that I can narrow down where I want to go.
