@@ -143,7 +143,7 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
 ACCOUNT_SIGNUP_FORM_CLASS = "core.forms.CustomSignupForm"
 
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 ALLAUTH_UI_THEME = "fantasy"
 
