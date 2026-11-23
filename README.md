@@ -21,7 +21,6 @@
 
 - [Existing features](#existing-features) 
 - [User Goals mapping](#user-goals-mapping) 
-- [Features left to implement](#features-left-to-implement) 
 - [User Goals still to implement](#user-goals-still-to-implement) 
 
 ## [Technologies used](#technologies-used-1)
@@ -411,6 +410,7 @@ Desktop Wireframes
 ---      
 #### Existing features
 ---
+
 ##### Trip planning
 - **Guided trip creation:** a four-step wizard collects your travel preferences, destination and trip name, dates and budget, then a review step before the trip is created.
 - **Travel preferences:** choose a travel style and interests such as culture, food, nature, history, nightlife, family-friendly and solo travel. Your preferences are saved to your profile.
@@ -490,6 +490,7 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 | HTML                | Webpages                                |
 | CSS                 | Styling                                 |
 | Neon                | postgresql database                     |
+| Zap                 | Security Testing                        |
 
 [back to top](#plot-my-path)
 ### Testing
@@ -916,6 +917,13 @@ The tests mock React mounting and API requests so that the application's JavaScr
 
 #### Security 
 ---
+![security test 1](..//plot_my_path/static/images/readme-img/security-test-1.png)
+
+
+Results 
+- Abscensce of Anti CSRF Tokens- Having thoroughly checked thrrough all of my forms I can confirm that is being flagged up for my google OAath sign in form which submits directly to google authentication endpoint. Its implementation is managed by google and are outside the control of my application. Djangos own CSRF mmiddleware remain enabl;ed to protect the applications forms and Post requests. Due to all that evidence the error is considered not applicable and treated as an externam third party finding.  
+
+CSP Failure to Define Directive with No fallback-
 [back to top](#plot-my-path)
 #### Automated Testing
 ---
