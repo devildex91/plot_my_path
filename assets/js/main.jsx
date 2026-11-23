@@ -1,20 +1,19 @@
-import { createRoot } from 'react-dom/client';
-import Onboarding from './components/Onboarding.jsx';
-import SearchBar from './components/SearchBar.jsx';
-import ItineraryBuilder from './components/itinerary_builder.jsx';
-import { getCookie } from '../utils.js';
+import { createRoot } from "react-dom/client";
+import Onboarding from "./components/Onboarding.jsx";
+import SearchBar from "./components/SearchBar.jsx";
+import ItineraryBuilder from "./components/itinerary_builder.jsx";
+import { getCookie } from "../utils.js";
 const rootElement = document.getElementById("onboarding");
 const searchRoot = document.getElementById("searchDiv");
 const builder = document.getElementById("builder");
 const dataElement = document.getElementById("app-data");
 if (rootElement) {
-const homeUrl = rootElement.getAttribute("data-home-url");
+  const homeUrl = rootElement.getAttribute("data-home-url");
 
- createRoot(rootElement).render(<Onboarding homeUrl={homeUrl} />)
+  createRoot(rootElement).render(<Onboarding homeUrl={homeUrl} />);
 }
 
-
-// Search bar root element 
+// Search bar root element
 if (searchRoot) {
   const baseUrl = searchRoot.getAttribute("data-base-url");
   createRoot(searchRoot).render(<SearchBar baseUrl={baseUrl} />);
@@ -53,7 +52,6 @@ if (toggle) {
   });
 }
 
-
 // Toggle saved-destination state for Django-rendered destination cards.
 document.addEventListener("click", async (e) => {
   const button = e.target.closest(".favourite-btn");
@@ -87,7 +85,6 @@ document.addEventListener("click", async (e) => {
       icon.classList.remove("text-red-500");
       button.setAttribute("aria-label", "Add to favourites");
     }
-
   } catch (error) {
     console.error("Favourite error:", error);
   } finally {
@@ -121,33 +118,37 @@ document.addEventListener("click", async (e) => {
 });
 
 // Fade out success and error messages after a short display period.
-document.addEventListener('DOMContentLoaded', () => {
-  const alerts = document.querySelectorAll('#message-container .alert');
+document.addEventListener("DOMContentLoaded", () => {
+  const alerts = document.querySelectorAll("#message-container .alert");
 
   alerts.forEach((alert) => {
     setTimeout(() => {
-      alert.classList.add('fade-out');
+      alert.classList.add("fade-out");
     }, 3000);
   });
 });
 
 // Confirm before submitting refund or logout forms.
 const setupFormConfirmations = () => {
-    document.getElementById("refund-form")?.addEventListener("submit", (event) => {
-        if (!confirm("Refund your purchase and remove premium?")) {
-            event.preventDefault();
-        }
+  document
+    .getElementById("refund-form")
+    ?.addEventListener("submit", (event) => {
+      if (!confirm("Refund your purchase and remove premium?")) {
+        event.preventDefault();
+      }
     });
 
-    document.getElementById("logout-form")?.addEventListener("submit", (event) => {
-        if (!confirm("Are you sure you want to logout?")) {
-            event.preventDefault();
-        }
+  document
+    .getElementById("logout-form")
+    ?.addEventListener("submit", (event) => {
+      if (!confirm("Are you sure you want to logout?")) {
+        event.preventDefault();
+      }
     });
 };
 
 if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setupFormConfirmations);
+  document.addEventListener("DOMContentLoaded", setupFormConfirmations);
 } else {
-    setupFormConfirmations();
+  setupFormConfirmations();
 }

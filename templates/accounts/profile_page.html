@@ -36,7 +36,7 @@
       </li>
       <li>
         {% if request.user.membership.is_active %}
-          <form method="post" action="{% url 'request_refund' %}" onsubmit="return confirm('Refund your purchase and remove premium?');">
+          <form method="post" action="{% url 'request_refund' %}" id = "refund-form">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline btn-error">Cancel and refund</button>
             </form>
@@ -72,7 +72,7 @@
         </label>
       </li>
     </ul>
-    <form method="post" action="{% url 'account_logout' %}" onsubmit = "return confirm('Are you sure you want to logout?');">
+    <form method="post" action="{% url 'account_logout' %}" id="logout-form">
       {% csrf_token %}
       {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
