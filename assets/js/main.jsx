@@ -130,3 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000);
   });
 });
+
+// Confirm before submitting refund or logout forms.
+const setupFormConfirmations = () => {
+    document.getElementById("refund-form")?.addEventListener("submit", (event) => {
+        if (!confirm("Refund your purchase and remove premium?")) {
+            event.preventDefault();
+        }
+    });
+
+    document.getElementById("logout-form")?.addEventListener("submit", (event) => {
+        if (!confirm("Are you sure you want to logout?")) {
+            event.preventDefault();
+        }
+    });
+};
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupFormConfirmations);
+} else {
+    setupFormConfirmations();
+}
