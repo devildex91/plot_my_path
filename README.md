@@ -114,102 +114,103 @@ Acceptance criteria are listed beneath each user story.
 
 4. As a signed-in user, I can view my profile page so that I can see my account and membership in one place.
   - Messages about my membership and refunds appear here.
+
 **Discovering destinations**
 
-1. As a signed-in user, I can browse destinations by continent so that I can narrow down where I want to go.
+5. As a signed-in user, I can browse destinations by continent so that I can narrow down where I want to go.
   - All destinations are shown by default.
   - Choosing a continent filters the list.
 
-2. As a signed-in user, I can search destinations by name so that I can find a place quickly.
+6. As a signed-in user, I can search destinations by name so that I can find a place quickly.
   - Partial matches are returned, up to a maximum of 10.
   - An empty search returns no results.
 
-3. As a signed-in user, I can view a destination's details so that I can decide whether it suits me.
+7. As a signed-in user, I can view a destination's details so that I can decide whether it suits me.
   - The page shows the description, average cost per day, image and attractions.
   - It shows whether I have already saved the destination.
 
-4. As a signed-in user, I can see an attraction's category, visit length, entry cost, rating and opening times so that I can plan realistic days.
+8. As a signed-in user, I can see an attraction's category, visit length, entry cost, rating and opening times so that I can plan realistic days.
 
-5.  As a signed-in user, I can save and unsave destinations so that I can build a shortlist for later.
+9.  As a signed-in user, I can save and unsave destinations so that I can build a shortlist for later.
   - The same destination cannot be saved twice.
   - The heart/favourite state updates without reloading the page.
 
-6. As a signed-in user, I can view my saved destinations so that I can quickly return to the places I liked.
+10. As a signed-in user, I can view my saved destinations so that I can quickly return to the places I liked.
   - Only my own saved destinations are shown.
 
 **Creating a trip**
 
-1. As a signed-in user, I can create a trip through a step-by-step form so that setting up a trip feels simple.
+11. As a signed-in user, I can create a trip through a step-by-step form so that setting up a trip feels simple.
   - The steps are preferences, destination and name, dates and budget, and a final review.
-  - When I finish I am taken straight to my itinerary.
+  - When I finish I am taken straight to my itinerary page
 
-2. As a signed-in user, I can set my travel style and interests so that my trips reflect what I enjoy.
+12. As a signed-in user, I can set my travel style and interests so that my trips reflect what I enjoy.
   - My preferences are saved to my profile and loaded into the itinerary builder.
 
-3. As a signed-in user, I can only enter sensible dates so that I don't create an impossible trip.
+13. As a signed-in user, I can only enter sensible dates so that I don't create an impossible trip.
   - The start date cannot be in the past.
   - The end date cannot be before the start date.
   - A trip must be at least one day long.
 
-4. As a free user, I am told when I have used my free trip so that I understand how to create more.
+14. As a free user, I am told when I have used my free trip so that I understand how to create more.
   - After one trip I am redirected to my profile with a message about upgrading.
   - The limit is checked again when the form is submitted.
   - Premium members and staff are not limited.
 
-5. As a signed-in user, I can view all of my trips so that I can pick up where I left off.
+15. As a signed-in user, I can view all of my trips so that I can pick up where I left off.
   - Trips are listed with the most recent start date first.
   - Only my own trips are shown.
 
-6. As a signed-in user, I can delete a trip so that I can remove plans I no longer need.
+16. As a signed-in user, I can delete a trip so that I can remove plans I no longer need.
   - Only my own trips can be deleted.
   - A confirmation message is shown.
 
 **Building an itinerary**
 
-1. As a signed-in user, I can see a day for every date of my trip so that I can plan one day at a time.
+17. As a signed-in user, I can see a day for every date of my trip so that I can plan one day at a time.
   - Days are numbered from 1 and created automatically.
   - Reopening the itinerary never creates duplicate days.
 
-2. As a signed-in user, I can add an attraction to a day with a start and end time so that I can build a realistic plan.
+18. As a signed-in user, I can add an attraction to a day with a start and end time so that I can build a realistic plan.
   - The attraction must belong to the trip's destination.
   - The start time must be before the end time.
   - Invalid or missing information returns a clear error.
 
-3. As a signed-in user, I can remove an activity from a day so that I can change my plans.
+19. As a signed-in user, I can alter or remove an activity from a day so that I can change my plans.
   - The remaining activities are renumbered with no gaps.
 
-4. As a signed-in user, I can see the weather forecast for my trip dates so that I can plan around it.
+20. As a signed-in user, I can see the weather forecast for my trip dates so that I can plan around it.
   - Daily temperatures, conditions and chance of rain are shown.
   - If the weather service is unavailable, a message is shown and the itinerary still loads.
 
-5. As a signed-in user, I can be confident that other people cannot see or change my trips so that my plans stay private.
+21. As a signed-in user, I can be confident that other people cannot see or change my trips so that my plans stay private.
   - Requesting another user's trip returns "not found".
 
 **Premium membership and payments**
 
-1.  As a free user, I can pay a one-off £5 to become a premium member so that I can create unlimited trips.
+22.  As a free user, I can pay a one-off fee to become a premium member so that I can create unlimited trips.
   - Payment is taken through Stripe Checkout.
   - If I am already a premium member I am redirected and cannot pay twice.
 
-2. As a user who has paid, I can have my membership activated reliably so that I get what I paid for.
+23. As a user who has paid, I can have my membership activated reliably so that I get what I paid for.
   - The success page checks that the payment belongs to me and has been completed.
   - A Stripe webhook also activates the membership as a backup.
   - Duplicate callbacks do not create duplicate payments.
 
-3. As a user whose payment fails, I can see a clear message so that I know what happened and can try again.
+24. As a user whose payment fails, I can see a clear message so that I know what happened and can try again.
 
-4. As a premium member, I can request a refund so that I am protected if premium isn't right for me.
+25. As a premium member, I can request a refund so that I am protected if premium isn't right for me.
   - Refunds are available within 14 days of purchase and when no more than 3 trips have been created since.
   - Premium access is removed and the payment is marked as refunded.
-  - Refunds made from the Stripe dashboard also remove premium access.
+ 
 
 **Recommendations and support**
 
-1. As a signed-in user, I can receive recommended attractions for my trip based on my preferences so that I can discover things I'd enjoy. *(planned feature)*
+26. As a signed-in user, I can receive recommended attractions for my trip based on my preferences so that I can discover things I'd enjoy.
   - Each recommendation has a score and a short reason.
   - The highest scoring recommendations are shown first.
 
-2. As a visitor or signed-in user, I can contact the team through a form so that I can get help.
+27. As a visitor or signed-in user, I can contact the team through a form so that I can get help.
   - Name, email, subject and message are required.
   - If I am signed in, my name and email are filled in for me.
   - The team receives my message by email and can reply directly to me.
@@ -441,12 +442,35 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 [back to top](#plot-my-path)
 #### User Goals mapping
 ---
-
-[back to top](#plot-my-path)
-#### Features left to implement
----
-[back to top](#plot-my-path)
-#### User Goals still to implement
+| User Story No | Implemented | Evidence or still to implement                                                                                                                                                                                                                                                                                                            |
+|---------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1             | Yes         |  [sign up evidence](../plot_my_path/static/images/readme-img/Account-onboarding-evidence-1.png),  [sign up fields](../plot_my_path/static/images/readme-img/Account-signup-evidence-2.png),  [account verification email](../plot_my_path/static/images/readme-img/account-verification-email.png)                                        |
+| 2             | Yes         | [landing page](../plot_my_path/static/images/readme-img/landing-page-us2.png), [onboarding page1](../plot_my_path/static/images/readme-img/onboarding1-us2.png), [onboarding page 2](../plot_my_path/static/images/readme-img/onboarding2-us2.png), [onboarding page 3](../plot_my_path/static/images/readme-img/onboarding3-us2.png)     |
+| 3             | Yes         | [hoempage greeting ](../plot_my_path/static/images/readme-img/homepage-greeting.png), [popular destinations on homepage](../plot_my_path/static/images/readme-img/homepage-popdestinations.png)                                                                                                                                           |
+| 4             | Yes         | [profile page](../plot_my_path/static/images/readme-img/profile-page.png)                                                                                                                                                                                                                                                                 |
+| 5             | yes         | [all destinations](../plot_my_path/static/images/readme-img/destinations-all.png), [continent filtered results ](../plot_my_path/static/images/readme-img/filtered-destinations.png)                                                                                                                                                      |
+| 6             | yes         | [empty search with no results ](../plot_my_path/static/images/readme-img/destination-empty-search.png), [search results after typing](../plot_my_path/static/images/readme-img/destination-search-results.png)                                                                                                                            |
+| 7             | yes         | [destination detail page](../plot-my-path/static/images/readme-img/destination-detail.png)                                                                                                                                                                                                                                                |
+| 8             | No          | Currently only shows brief description of attraction but backend data is in place for later development.                                                                                                                                                                                                                                  |
+| 9             | yes         | [favourite button ](../plot_my_path/static/images/readme-img/favourite-button.png), [saved destination page with no duplicates](../plot_my_path/static/images/readme-img/saved-destinations.png)                                                                                                                                          |
+| 10            | yes         | [saved destinations page ](../plot_my_path/static/images/readme-img/saved-destinations.png)                                                                                                                                                                                                                                               |
+| 11            | yes         | [wizard form page 1 ](../plot_my_path/static/images/readme-img/wizard-form-1.png), [wizard form page 2](../plot_my_path/static/images/readme-img/wizard-form-2.png), [wizard form page 3 ](../plot_my_path/static/images/readme-img/wizard-form-3.png), [waizard form page 4](../plot_my_path/static/images/readme-img/wizard-form-4.png) |
+| 12            | yes         | [if preferences are saved it will match interest in itinerary builder on both drop down and flag up once selected](../plot_my_path/static/images/readme-img/preferences-saved.png)                                                                                                                                                        |
+| 13            | yes         | [start date in past error ](../plot_my_path/static/images/readme-img/same-day-error.png), [end date before start date error ](../plot_my_path/static/images/readme-img/past-date-error.png), [no longer than one day error message](../plot_my_path/static/images/readme-img/end-date-error.png)                                          |
+| 14            | yes         | [profile redirect with message after free useage](../plot_my_path/static/images/readme-img/profile-page-warning.png)                                                                                                                                                                                                                      |
+| 15            | yes         | [trip page](../plot_my_path/static/images/readme-img/trips-page.png)                                                                                                                                                                                                                                                                      |
+| 16            | yes         | [deleting a trip warning ](plot_my_path/static/images/readme-img/trip-deletion-1.png), [deleting a trip confirmation ](plot_my_path/static/images/readme-img/trip-deletion-2.png)                                                                                                                                                         |
+| 17            | yes         | [days display on itinerary page](plot_my_path/static/images/readme-img/itinerary-page-days.png)                                                                                                                                                                                                                                           |
+| 18            | yes         | [adding attraction](plot_my_path/static/images/readme-img/adding-attraction.png), [no attraction selected error ](plot_my_path/static/images/readme-img/no-attraction-error.png), [start time error message](plot_my_path/static/images/readme-img/attraction-start-time-error.png)                                                       |
+| 19            | no          | Currently can only remove activity, cannot update it. Feature to be added in later update                                                                                                                                                                                                                                                 |
+| 20            | yes         | [normal weather page](../plot_my_path/static/images/readme-img/weather.png), [no weather to display page](../plot_my_path/static/images/readme-img/no-weather.png)                                                                                                                                                                        |
+| 21            | yes         | Each trip is assigned to that users id so unless signed in as that user you do not even know if they have any trips planned let alone view them.                                                                                                                                                                                          |
+| 22            | yes         | [stripe payment page](plot_my_path/static/images/readme-img/stripe-payment-page.png), [Cancel and refund button appears so that being charged twice is not an option as you cannot be redirected](plot_my_path/static/images/readme-img/cancel-refund-button.png)                                                                         |
+| 23            | Yes         | [payment success page](plot_my_path/static/images/readme-img/payment-success.png), [premium memnership badge](plot_my_path/static/images/readme-img/premium-membership-profile.png)                                                                                                                                                       |
+| 24            | Yes         | [payment failed page](../plot_my_path/static/images/readme-img/payment-failed.png)                                                                                                                                                                                                                                                        |
+| 25            | Yes         | [cancel button](../plot_my_path/static/images/readme-img/cancel-refund-button.png), [cancel message](../plot_my_path/static/images/readme-img/cancel-message.png), [cancel message 2](../plot_my_path/static/images/readme-img/cancel-message2.png)-                                                                                      |
+| 26            | No          | Comes up with matches your criteria but does not give any reasons. Will be added in a later update                                                                                                                                                                                                                                        |
+| 27            | Yes         | [contact form](../plot_my_path/static/images/readme-img/contact-form.png), [email confirmation](../plot_my_path/static/images/readme-img/email-confirmation.png)                                                                                                                                                                          |
 ---
 [back to top](#plot-my-path)
 ### Technologies used
