@@ -17,12 +17,12 @@
     </title>
 
     {% block extra_head %}
-      <script>
-        (function () {
-  const saved = localStorage.getItem("theme");
-  document.documentElement.setAttribute("data-theme", saved || "fantasy");
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const saved = localStorage.getItem("theme");
+    document.documentElement.setAttribute("data-theme", saved || "fantasy");
 })();
-      </script>
+</script>
     {% endblock %}
 
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />

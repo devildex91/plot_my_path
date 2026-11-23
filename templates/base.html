@@ -13,10 +13,10 @@
     <title>
         {% block title %}Plot My Path{% endblock %}
     </title>
-        <script>
+<script nonce="{{ csp_nonce }}">
 (function () {
-  const saved = localStorage.getItem("theme");
-  document.documentElement.setAttribute("data-theme", saved || "fantasy");
+    const saved = localStorage.getItem("theme");
+    document.documentElement.setAttribute("data-theme", saved || "fantasy");
 })();
 </script>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />

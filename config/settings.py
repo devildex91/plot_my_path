@@ -104,6 +104,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.csrf",
+                "django.template.context_processors.csp",
             ],
         },
     },
@@ -255,15 +256,13 @@ from django.utils.csp import CSP
 
 SECURE_CSP_REPORT_ONLY = {
     "default-src": [CSP.SELF],
-
+    "script-src": [CSP.SELF, CSP.NONCE],
     "base-uri": [CSP.SELF],
-
     "form-action": [CSP.SELF],
-
     "frame-ancestors": [CSP.NONE],
-
     "object-src": [CSP.NONE],
 }
+
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
