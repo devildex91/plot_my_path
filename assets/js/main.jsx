@@ -184,3 +184,22 @@ if (document.readyState === "loading") {
 } else {
     setupContinentFilters();
 }
+
+// Go back button functionality for Django-rendered pages.
+const setupGoBackButton = () => {
+    document.querySelectorAll(".go-back-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "/destinations/";
+            }
+        });
+    });
+};
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupGoBackButton);
+} else {
+    setupGoBackButton();
+}
