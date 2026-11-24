@@ -20,3 +20,7 @@
 .home-hero {
     background-image: url("/static/images/home_img.avif");
 }
+
+.landing-page {
+    background-image: url("/static/images/landing_background.avif");
+}
