@@ -152,3 +152,20 @@ if (document.readyState === "loading") {
 } else {
   setupFormConfirmations();
 }
+
+//confirm before submitting delete trip forms.
+const setupDeleteTripConfirmations = () => {
+  document.querySelectorAll(".delete-trip-form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      if (!confirm("Delete this trip? This cannot be undone.")) {
+        event.preventDefault();
+      }
+    });
+  });
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", setupDeleteTripConfirmations);
+} else {
+  setupDeleteTripConfirmations();
+}

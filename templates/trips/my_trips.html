@@ -12,9 +12,9 @@
             <div class="card-body">
               <h2 class="card-title">{{ trip.name }}</h2>
               <h3 class="font-bold text-xl">To: {{ trip.destination }}</h3>
-               <div class="card-actions justify-end">
+              <div class="card-actions justify-end">
                 <a href="{% url 'itinerary_builder' trip.id %}" class="btn btn-primary">View Trip</a>
-                <form method="post" action="{% url 'delete_trip' trip.id %}" onsubmit="return confirm('Delete this trip? This cannot be undone.');">
+                <form method="post" action="{% url 'delete_trip' trip.id %}" class="delete-trip-form">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-error btn-outline">Delete</button>
                 </form>
