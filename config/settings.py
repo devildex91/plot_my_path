@@ -238,7 +238,7 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False
-   
+
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
@@ -259,15 +259,17 @@ SECURE_CSP = {
     "script-src": [CSP.SELF, CSP.NONCE],
     "img-src": [CSP.SELF, "data:", "https://res.cloudinary.com"],
     "base-uri": [CSP.SELF],
-    "form-action": [CSP.SELF],
+    "form-action": [
+        CSP.SELF,
+        "https://accounts.google.com",
+    ],
     "frame-ancestors": [CSP.NONE],
     "object-src": [CSP.NONE],
     "connect-src": [
-    CSP.SELF,
-    "https://tiles.openfreemap.org",
-],
+        CSP.SELF,
+        "https://tiles.openfreemap.org",
+    ],
 }
-
 
 
 WHITENOISE_ALLOW_ALL_ORIGINS = False
