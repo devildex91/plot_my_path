@@ -257,6 +257,7 @@ from django.utils.csp import CSP
 SECURE_CSP_REPORT_ONLY = {
     "default-src": [CSP.SELF],
     "script-src": [CSP.SELF, CSP.NONCE],
+    "img-src": [CSP.SELF, CSP.DATA],
     "base-uri": [CSP.SELF],
     "form-action": [CSP.SELF],
     "frame-ancestors": [CSP.NONE],

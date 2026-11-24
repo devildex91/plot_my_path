@@ -923,7 +923,22 @@ The tests mock React mounting and API requests so that the application's JavaScr
 Results 
 - Abscensce of Anti CSRF Tokens- Having thoroughly checked thrrough all of my forms I can confirm that is being flagged up for my google OAath sign in form which submits directly to google authentication endpoint. Its implementation is managed by google and are outside the control of my application. Djangos own CSRF mmiddleware remain enabl;ed to protect the applications forms and Post requests. Due to all that evidence the error is considered not applicable and treated as an externam third party finding.  
 
-CSP Failure to Define Directive with No fallback-
+CSP Failure to Define Directive with No fallback- Added middleware and from django.utils.csp import CSP
+
+SECURE_CSP_REPORT_ONLY = {
+    "default-src": [CSP.SELF],
+
+    "base-uri": [CSP.SELF],
+
+    "form-action": [CSP.SELF],
+
+    "frame-ancestors": [CSP.NONE],
+
+    "object-src": [CSP.NONE],
+}
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False  to my settings to help add 
 [back to top](#plot-my-path)
 #### Automated Testing
 ---
