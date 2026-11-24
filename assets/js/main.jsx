@@ -192,7 +192,7 @@ const setupGoBackButton = () => {
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = "/destinations/";
+                window.location.href = "/";
             }
         });
     });

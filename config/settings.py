@@ -262,6 +262,10 @@ SECURE_CSP_REPORT_ONLY = {
     "form-action": [CSP.SELF],
     "frame-ancestors": [CSP.NONE],
     "object-src": [CSP.NONE],
+    "connect-src": [
+    CSP.SELF,
+    "https://tiles.openfreemap.org",
+],
 }
 
 SECURE_HSTS_SECONDS = 31536000
