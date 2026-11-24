@@ -8,23 +8,21 @@
     <div id="continent-choice" class="join flex flex-row justify-evenly flex-wrap">
 
         <input
-            class="join-item btn btn-primary"
+            class="join-item btn btn-primary continent-filter""
             type="radio"
             name="continent"
             value="all"
             aria-label="All"
-            onchange="this.form.submit()"
             {% if selected_continent == 'all' %}checked{% endif %}
         />
 
         {% for continent in continents %}
             <input
-                class="join-item btn btn-primary"
+                class="join-item btn btn-primary continent-filter""
                 type="radio"
                 name="continent"
                 value="{{ continent }}"
                 aria-label="{{ continent }}"
-                onchange="this.form.submit()"
                 {% if selected_continent == continent %}checked{% endif %}
             />
         {% endfor %}

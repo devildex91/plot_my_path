@@ -169,3 +169,18 @@ if (document.readyState === "loading") {
 } else {
   setupDeleteTripConfirmations();
 }
+
+// Submit continent filter forms on change.
+const setupContinentFilters = () => {
+    document.querySelectorAll(".continent-filter").forEach((radio) => {
+        radio.addEventListener("change", () => {
+            radio.form.submit();
+        });
+    });
+};
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupContinentFilters);
+} else {
+    setupContinentFilters();
+}
