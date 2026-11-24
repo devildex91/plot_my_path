@@ -254,7 +254,7 @@ CONTACT_EMAIL = env("CONTACT_EMAIL")
 
 from django.utils.csp import CSP
 
-SECURE_CSP_REPORT_ONLY = {
+SECURE_CSP = {
     "default-src": [CSP.SELF],
     "script-src": [CSP.SELF, CSP.NONCE],
     "img-src": [CSP.SELF, "data:", "https://res.cloudinary.com"],
