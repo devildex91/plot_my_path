@@ -16,3 +16,7 @@
 .alert.fade-out {
   @apply opacity-0;
 }
+
+.home-hero {
+    background-image: url("/static/images/home_img.avif");
+}

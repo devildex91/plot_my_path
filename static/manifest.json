@@ -20,7 +20,8 @@
       "css/fa-brands-400.css",
       "css/fa-regular-400.css",
       "css/fa-solid-900.css",
-      "css/fa-v4compatibility.css"
+      "css/fa-v4compatibility.css",
+      "css/home_img.css"
     ]
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
@@ -38,5 +39,9 @@
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2": {
     "file": "css/fa-v4compatibility.css",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
+  },
+  "static/images/home_img.avif": {
+    "file": "css/home_img.css",
+    "src": "static/images/home_img.avif"
   }
 }
