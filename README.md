@@ -550,11 +550,33 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 
 - As the mobile fixes had already been applied, the desktop test scored highly in every category. No further changes were needed.
 
-##### Login page
+##### Login Page
+---
 **Mobile Tests**
 
-![Lighthouse test 1](../plot_my_path/static/images/readme-img/login-lighthouse-1.png)
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 99          | 93            | 100            | 100 |
+| Second Test Score | 99          | 93            | 100            | 100 |
+| Third Test Score  | 99          | 100           | 100            | 100 |
 
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/login-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/login-lighthouse-2.png)
+![Lighthouse mobile test 3](../plot_my_path/static/images/readme-img/login-lighthouse-3.png)
+
+- After the first round of Lighthouse testing, the Accessibility score of 93 was caused by low-contrast text. I resolved this by removing the opacity from the affected text.
+- The second test showed two remaining issues: the page had no main landmark for screen readers, and some further text with 70% opacity was failing the contrast ratio check. This text was being styled by allauth UI, so I added a custom CSS rule targeting all form label text to override it.
+- I also changed the card containing the allauth forms to a main element, which provided the page with a main landmark. Together, these changes raised the Accessibility score from 93 to 100.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/login-desktop-lighthouse.png)
+
+- As the mobile fixes had already been applied, the desktop test scored 100 in every category. No further changes were needed.
 
 [back to top](#plot-my-path)
 #### HTML tests 
