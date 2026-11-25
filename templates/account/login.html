@@ -10,7 +10,7 @@
 
   <div class="text-center mb-2">
     <h2 class="text-2xl font-bold text-primary">{% trans "Welcome to Plot My Path" %}</h2>
-    <p class="text-sm opacity-70 mt-1">{% trans "Log in to continue planning your next adventure." %}</p>
+    <p class="text-sm mt-1">{% trans "Log in to continue planning your next adventure." %}</p>
   </div>
 
   {% if not SOCIALACCOUNT_ONLY %}
@@ -38,7 +38,7 @@
   {% endif %}
 
   {% if LOGIN_BY_CODE_ENABLED %}
-    <div class="divider my-4 text-xs opacity-70">{% trans "or" %}</div>
+    <div class="divider my-4 text-xs">{% trans "or" %}</div>
     <a href="{{ request_login_code_url }}" class="btn btn-outline btn-primary btn-sm w-full rounded-xl">
       <i class="fa-solid fa-envelope"></i> {% trans "Mail me a sign-in code" %}
     </a>
@@ -54,7 +54,7 @@
       <a class="link link-primary font-semibold" href="{{ signup_url }}">Sign up</a>{% endblocktranslate %}
     </p>
     <p>
-      <a href="{% url 'contact' %}" class="link link-hover text-xs opacity-70">{% trans "Help and Support" %}</a>
+      <a href="{% url 'contact' %}" class="link link-hover text-xs">{% trans "Help and Support" %}</a>
     </p>
   </div>
 {% endblock content %}

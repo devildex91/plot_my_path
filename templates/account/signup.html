@@ -10,7 +10,7 @@
 
   <div class="text-center mb-2">
     <h2 class="text-2xl font-bold text-primary">{{ heading }}</h2>
-    <p class="text-sm opacity-70 mt-1">{% trans "Join us and start planning your next adventure today." %}</p>
+    <p class="text-sm mt-1">{% trans "Join us and start planning your next adventure today." %}</p>
   </div>
 
   {% if not SOCIALACCOUNT_ONLY %}
@@ -32,7 +32,7 @@
       <a class="link link-primary font-semibold" href="{{ login_url }}">Sign in</a>{% endblocktranslate %}
     </p>
     <p>
-      <a href="{% url 'contact' %}" class="link link-hover text-xs opacity-70">{% trans "Help and Support" %}</a>
+      <a href="{% url 'contact' %}" class="link link-hover text-xs">{% trans "Help and Support" %}</a>
     </p>
   </div>
 {% endblock content %}

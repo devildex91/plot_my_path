@@ -550,6 +550,10 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 
 - As the mobile fixes had already been applied, the desktop test scored highly in every category. No further changes were needed.
 
+##### Login page
+**Mobile Tests**
+
+![Lighthouse test 1](../plot_my_path/static/images/readme-img/login-lighthouse-1.png)
 
 
 [back to top](#plot-my-path)
