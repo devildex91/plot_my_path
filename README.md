@@ -917,29 +917,32 @@ The tests mock React mounting and API requests so that the application's JavaScr
 
 #### Security 
 ---
+Content Security Policy
+---
+
+To make my project as secure as possible, I decided to add a Content Security Policy (CSP). An enforced CSP reduces the risk of Cross-Site Scripting (XSS), clickjacking and the unauthorised loading of external resources. I initially set the policy up in report-only mode so I could test it and identify any violations without breaking the site. Once I had reviewed the reports, I switched to enforcement using Django's SECURE_CSP setting. The following changes were needed to make it work effectively:
+
+- **Removed inline styles:** The landing page background image was triggering CSP violations because it was set using an inline HTML style attribute. I moved it into a class in my CSS stylesheet instead. This removed the need to permit inline styles in my CSP, and the image still loads as before.
+- **Updated the policy for Google OAuth sign-in:** When I first enforced the CSP, Google sign-in stopped working. After investigating, I discovered that the OAuth flow redirects to Google's authentication endpoint, which the CSP was blocking. Adding form-action with Google's domain fixed this, and on retesting the sign-in worked perfectly.
+
+The CSP configuration is as follows:
+
+| Directive                                         | Purpose                                                                                                               |
+|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `default-src 'self'`                              | Restricts resources to the application's own origin by default.                                                       |
+| `script-src 'self' 'nonce-...'`                   | Allows scripts from the application's own origin, plus explicitly authorised inline scripts using a per-response nonce. |
+| `img-src 'self' data: https://res.cloudinary.com` | Allows local images, data URI images and images hosted by Cloudinary.                                                 |
+| `base-uri 'self'`                                 | Prevents unauthorised external base URLs from being used.                                                             |
+| `form-action 'self' https://accounts.google.com`  | Restricts form submissions to the application and permits the Google OAuth authentication flow.                       |
+| `frame-ancestors 'none'`                          | Prevents the application from being embedded in frames, protecting against clickjacking.                              |
+| `object-src 'none'`                               | Blocks potentially unsafe embedded objects such as Flash.                                                             |
+| `connect-src 'self' https://tiles.openfreemap.org` | Restricts network connections to the application and the OpenFreeMap tile service.                                   |
+
 ![security test 1](..//plot_my_path/static/images/readme-img/security-test-1.png)
 
 
 Results 
-- Abscensce of Anti CSRF Tokens- Having thoroughly checked thrrough all of my forms I can confirm that is being flagged up for my google OAath sign in form which submits directly to google authentication endpoint. Its implementation is managed by google and are outside the control of my application. Djangos own CSRF mmiddleware remain enabl;ed to protect the applications forms and Post requests. Due to all that evidence the error is considered not applicable and treated as an externam third party finding.  
 
-CSP Failure to Define Directive with No fallback- Added middleware and from django.utils.csp import CSP
-
-SECURE_CSP_REPORT_ONLY = {
-    "default-src": [CSP.SELF],
-
-    "base-uri": [CSP.SELF],
-
-    "form-action": [CSP.SELF],
-
-    "frame-ancestors": [CSP.NONE],
-
-    "object-src": [CSP.NONE],
-}
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_HSTS_PRELOAD = False  to my settings to help add 
-[back to top](#plot-my-path)
 #### Automated Testing
 ---
 
