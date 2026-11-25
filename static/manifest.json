@@ -1,11 +1,23 @@
 {
+  "assets/js/components/itinerary_builder.jsx": {
+    "file": "assets/itinerary_builder-DaW42CAu.js",
+    "name": "itinerary_builder",
+    "src": "assets/js/components/itinerary_builder.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "assets/js/main.jsx"
+    ],
+    "css": [
+      "css/itinerary_builder.css"
+    ]
+  },
   "assets/js/main.jsx": {
     "file": "js/app-bundle.js",
     "name": "app",
     "src": "assets/js/main.jsx",
     "isEntry": true,
-    "css": [
-      "css/app.css"
+    "dynamicImports": [
+      "assets/js/components/itinerary_builder.jsx"
     ]
   },
   "assets/styles/style.css": {
@@ -21,7 +33,8 @@
       "css/fa-regular-400.css",
       "css/fa-solid-900.css",
       "css/fa-v4compatibility.css",
-      "css/home_img.css"
+      "css/home_img.css",
+      "css/landing_background.css"
     ]
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
@@ -43,5 +56,9 @@
   "static/images/home_img.avif": {
     "file": "css/home_img.css",
     "src": "static/images/home_img.avif"
+  },
+  "static/images/landing_background.avif": {
+    "file": "css/landing_background.css",
+    "src": "static/images/landing_background.avif"
   }
 }
