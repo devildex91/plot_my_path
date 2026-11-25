@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plot My Path</title>
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
-    <script>
-      window.DJANGO_STATIC_URL = "{% static '' %}";
-    </script>
+    <script nonce="{{ csp_nonce }}">
+  window.DJANGO_STATIC_URL = "{% static '' %}";
+</script>
    <meta name = "description" content="Plot My Path travel itinerary builder"/>
   </head>
   <body class="min-h-screen bg-base-100">
