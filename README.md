@@ -490,7 +490,7 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 | HTML                | Webpages                                |
 | CSS                 | Styling                                 |
 | Neon                | postgresql database                     |
-| Zap                 | Security Testing                        |
+| https://developer.mozilla.org/en-US/observatory/               | Security Testing                        |
 
 [back to top](#plot-my-path)
 ### Testing
@@ -938,8 +938,10 @@ The CSP configuration is as follows:
 | `object-src 'none'`                               | Blocks potentially unsafe embedded objects such as Flash.                                                             |
 | `connect-src 'self' https://tiles.openfreemap.org` | Restricts network connections to the application and the OpenFreeMap tile service.                                   |
 
-![security test 1](..//plot_my_path/static/images/readme-img/security-test-1.png)
-
+![security test 1](../plot_my_path/static/images/readme-img/security-test-1.png)
+ 
+ HAving already carried out quite an extensive CSP policy the only error that flagged up following the first security test was the Strict Transport Security (HSTS) which had been set to one hour previously. THe recommended was one year which has since been adjusted and the second test below confirms that all tests passed. 
+ ![security test 2](../plot_my_path/static/images/readme-img/security-test-2.png)
 
 Results 
 
