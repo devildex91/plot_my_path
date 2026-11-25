@@ -497,6 +497,12 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 ---
 #### Lighthouse tests 
 ---
+##### Landing page 
+--- 
+![Test 1](../plot_my_path/static/images/readme-img/landing-lighthouse-1.png)
+
+
+
 [back to top](#plot-my-path)
 #### HTML tests 
 ---
@@ -940,7 +946,8 @@ The CSP configuration is as follows:
 
 ![security test 1](../plot_my_path/static/images/readme-img/security-test-1.png)
  
- HAving already carried out quite an extensive CSP policy the only error that flagged up following the first security test was the Strict Transport Security (HSTS) which had been set to one hour previously. THe recommended was one year which has since been adjusted and the second test below confirms that all tests passed. 
+ Having already carried out quite an extensive CSP policy the only error that flagged up following the first security test was the Strict Transport Security (HSTS) which had been set to one hour previously. THe recommended was one year which has since been adjusted and the second test below confirms that all tests passed. 
+
  ![security test 2](../plot_my_path/static/images/readme-img/security-test-2.png)
 
 Results 
@@ -1331,6 +1338,7 @@ Preserving test database for alias 'default'...
 [back to top](#plot-my-path)
 #### Cross browser testing
 ---
+
 [back to top](#plot-my-path)
 #### User Testing 
 ---
