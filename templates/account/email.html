@@ -11,7 +11,7 @@
   <div class="text-center mb-2">
     <h2 class="text-2xl font-bold text-primary">{{ heading }}</h2>
     {% if emailaddresses %}
-      <p class="text-sm opacity-70 mt-1">{% trans "The following email addresses are associated with your account:" %}</p>
+      <p class="text-sm mt-1">{% trans "The following email addresses are associated with your account:" %}</p>
     {% endif %}
   </div>
 
@@ -64,7 +64,7 @@
   {% endif %}
 
   {% if can_add_email %}
-    <div class="divider my-4 text-xs opacity-70">{% trans "Add Email Address" %}</div>
+    <div class="divider my-4 text-xs">{% trans "Add Email Address" %}</div>
 
     {% trans "Add Email" as button_text %}
     {% #form form=form url=action_url button_text=button_text use_default_button="false" %}
@@ -76,6 +76,6 @@
   {% endif %}
 
   <div class="text-center text-sm mt-6">
-    <a href="{% url 'profile' %}" class="link link-hover text-xs opacity-70">{% trans "Back to profile" %}</a>
+    <a href="{% url 'profile' %}" class="link link-hover text-xs">{% trans "Back to profile" %}</a>
   </div>
 {% endblock content %}

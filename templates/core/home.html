@@ -51,7 +51,7 @@
   </figure>
   <div class="card-body p-4">
     <h3 class="card-title text-lg font-extrabold text-primary">{{ destination.name }}</h3>
-    <p class="text-base text-primary font-bold opacity-80">Average cost per day: £{{ destination.average_cost_per_day }}</p>
+    <p class="text-base text-primary font-bold">Average cost per day: £{{ destination.average_cost_per_day }}</p>
     <div class="card-actions justify-end mt-2">
       <a href="{% url 'details' destination.id %}" class="btn btn-primary btn-sm max-w-full whitespace-normal">View Details</a>
     </div>

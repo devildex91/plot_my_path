@@ -11,7 +11,7 @@ export default function ActivityList({
   return (
     <section className="space-y-4" aria-label="Planned activities">
       <ul className="list bg-base-100 rounded-box shadow-md">
-        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+        <li className="p-4 pb-2 text-xs tracking-wide">
           Planned Activities
         </li>
 
@@ -41,7 +41,7 @@ export default function ActivityList({
                       Matches your interests
                     </span>
                   )}
-                  <div className="text-xs uppercase font-semibold opacity-60">
+                  <div className="text-xs uppercase font-semibold">
                     {formatActivityTime(activity.start_time)} -{" "}
                     {formatActivityTime(activity.end_time)}
                     <p>£{attraction?.entry_cost}pp</p>
@@ -62,7 +62,7 @@ export default function ActivityList({
             );
           })
         ) : (
-          <li className="p-4 text-sm text-base-content/70">
+          <li className="p-4 text-sm text-base-content">
             No activities planned for this day yet.
           </li>
         )}

@@ -26,7 +26,7 @@ function Onboarding({ homeUrl }) {
               <h2 className="card-title text-4xl font-bold">
                 Personalised Itineraries
               </h2>
-              <p className="text-xl text-center mx-2 my-4 opacity-80">
+              <p className="text-xl text-center mx-2 my-4">
                 Tell us your preferences and we will show you the perfect things
                 to do on your trip.
               </p>
@@ -58,7 +58,7 @@ function Onboarding({ homeUrl }) {
               <h2 className="card-title text-4xl font-bold">
                 Discover Amazing Destinations
               </h2>
-              <p className="text-xl text-center mx-2 opacity-80">
+              <p className="text-xl text-center mx-2">
                 Explore top attractions, hidden gems and local favourites.
               </p>
             </div>
@@ -89,7 +89,7 @@ function Onboarding({ homeUrl }) {
               <h2 className="card-title text-4xl font-bold mb-4">
                 Real-Time Info
               </h2>
-              <p className="text-xl text-center mx-2 opacity-80">
+              <p className="text-xl text-center mx-2">
                 Get timely weather updates and smart recommendations.
               </p>
             </div>

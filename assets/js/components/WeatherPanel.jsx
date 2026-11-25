@@ -18,7 +18,7 @@ export default function WeatherPanel({ destinationName, day, weather, error }) {
           <p><span className="font-semibold">Chance of rain:</span> {selected.precipprob}%</p>
         </div>
       ) : (
-        <p className="text-sm opacity-70" role="status">No weather data available for this day.</p>
+        <p className="text-sm" role="status">No weather data available for this day.</p>
       )}
     </div>
   );
