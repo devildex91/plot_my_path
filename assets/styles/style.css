@@ -24,3 +24,8 @@
 .landing-page {
     background-image: url("/static/images/landing_background.avif");
 }
+
+form label,
+form .label-text {
+  color: var(--color-primary);
+}
