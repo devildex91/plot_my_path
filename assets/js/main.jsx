@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import Onboarding from "./components/Onboarding.jsx";
 import SearchBar from "./components/SearchBar.jsx";
-import ItineraryBuilder from "./components/itinerary_builder.jsx";
 import { getCookie } from "../utils.js";
 const rootElement = document.getElementById("onboarding");
 const searchRoot = document.getElementById("searchDiv");
@@ -27,15 +26,20 @@ if (builder) {
     weather,
     weather_error: weatherError,
   } = JSON.parse(dataElement.textContent);
-  createRoot(builder).render(
-    <ItineraryBuilder
-      trip={trip}
-      preferences={preferences}
-      days={days}
-      attractions={attractions}
-      weather={weather}
-      weatherError={weatherError}
-    />,
+
+  import("./components/itinerary_builder.jsx").then(
+    ({ default: ItineraryBuilder }) => {
+      createRoot(builder).render(
+        <ItineraryBuilder
+          trip={trip}
+          preferences={preferences}
+          days={days}
+          attractions={attractions}
+          weather={weather}
+          weatherError={weatherError}
+        />,
+      );
+    },
   );
 }
 // Theme toggle for Django-rendered pages.

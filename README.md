@@ -497,11 +497,39 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 ---
 #### Lighthouse tests 
 ---
-##### Landing page 
---- 
-![Test 1](../plot_my_path/static/images/readme-img/landing-lighthouse-1.png)
+##### Landing Page
+---
+**Mobile Tests**
+
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 78          | 100           | 96             | 91  |
+| Second Test Score | 100         | 100           | 96             | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/landing-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/landing-lighthouse-2.png)
+
+- The first round of mobile testing showed that the Best Practices score was being affected by a console error caused by a missing `favicon.ico`. I resolved this by creating the favicon, which removed the error.
+- I then compressed the landing page image and added meta descriptions to the page. Together, these changes raised the Performance score from 78 to 100 and the SEO score from 91 to 100.
+- The Best Practices score remained at 96. The remaining deduction relates to the compressed logo image, which is now displayed at a lower quality than its original. As it is only a logo, the difference is barely noticeable to the average user. Since the compression also improved the Performance score by 22 points, I considered this an acceptable trade-off.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 91          | 100           | 100            | 100 |
+
+- Following the mobile testing, all necessary changes had already been applied, so the desktop test achieved 100 in every category except Performance. This was due to layout shifts caused by the page adapting between mobile and desktop views. As the score of 91 was already high, I decided no further changes to the page were necessary.
 
 
+##### Onboarding page
+---
+**Mobile Tests**
+
+
+
+
+![first lighthouse test](../plot_my_path/static/images/readme-img/onboarding-lighthouse-1.png)
 
 [back to top](#plot-my-path)
 #### HTML tests 
