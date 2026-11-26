@@ -74,6 +74,7 @@ def search_destinations(request):
             "description": d.description,
             "cost": d.average_cost_per_day,
             "image_url": d.get_image_url,
+            "image_url_srcset": d.get_image_url_srcset,
         }
         for d in destinations
     ]
@@ -93,6 +94,7 @@ def popular_destinations(request):
             "description": d.description,
             "cost": d.average_cost_per_day,
             "image_url": d.get_image_url,
+            "image_url_srcset": d.get_image_url_srcset,
         }
         for d in destinations
     ]
