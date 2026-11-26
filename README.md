@@ -675,7 +675,31 @@ img
 
 - As the mobile fixes had already been applied, no further changes were needed for the desktop view.
 
-##### Destination detail 
+##### Destination Detail
+---
+**Mobile Tests**
+
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 97          | 92            | 100            | 100 |
+| Second Test Score | 96          | 100           | 100            | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/destination-detail-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/destination-detail-lighthouse-2.png)
+
+- The first round of mobile testing showed that the ARIA attributes on the favourite button were failing the Accessibility audit.
+- The aria-pressed value was being rendered with extra whitespace and line breaks, so it was not a valid true or false value. I moved the template logic onto a single line so the attribute renders exactly as true or false, which raised the Accessibility score from 92 to 100.
+- All other scores were already high, so no further changes were needed.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 99          | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/destination-detail-desktop-lighthouse.png)
+
+- As the mobile fixes had already been applied, the desktop test passed first time and no further changes were needed.
 
 
 [back to top](#plot-my-path)
