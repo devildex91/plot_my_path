@@ -7,7 +7,7 @@
         {% for trip in trips %}
           <div class="card bg-base-200 w-full shadow-sm border border-primary">
             <figure class="aspect-[4/3]">
-              <img src="{{ trip.destination.get_image_url }}" srcset="{{ trip.destination.get_image_url_srcset }}" alt="{{ trip.destination }}" crossorigin="anonymous" loading="lazy" decoding="async" class="w-full h-full object-cover" />
+              <img src="{{ trip.destination.get_image_url }}" srcset="{{ trip.destination.get_image_url_srcset }}" sizes="(max-width: 767px) 100vw, 378px" alt="{{ trip.destination }}" crossorigin="anonymous" loading="lazy" decoding="async" class="w-full h-full object-cover" />
             </figure>
             <div class="card-body">
               <h2 class="card-title">{{ trip.name }}</h2>
@@ -16,7 +16,7 @@
                 <a href="{% url 'itinerary_builder' trip.id %}" class="btn btn-primary">View Trip</a>
                 <form method="post" action="{% url 'delete_trip' trip.id %}" class="delete-trip-form">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-error btn-outline">Delete</button>
+                  <button type="submit" class="btn btn-error">Delete</button>
                 </form>
               </div>
             </div>
