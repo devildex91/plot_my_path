@@ -580,6 +580,48 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 
 - As the mobile fixes had already been applied, the desktop test scored 100 in every category. No further changes were needed.
 
+##### Home Page
+---
+**Mobile Tests**
+
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 77          | 100           | 77             | 100 |
+| Second Test Score | 87          | 100           | 77             | 100 |
+| Third Test Score  | 96          | 100           | 77             | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/home-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/home-lighthouse-2.png)
+![Lighthouse mobile test 3](../plot_my_path/static/images/readme-img/home-lighthouse-3.png)
+
+- The first round of mobile testing showed that the main issues were image optimisation and a warning on the search bar input.
+- To address this, I added a preload for home_img in the head of the page and added a name to the search bar input to remove the warning. This cleared the search bar warning, but on retest the preload did not improve the scores enough and introduced a new warning of its own.
+- To fix the image issues, I added the following Cloudinary optimisations to get_image_url
+  - c_limit: resizes the image only if it exceeds the specified width, without forcing a crop.
+  - w_1080: limits the default image to a maximum width of 1080px.
+  - q_auto: automatically adjusts image quality to reduce file size.
+  - f_auto: automatically serves an efficient image format supported by the browser.
+- I also added get_image_url_srcset, which generates multiple image sizes so the browser can choose the most suitable one for the screen and display size. The same changes were applied to the attractions get_image_url to prevent similar issues from arising there.
+- The HTML was then updated to use the new methods, which raised the Performance score from 77 to 96:
+
+img
+  src="{{ destination.get_image_url }}"
+  srcset="{{ destination.get_image_url_srcset }}"
+  alt="{{ destination.name }}"
+  loading="lazy"
+  decoding="async"
+  class="w-full h-full object-cover"
+
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 77             | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/home-desktop-lighthouse.png)
+
+- As the mobile fixes had already been applied, the desktop test scored highly in every category. No further changes were needed.
 
 
 [back to top](#plot-my-path)
