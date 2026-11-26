@@ -588,7 +588,7 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 |-------------------|-------------|---------------|----------------|-----|
 | First Test Score  | 77          | 100           | 77             | 100 |
 | Second Test Score | 87          | 100           | 77             | 100 |
-| Third Test Score  | 96          | 100           | 77             | 100 |
+| Third Test Score  | 93          | 100           | 100            | 100 |
 
 ![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/home-lighthouse-1.png)
 ![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/home-lighthouse-2.png)
@@ -602,12 +602,14 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
   - q_auto: automatically adjusts image quality to reduce file size.
   - f_auto: automatically serves an efficient image format supported by the browser.
 - I also added get_image_url_srcset, which generates multiple image sizes so the browser can choose the most suitable one for the screen and display size. The same changes were applied to the attractions get_image_url to prevent similar issues from arising there.
-- The HTML was then updated to use the new methods, which raised the Performance score from 77 to 96:
+- The HTML was then updated to use the new methods, which raised the Performance score from 77 to 93:
+- crossorigin anonymous added to img as well to solve cookie issue affecting best practices
 
 img
   src="{{ destination.get_image_url }}"
   srcset="{{ destination.get_image_url_srcset }}"
   alt="{{ destination.name }}"
+  crossorigin = "anonymous"
   loading="lazy"
   decoding="async"
   class="w-full h-full object-cover"
@@ -617,11 +619,12 @@ img
 
 |                  | Performance | Accessibility | Best Practices | SEO |
 |------------------|-------------|---------------|----------------|-----|
-| First Test Score | 100         | 100           | 77             | 100 |
+| First Test Score | 100         | 100           | 100            | 100 |
 
 ![Lighthouse desktop test](../plot_my_path/static/images/readme-img/home-desktop-lighthouse.png)
 
 - As the mobile fixes had already been applied, the desktop test scored highly in every category. No further changes were needed.
+
 
 
 [back to top](#plot-my-path)
@@ -1263,7 +1266,7 @@ Preserving test database for alias 'default'...
 ---
 
 ##### Payments Model Testing – The Tests
-
+**Retesting done after cloudinary image fetching was updated for better lighthouse scores.**
 - Payments model tests ran at commit **72fe012**.
 
 **Payment model**
