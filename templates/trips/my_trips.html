@@ -7,7 +7,7 @@
         {% for trip in trips %}
           <div class="card bg-base-200 w-full shadow-sm border border-primary">
             <figure class="aspect-[4/3]">
-              <img src="{{ trip.destination.get_image_url }}" alt="{{ trip.destination }}" loading="lazy" class="w-full h-full object-cover" />
+              <img src="{{ trip.destination.get_image_url }}" srcset="{{ trip.destination.get_image_url_srcset }}" alt="{{ trip.destination }}" crossorigin="anonymous" loading="lazy" decoding="async" class="w-full h-full object-cover" />
             </figure>
             <div class="card-body">
               <h2 class="card-title">{{ trip.name }}</h2>
