@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% block title %}Plot My Path|Destinations{% endblock %}
 {% block content %}
 
 <h1 class ="title text-2xl text-primary text-center font-extrabold">Destinations</h1>
@@ -38,6 +38,7 @@
         <img
     src="{{ destination.get_image_url }}"
     srcset="{{ destination.get_image_url_srcset }}"
+    sizes="(max-width: 767px) 100vw, 378px"
     alt="{{ destination.name }}"
     crossorigin="anonymous"
     loading="lazy"

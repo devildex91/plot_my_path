@@ -625,6 +625,30 @@ img
 
 - As the mobile fixes had already been applied, the desktop test scored highly in every category. No further changes were needed.
 
+##### My Trips 
+**Mobile Tests**
+
+|                   | Performance | Accesibility | Best Practice | SEO |
+|-------------------|-------------|--------------|---------------|-----|
+| First Test Score  | 88          | 95           | 100           | 100 |
+| Second Test Score | 94          | 100          | 100           | 100 |
+
+![Lighthouse mobile 1](../plot_my_path/static/images/readme-img/my-trips-lighthouse-1.png)
+![Lighthouse mobile 2](../plot_my_path/static/images/readme-img/my-trips-lighthouse-2.png)
+
+After the first score the images were lowering thescore by being the wrong size so i added sizes="(max-width: 767px) 100vw, 378px" to the img in my trips which increased the performance score to 94. Accessibility was being affected by the delete button contrast ratio so i changed that from an poutline to a full error button. Another issue that was faced was the favicon neing blurry on larger screens so ichanged this to a larger image which solved the issue  Both of these together  brought the score up to 100. 
+
+**Desktop tests**
+
+|                  | Performance | Accesibility | Best Practice | SEO |
+|------------------|-------------|--------------|---------------|-----|
+| First Test Score | 100         | 100          | 100           | 100 |
+
+Once all mobile tests had been carried out nothing else needed changing for desktop view.
+
+##### Destinations
+
+**Mobile Tests**
 
 
 [back to top](#plot-my-path)
