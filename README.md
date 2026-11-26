@@ -1178,6 +1178,7 @@ Preserving test database for alias 'default'...
 ##### Destinations Model Testing – The Tests
 
 - Destinations model tests ran at commit **72fe012**.
+**destinations model retested following updates to cloudinary get_image_url** 
 
 **Country**
 
@@ -1190,16 +1191,17 @@ Preserving test database for alias 'default'...
 - Its string representation is the destination name.
 - The natural key is the slug, and lookup by natural key works.
 - Slugs must be unique, enforced by a database constraint.
-- The image URL is built from the Cloudinary cloud name and the destination slug. This only builds a string, so no request is made to Cloudinary.
+- The get_image_url property builds the image URL from the Cloudinary cloud name and the destination slug, with image optimisation transformations (c_limit, w_1080, q_auto, f_auto) to reduce file size and serve suitable image formats. It only builds a string, so no request is made to Cloudinary.
+- The get_image_url_srcset property generates multiple optimised image URLs at widths of 384, 576, 768 and 1080 pixels. It uses the same q_auto and f_auto transformations, with the width varying for each entry, so the browser can select an appropriate image size.
 - Destinations are accessible through their country, and deleting a country deletes its destinations.
 
 **Attraction**
 
 - Its string representation is the attraction name, and the rating is optional.
 - The same slug cannot be used twice within one destination, but can be reused in a different destination.
-- The image URL is built from the Cloudinary cloud name and attraction slug.
+- The get_image_url property builds the image URL from the Cloudinary cloud name and the attraction slug, using the same optimisation transformations (c_limit, w_1080, q_auto, f_auto). It only builds a string, so no request is made to Cloudinary.
+- The get_image_url_srcset property generates multiple optimised image URLs at widths of 384, 576, 768 and 1080 pixels. It uses the same q_auto and f_auto transformations, with the width varying for each entry, so the browser can select an appropriate image size.
 - Attractions are accessible through their destination, and deleting a destination deletes its attractions.
-
 
 ##### Destinations View Testing – The Tests
 
@@ -1249,6 +1251,15 @@ Ran 42 tests in 15.698s
 OK
 Preserving test database for alias 'default'...
 
+##### Destinations Retest-result
+
+System check identified no issues (0 silenced).
+............................................
+----------------------------------------------------------------------
+Ran 44 tests in 15.627s
+
+OK
+Preserving test database for alias 'default'...
 ---
 
 ##### Payments Model Testing – The Tests

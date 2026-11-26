@@ -103,10 +103,20 @@ class DestinationTests(TestCase):
             make_destination(self.country, name="Paris 2", slug="paris")
 
     @override_settings(CLOUDINARY_CLOUD_NAME="testcloud")
-    def test_get_image_url_uses_cloud_name_and_slug(self):
+    def test_get_image_url_uses_cloud_name_slug_and_optimisation(self):
         self.assertEqual(
             self.destination.get_image_url,
-            "https://res.cloudinary.com/testcloud/image/upload/v1/paris",
+            "https://res.cloudinary.com/testcloud/image/upload/c_limit,w_1080,q_auto,f_auto/v1/paris",
+        )
+
+    @override_settings(CLOUDINARY_CLOUD_NAME="testcloud")
+    def test_get_image_url_srcset_includes_responsive_optimised_widths(self):
+        self.assertEqual(
+            self.destination.get_image_url_srcset,
+            ", ".join(
+                f"https://res.cloudinary.com/testcloud/image/upload/c_limit,w_{width},q_auto,f_auto/v1/paris {width}w"
+                for width in [384, 576, 768, 1080]
+            ),
         )
 
     def test_related_name_on_country(self):
@@ -141,10 +151,20 @@ class AttractionTests(TestCase):
         self.assertEqual(other.slug, self.attraction.slug)
 
     @override_settings(CLOUDINARY_CLOUD_NAME="testcloud")
-    def test_get_image_url(self):
+    def test_get_image_url_uses_cloud_name_slug_and_optimisation(self):
         self.assertEqual(
             self.attraction.get_image_url,
-            "https://res.cloudinary.com/testcloud/image/upload/v1/louvre",
+            "https://res.cloudinary.com/testcloud/image/upload/c_limit,w_1080,q_auto,f_auto/v1/louvre",
+        )
+
+    @override_settings(CLOUDINARY_CLOUD_NAME="testcloud")
+    def test_get_image_url_srcset_includes_responsive_optimised_widths(self):
+        self.assertEqual(
+            self.attraction.get_image_url_srcset,
+            ", ".join(
+                f"https://res.cloudinary.com/testcloud/image/upload/c_limit,w_{width},q_auto,f_auto/v1/louvre {width}w"
+                for width in [384, 576, 768, 1080]
+            ),
         )
 
     def test_related_name_on_destination(self):
@@ -302,7 +322,7 @@ class SearchDestinationsViewTests(LoggedInTestCase):
                 "slug": "paris",
                 "description": "A place.",
                 "cost": "150.00",  # Decimal is serialised as a string
-                "image_url": "https://res.cloudinary.com/testcloud/image/upload/v1/paris",
+                "image_url": "https://res.cloudinary.com/testcloud/image/upload/c_limit,w_1080,q_auto,f_auto/v1/paris",
             },
         )
 
