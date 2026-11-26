@@ -29,3 +29,9 @@ form label,
 form .label-text {
   color: var(--color-primary);
 }
+/*trial fix for allauth ui background*/
+main.card-body .card,
+main.card-body .bg-base-100 {
+  background-color: transparent;
+  box-shadow: none;
+}
