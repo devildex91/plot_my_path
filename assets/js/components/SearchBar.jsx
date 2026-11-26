@@ -76,7 +76,10 @@ function SearchBar({ onSearch, baseUrl }) {
                 <a href={dynamicUrl} className="search-result-link">
                   <img
                     src={item.image_url}
+                    srcSet={item.image_url_srcset}
                     alt={item.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-20 h-auto rounded-t-xl"
                   />
 
