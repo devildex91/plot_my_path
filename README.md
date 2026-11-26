@@ -568,6 +568,8 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 - The second test showed two remaining issues: the page had no main landmark for screen readers, and some further text with 70% opacity was failing the contrast ratio check. This text was being styled by allauth UI, so I added a custom CSS rule targeting all form label text to override it.
 - I also changed the card containing the allauth forms to a main element, which provided the page with a main landmark. Together, these changes raised the Accessibility score from 93 to 100.
 
+**Having made all nescesary changes on the login page and updating the backgrounds with a new css style all allauth pages are scoring identically to the third mobile test above and ther desktop tet below so the results have not been recorded**
+
 **Desktop Tests**
 
 |                  | Performance | Accessibility | Best Practices | SEO |
@@ -577,6 +579,8 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 ![Lighthouse desktop test](../plot_my_path/static/images/readme-img/login-desktop-lighthouse.png)
 
 - As the mobile fixes had already been applied, the desktop test scored 100 in every category. No further changes were needed.
+
+
 
 [back to top](#plot-my-path)
 #### HTML tests 

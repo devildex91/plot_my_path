@@ -17,6 +17,7 @@
     document.documentElement.setAttribute("data-theme", saved || "fantasy");
 })();
 </script>
+{% block extra_head %}{% endblock %}
     <link rel="stylesheet" href="{% vite_asset_url 'assets/styles/style.css' %}" />
     <meta name = "description" content="Plot My Path travel itinerary builder"/>
 </head>
@@ -50,7 +51,7 @@
         <a href= "{% url 'my_trips' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Trips">
             <i class="fa-solid fa-briefcase primary"></i><p class="text-xs">Trips</p>
         </a>
-        <a href="{% url 'destination_lists' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Explore">
+        <a href="{% url 'destination_lists' %}" class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Destinations">
             <i class="fa-solid fa-compass"></i><p class="text-xs">Destinations</p>
         </a>
         <a href="{% url 'profile' %}"  class="text-xl text-primary hover:text-secondary transition-colors text-center" aria-label="Profile">

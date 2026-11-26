@@ -150,15 +150,10 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 ALLAUTH_UI_THEME = "fantasy"
 
-# ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
-
 ACCOUNT_UNIQUE_EMAIL = True
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
     "default": env.db(
@@ -169,8 +164,6 @@ DATABASES = {
 
 DATABASES["default"]["CONN_MAX_AGE"] = 600
 
-# Password validation
-# https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -199,9 +192,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
