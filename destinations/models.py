@@ -54,11 +54,30 @@ class Destination(models.Model):
     objects = DestinationManager()
 
     # allows me to treat images like a database field when calling without storing image in db
+
     @property
     def get_image_url(self):
-        """Build the Cloudinary URL without storing a separate image field."""
+        """Build an automatically optimised Cloudinary URL."""
         cloud_name = getattr(settings, "CLOUDINARY_CLOUD_NAME", "dxhclnrp")
-        return f"https://res.cloudinary.com/{cloud_name}/image/upload/v1/{self.slug}"
+
+        return (
+            f"https://res.cloudinary.com/{cloud_name}/image/upload/"
+            f"c_limit,w_1080,q_auto,f_auto/"
+            f"v1/{self.slug}"
+        )
+
+    @property
+    def get_image_url_srcset(self):
+        """Build responsive image URLs for different screen sizes."""
+        cloud_name = getattr(settings, "CLOUDINARY_CLOUD_NAME", "dxhclnrp")
+
+        widths = [384, 576, 768, 1080]
+
+        return ", ".join(
+            f"https://res.cloudinary.com/{cloud_name}/image/upload/"
+            f"c_limit,w_{width},q_auto,f_auto/v1/{self.slug} {width}w"
+            for width in widths
+        )
 
     def natural_key(self):
         """Use the unique slug as the stable key when loading fixtures."""
@@ -92,10 +111,27 @@ class Attraction(models.Model):
 
     @property
     def get_image_url(self):
-        """Build this attraction's Cloudinary image URL from its slug."""
+        """Build an optimised Cloudinary image URL for this attraction."""
         cloud_name = getattr(settings, "CLOUDINARY_CLOUD_NAME", "dxhclnrp")
 
-        return f"https://res.cloudinary.com/{cloud_name}/image/upload/v1/{self.slug}"
+        return (
+            f"https://res.cloudinary.com/{cloud_name}/image/upload/"
+            f"c_limit,w_1080,q_auto,f_auto/"
+            f"v1/{self.slug}"
+        )
+
+    @property
+    def get_image_url_srcset(self):
+        """Generate responsive Cloudinary image URLs."""
+        cloud_name = getattr(settings, "CLOUDINARY_CLOUD_NAME", "dxhclnrp")
+
+        widths = [384, 576, 768, 1080]
+
+        return ", ".join(
+            f"https://res.cloudinary.com/{cloud_name}/image/upload/"
+            f"c_limit,w_{width},q_auto,f_auto/v1/{self.slug} {width}w"
+            for width in widths
+        )
 
     def __str__(self):
         """Return the attraction name."""
