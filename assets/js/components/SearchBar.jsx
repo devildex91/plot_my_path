@@ -52,7 +52,6 @@ function SearchBar({ onSearch, baseUrl }) {
         </svg>
         <input
           type="text"
-          id="destination-search"
           name="searchbar"
           className="grow text-primary placeholder:text-primary/60"
           placeholder="Search Destinations..."
