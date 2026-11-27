@@ -42,7 +42,7 @@ class CreateTripView(LoginRequiredMixin, SessionWizardView):
     """Collect trip preferences and details across the multi-step creation flow."""
 
     form_list = FORMS
-    template_name = "trips/trips.html"
+    template_name = "trips/trip_builder.html"
 
     def dispatch(self, request, *args, **kwargs):
         """Block users who have used their free trip before any step loads"""

@@ -701,6 +701,30 @@ img
 
 - As the mobile fixes had already been applied, the desktop test passed first time and no further changes were needed.
 
+##### trip_builder.html(originally trips.html)
+
+##### Trip Builder
+---
+**Mobile Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 99          | 100           | 100            | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/trip_builder-lighthouse-1.png)
+
+- As all of my pages inherit from base.html, the changes made while testing earlier pages were applied sitewide where possible. This is reflected in the scores, which were high on the first test for this page.
+- I also renamed the file to trip_builder and updated all links to the old filename, so that the name describes what the page does before anyone looks at the code.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/trip_builder-desktop-lighthouse.png)
+
+- As with the mobile tests, no further changes were required after testing.
 
 [back to top](#plot-my-path)
 #### HTML tests 
