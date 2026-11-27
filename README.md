@@ -857,74 +857,9 @@ img
 
 - No actions were required.
 
-
-##### Account Connections
----
-**Mobile Tests**
-
-|                  | Performance | Accessibility | Best Practices | SEO |
-|------------------|-------------|---------------|----------------|-----|
-| First Test Score | 99          | 100           | 100            | 100 |
-
-![Lighthouse mobile test](../plot_my_path/static/images/readme-img/account-connection-lighthouse-1.png)
-
-- No actions were required.
-
-**Desktop Tests**
-
-|                  | Performance | Accessibility | Best Practices | SEO |
-|------------------|-------------|---------------|----------------|-----|
-| First Test Score | 100         | 100           | 100            | 100 |
-
-![Lighthouse desktop test](../plot_my_path/static/images/readme-img/account-connection-desktop-lighthouse.png)
-
-- No actions were required.
-
-
-##### Contact Us
----
-**Mobile Tests**
-
-|                  | Performance | Accessibility | Best Practices | SEO |
-|------------------|-------------|---------------|----------------|-----|
-| First Test Score | 96          | 100           | 100            | 100 |
-
-![Lighthouse mobile test](../plot_my_path/static/images/readme-img/contact-us-lighthouse-1.png)
-
-- No actions were required.
-
-**Desktop Tests**
-
-|                  | Performance | Accessibility | Best Practices | SEO |
-|------------------|-------------|---------------|----------------|-----|
-| First Test Score | 100         | 100           | 100            | 100 |
-
-![Lighthouse desktop test](../plot_my_path/static/images/readme-img/contact-us-desktop-lighthouse.png)
-
-- No actions were required.
-##### Checkout
-
-**Mobile Tests**
-
-|                  | Performance | Accessibility | Best Practices | SEO |
-|------------------|-------------|---------------|----------------|-----|
-| First Test Score | 97          | 100           | 100            | 100 |
-
-![Lighthouse mobile test](../plot_my_path/static/images/readme-img/checkout-mobile-lighthouse.png)
-
-- No actions were required.
-
-**Desktop Tests**
-
-|                  | Performance | Accessibility | Best Practices | SEO |
-|------------------|-------------|---------------|----------------|-----|
-| First Test Score | 100         | 100           | 100            | 100 |
-
-![Lighthouse desktop test](../plot_my_path/static/images/readme-img/checkout-desktop-lighthouse.png)
-
-- No actions were required.
-
 [back to top](#plot-my-path)
+
+
 
 #### HTML tests 
 ---
