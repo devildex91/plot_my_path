@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Plot My Path|500
+{% endblock %}
+{% block content %}
+  <div class="flex items-center justify-center px-4 py-12">
+    <div class="card bg-base-200 w-full max-w-md shadow-sm border border-primary text-primary">
+      <div class="card-body items-center text-center">
+        <img src="{% static 'images/pmp-logo.avif' %}" alt="Plot My Path logo" class="h-20 w-auto mb-2" />
+
+        <h1 class="text-6xl font-bold">Something went wrong</h1>
+
+        <p class="text-sm mt-1">We're sorry, an unexpected error occurred. Please try again shortly</p>
+
+        <div class="card-actions mt-6">
+          <a href="{% url 'home' %}" class="btn btn-primary rounded-xl">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

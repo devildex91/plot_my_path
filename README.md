@@ -568,7 +568,7 @@ Django, django-allauth, React, Vite (via django-vite), Tailwind CSS with daisyUI
 - The second test showed two remaining issues: the page had no main landmark for screen readers, and some further text with 70% opacity was failing the contrast ratio check. This text was being styled by allauth UI, so I added a custom CSS rule targeting all form label text to override it.
 - I also changed the card containing the allauth forms to a main element, which provided the page with a main landmark. Together, these changes raised the Accessibility score from 93 to 100.
 
-**Having made all nescesary changes on the login page and updating the backgrounds with a new css style all allauth pages are scoring identically to the third mobile test above and ther desktop tet below so the results have not been recorded**
+**Having made all nescesary changes on the login page and updating the backgrounds with a new css style all allauth pages are scoring identically to the third mobile test above and ther desktop test below so the results have not been recorded**
 
 **Desktop Tests**
 
@@ -625,7 +625,7 @@ img
 
 - As the mobile fixes had already been applied, the desktop test scored highly in every category. No further changes were needed.
 
-##### My Trips
+##### Upcoming Trips
 ---
 **Mobile Tests**
 
@@ -725,6 +725,59 @@ img
 ![Lighthouse desktop test](../plot_my_path/static/images/readme-img/trip_builder-desktop-lighthouse.png)
 
 - As with the mobile tests, no further changes were required after testing.
+
+##### Itinerary Builder
+---
+**Mobile Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 84          | 100           | 100            | 100 |
+
+![Lighthouse mobile test](../plot_my_path/static/images/readme-img/itinerary_builder-lighthouse-1.png)
+
+- The first round of mobile testing showed that the main factor affecting Performance was document request latency.
+- The site is hosted on Render's free tier, where server response time is outside of my control, so this was recorded as a known hosting limitation.
+- The page also has a lot to load. It hosts a React component that brings in three separate components, along with an interactive map and weather data.
+- With all of this in mind, the score of 84 was considered good for the amount happening on the page, and no further changes were made.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 99          | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/itinerary-builder-desktop-lighthouse.png)
+
+- The desktop test scored 99, which supports the point that the mobile score was held back by document request latency and the throttled mobile conditions rather than the page itself. No further action was needed on this page.
+
+##### Profile Page
+---
+**Mobile Tests**
+
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 99          | 95            | 100            | 100 |
+| Second Test Score | 99          | 100           | 100            | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/profile-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/profile-lighthouse-2.png)
+
+- The first round of mobile testing flagged the same contrast ratio problem on the cancel button that had appeared on a previous page.
+- To resolve this, I changed the button from btn-error btn-outline to a solid btn-error, which raised the Accessibility score from 95 to 100.
+- All other scores were already high, so no further changes were needed.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/profile-desktop-lighthouse.png)
+
+- As the mobile fixes had already been applied, no further changes were needed for the desktop view.
+
+##### Saved Destinations
 
 [back to top](#plot-my-path)
 #### HTML tests 

@@ -271,6 +271,7 @@ class MyTripsViewTests(TripsViewTestBase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "trips/upcoming_trips.html")
         self.assertEqual(list(response.context["trips"]), [self.trip])
 
 
