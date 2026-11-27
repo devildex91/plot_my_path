@@ -777,7 +777,7 @@ img
 
 - As the mobile fixes had already been applied, no further changes were needed for the desktop view.
 
-##### Saved Destinations
+##### Saved Destinations(previously favourite_destinations)
 ---
 **Mobile Tests**
 
