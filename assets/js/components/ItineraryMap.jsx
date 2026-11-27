@@ -7,7 +7,12 @@ maplibregl.setWorkerUrl(
 );
 
 const FALLBACK_CENTER = [-2.2431, 51.8642];
-
+/** A set of layer IDs for highway shields that should be hidden. */
+const SHIELD_LAYERS = new Set([
+  "highway-shield-non-us",
+  "highway-shield-us-interstate",
+  "road_shield_us",
+]);
 /** Check longitude/latitude values before passing them to MapLibre. */
 const isValidCoordinate = (lng, lat) => {
   const x = Number(lng);
@@ -116,6 +121,10 @@ export default function ItineraryMap({ center, stops = [], attractions = [] }) {
       style: "https://tiles.openfreemap.org/styles/positron",
       center: initialCenter,
       zoom: 11,
+      transformStyle: (previous, next) => ({
+    ...next,
+    layers: next.layers.filter((layer) => !SHIELD_LAYERS.has(layer.id)),
+  }),
     });
 
     mapRef.current = map;
