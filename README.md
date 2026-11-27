@@ -778,6 +778,33 @@ img
 - As the mobile fixes had already been applied, no further changes were needed for the desktop view.
 
 ##### Saved Destinations
+---
+**Mobile Tests**
+
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 84          | 98            | 77             | 100 |
+| Second Test Score | 78          | 98            | 100            | 100 |
+| Third Test Score  | 98          | 100           | 100            | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/saved-destination-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/saved-destination-lighthouse-2.png)
+![Lighthouse mobile test 3](../plot_my_path/static/images/readme-img/saved-destination-lighthouse-3.png)
+
+- The first round of mobile testing showed that when I updated get_image_url and get_image_url_srcset, I had not updated the images on this page. This caused both the Performance and Best Practices scores to drop, due to oversized images and third-party cookies.
+- I then updated the img and added the srcset, but did not update the sizes attribute, so the Performance score dropped to 78. The Best Practices score rose to 100 at this point, as the third-party cookie issue was resolved.
+- I also discovered that I had previously deleted an h2 without updating the h3, so the page had an h1 followed by an h3. This skipped heading level was affecting the Accessibility score.
+- I updated the sizes attribute and changed the h3 to an h2. The final test scored 98 for Performance and 100 for Accessibility, which I considered acceptable.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/saved-destination-desktop-lighthouse.png)
+
+- As the mobile fixes had already been applied, no further changes were needed for the desktop view.
 
 [back to top](#plot-my-path)
 #### HTML tests 
