@@ -38,7 +38,7 @@
         {% if request.user.membership.is_active %}
           <form method="post" action="{% url 'request_refund' %}" id = "refund-form">
             {% csrf_token %}
-            <button type="submit" class="btn btn-outline btn-error">Cancel and refund</button>
+            <button type="submit" class="btn btn-error">Cancel and refund</button>
             </form>
             {% else %}
             <a href="{% url 'checkout' %}" class="p-4 text-primary">Activate membership</a>
