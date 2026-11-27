@@ -113,7 +113,7 @@ export default function ItineraryMap({ center, stops = [], attractions = [] }) {
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: "https://tiles.openfreemap.org/styles/liberty",
+      style: "https://tiles.openfreemap.org/styles/positron",
       center: initialCenter,
       zoom: 11,
     });
