@@ -10,10 +10,10 @@
         {% for item in saved_destinations %}
           <div class="card bg-base-200 w-full shadow-sm border border-primary">
             <figure class="aspect-[4/3]">
-               <img src="{{ item.destination.get_image_url }}" srcset="{{ item.destination.get_image_url_srcset }}" alt="{{ item.destination }}" crossorigin="anonymous" loading="lazy" decoding="async" />
+               <img src="{{ item.destination.get_image_url }}" sizes="(max-width: 767px) 100vw, 378px" srcset="{{ item.destination.get_image_url_srcset }}" alt="{{ item.destination }}" crossorigin="anonymous" loading="lazy" decoding="async" />
             </figure>
             <div class="card-body">
-              <h3 class = "font-bold text-xl">{{ item.destination.name }}</h3>
+              <h2 class = "font-bold text-xl">{{ item.destination.name }}</h2>
               <p class="font-bold">{{ item.destination.description }}</p>
               <div class="card-actions justify-end">
                 <a href="{% url 'organise_trip' %}" class="btn btn-primary mt-4">Start Planning</a>
