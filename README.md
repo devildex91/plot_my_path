@@ -857,6 +857,46 @@ img
 
 - No actions were required.
 
+##### sunset Tests(dark theme)
+**All tests were 90 or above throughout so no work was needed to improve the scores. With tasht being the case a table of the results is provided rahter than screenshots as all work was carried out in the fantasy theme testing  seen above**
+**Mobile Tests**
+---
+| Mobile Tests       | Performance | Accesibility | Best Practice | SEO |
+|--------------------|-------------|--------------|---------------|-----|
+| login              |  99         |    100       |   100         | 100 |
+| Homepage           | 91          | 100          | 100           | 100 |
+| Destination        | 96          | 100          | 100           | 100 |
+| Destination_detail | 97          | 100          | 100           | 100 |
+| trip_builder       | 99          | 100          | 100           | 100 |
+| upcoming trips     | 98          | 100          | 100           | 100 |
+| itinerary builder  | 83          | 100          | 100           | 100 |
+| profile page       | 100         | 100          | 100           | 100 |
+| saved destination  | 96          | 100          | 100           | 100 |
+| email              | 96          | 100          | 100           | 100 |
+| password change    | 99          | 100          | 100           | 100 |
+| connected-accounts | 99          | 100          | 100           | 100 |
+| checkout           | 99          | 100          | 100           | 100 |
+| contact us         | 90          | 100          | 100           | 100 |
+
+**Desktop Tests**
+---
+| Desktop Tests      | Performance | Accesibility | Best Practice | SEO |
+|--------------------|-------------|--------------|---------------|-----|
+| login              | 100         | 100          | 100           | 100 |
+| Homepage           | 100         | 100          | 100           | 100 |
+| Destination        | 100         | 100          | 100           | 100 |
+| Destination_detail | 100         | 100          | 100           | 100 |
+| trip_builder       | 100         | 100          | 100           | 100 |
+| upcoming trips     | 100         | 100          | 100           | 100 |
+| itinerary builder  | 100         | 100          | 100           | 100 |
+| profile page       | 100         | 100          | 100           | 100 |
+| saved destination  | 100         | 100          | 100           | 100 |
+| email              | 100         | 100          | 100           | 100 |
+| password change    | 100         | 100          | 100           | 100 |
+| connected-accounts | 100         | 100          | 100           | 100 |
+| checkout           | 100         | 100          | 100           | 100 |
+| contact us         | 100         | 100          | 100           | 100 |
+
 [back to top](#plot-my-path)
 
 
