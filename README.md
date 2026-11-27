@@ -701,9 +701,9 @@ img
 
 - As the mobile fixes had already been applied, the desktop test passed first time and no further changes were needed.
 
-##### trip_builder.html(originally trips.html)
 
-##### Trip Builder
+##### Trip Builder(originally trips.html)
+
 ---
 **Mobile Tests**
 
