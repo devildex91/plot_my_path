@@ -806,7 +806,61 @@ img
 
 - As the mobile fixes had already been applied, no further changes were needed for the desktop view.
 
+##### Email
+---
+**Mobile Tests**
+
+|                   | Performance | Accessibility | Best Practices | SEO |
+|-------------------|-------------|---------------|----------------|-----|
+| First Test Score  | 99          | 93            | 100            | 100 |
+| Second Test Score | 97          | 93            | 100            | 100 |
+| Third Test Score  | 99          | 100           | 100            | 100 |
+
+![Lighthouse mobile test 1](../plot_my_path/static/images/readme-img/email-mobile-lighthouse-1.png)
+![Lighthouse mobile test 2](../plot_my_path/static/images/readme-img/email-mobile-lighthouse-2.png)
+![Lighthouse mobile test 3](../plot_my_path/static/images/readme-img/email-mobile-lighthouse-3.png)
+
+- After the first test, I noticed the remove button was still btn-error btn-outline, so I assumed this was causing the Accessibility issue. I changed it and retested, but the score stayed at 93, so this was not the cause.
+- On closer inspection, I found that the primary badge was a slightly lighter shade of blue than the primary colour, which gave it insufficient contrast. After correcting it, the Accessibility score rose from 93 to 100.
+- All scores were then 100 apart from Performance, which was 99.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/email-desktop-lighthouse.png)
+
+- As the mobile fixes had already been applied, no further action was needed for the desktop view.
+
+
+##### Password Change
+---
+**Mobile Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 99          | 100           | 100            | 100 |
+
+![Lighthouse mobile test](../plot_my_path/static/images/readme-img/password-change-lighthouse-1.png)
+
+- No actions were required.
+
+**Desktop Tests**
+
+|                  | Performance | Accessibility | Best Practices | SEO |
+|------------------|-------------|---------------|----------------|-----|
+| First Test Score | 100         | 100           | 100            | 100 |
+
+![Lighthouse desktop test](../plot_my_path/static/images/readme-img/password-change-desktop-lighthouse.png)
+
+- No actions were required.
+
 [back to top](#plot-my-path)
+
+
+
 #### HTML tests 
 ---
 [back to top](#plot-my-path)
