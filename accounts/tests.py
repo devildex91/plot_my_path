@@ -161,9 +161,9 @@ class ProfilePageViewTests(LoggedInTestCase):
         self.assertContains(response, self.user.username)
 
 
-class FavouriteDestinationsViewTests(LoggedInTestCase):
+class SavedDestinationsViewTests(LoggedInTestCase):
     def test_login_is_required(self):
-        url = reverse("favourite_destinations")
+        url = reverse("saved_destinations")
         self.client.logout()
         self.assert_login_redirect(self.client.get(url), url)
 
@@ -177,10 +177,10 @@ class FavouriteDestinationsViewTests(LoggedInTestCase):
             destination=self.rome,
         )
 
-        response = self.client.get(reverse("favourite_destinations"))
+        response = self.client.get(reverse("saved_destinations"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "accounts/favourite_destinations.html")
+        self.assertTemplateUsed(response, "accounts/saved_destinations.html")
         self.assertEqual(
             list(response.context["saved_destinations"]),
             [mine],

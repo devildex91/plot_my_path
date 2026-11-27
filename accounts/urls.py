@@ -9,9 +9,9 @@ urlpatterns = [
         name="profile",
     ),
     path(
-        "favourite_destinations/",
-        views.favourite_destinations,
-        name="favourite_destinations",
+        "saved_destinations/",
+        views.saved_destinations,
+        name="saved_destinations",
     ),
     path(
         "favourites/destination/<int:destination_id>/",

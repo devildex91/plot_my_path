@@ -36,7 +36,7 @@ def toggle_destination_favourite(request, destination_id):
 
 
 @login_required
-def favourite_destinations(request):
+def saved_destinations(request):
     """Render the destinations saved by the signed-in user."""
     saved = SavedDestination.objects.filter(user=request.user).select_related(
         "destination"
@@ -44,7 +44,7 @@ def favourite_destinations(request):
 
     return render(
         request,
-        "accounts/favourite_destinations.html",
+        "accounts/saved_destinations.html",
         {
             "saved_destinations": saved,
         },
